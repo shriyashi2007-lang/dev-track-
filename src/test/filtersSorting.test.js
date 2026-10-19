@@ -1,0 +1,69 @@
+import { describe, it, expect } from 'vitest'
+import { filterProblems } from '../utils/filters'
+import { sortProblems } from '../utils/sorting'
+
+describe('Filtering and Sorting', () => {
+  const problems = [
+    {
+      id: '1',
+      title: 'Two Sum',
+      platform: 'LeetCode',
+      difficulty: 'Easy',
+      topics: ['Arrays', 'Hash Table'],
+      status: 'Solved',
+      solvedDate: '2026-10-18',
+      timeTakenMinutes: 15,
+      revision: { marked: false },
+    },
+    {
+      id: '2',
+      title: 'Binary Tree Inorder Traversal',
+      platform: 'LeetCode',
+      difficulty: 'Medium',
+      topics: ['Trees'],
+      status: 'Solved',
+      solvedDate: '2026-10-19',
+      timeTakenMinutes: 30,
+      revision: { marked: true },
+    },
+    {
+      id: '3',
+      title: 'Graph Valid Tree',
+      platform: 'GeeksforGeeks',
+      difficulty: 'Hard',
+      topics: ['Graphs', 'Trees'],
+      status: 'Attempted',
+      solvedDate: null,
+      timeTakenMinutes: 45,
+      revision: { marked: true },
+    },
+  ]
+
+  it('filters by search term across title and topic', () => {
+    const res = filterProblems(problems, { search: 'tree' })
+    expect(res.length).toBe(2)
+    expect(res.map((p) => p.id)).toEqual(['2', '3'])
+  })
+
+  it('filters by difficulty and status', () => {
+    const res = filterProblems(problems, {
+      difficulties: ['Medium', 'Hard'],
+      status: 'Solved',
+    })
+    expect(res.length).toBe(1)
+    expect(res[0].id).toBe('2')
+  })
+
+  it('filters by revision flag', () => {
+    const res = filterProblems(problems, { revisionOnly: true })
+    expect(res.length).toBe(2)
+  })
+
+  it('sorts correctly by difficulty ascending and descending', () => {
+    const asc = sortProblems(problems, 'difficulty-asc')
+    expect(asc.map((p) => p.difficulty)).toEqual(['Easy', 'Medium', 'Hard'])
+
+    const desc = sortProblems(problems, 'difficulty-desc')
+    expect(desc.map((p) => p.difficulty)).toEqual(['Hard', 'Medium', 'Easy'])
+  })
+})
