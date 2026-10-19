@@ -14,14 +14,14 @@ export function RecentSolvedList({ problems = [], onEdit, onToggleRevision }) {
     <Card className="p-5">
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-2">
-          <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+          <CheckCircle2 className="w-4 h-4 text-status-solved-text" />
           <h3 className="text-xs font-semibold text-content-primary uppercase tracking-wider">
             Recently Solved
           </h3>
         </div>
         <Link
           to="/problems?status=Solved"
-          className="text-xs text-primary hover:text-primary-hover flex items-center gap-1 transition-colors"
+          className="text-xs text-primary hover:text-primary-hover flex items-center gap-1 transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-accent"
         >
           <span>View all</span>
           <ArrowRight className="w-3 h-3" />
@@ -55,13 +55,13 @@ export function RecentSolvedList({ problems = [], onEdit, onToggleRevision }) {
                       href={problem.url}
                       target="_blank"
                       rel="noreferrer"
-                      className="text-content-muted hover:text-primary transition-colors"
+                      className="text-content-muted hover:text-accent transition-colors"
                     >
                       <ExternalLink className="w-3 h-3" />
                     </a>
                   )}
                 </div>
-                <div className="flex items-center gap-2 text-[10px] text-content-muted font-mono">
+                <div className="flex items-center gap-2 text-[10px] text-content-muted tabular-nums">
                   <span>{problem.platform}</span>
                   <span>•</span>
                   <span>{formatDate(problem.solvedDate, 'MMM d, yyyy')}</span>
@@ -73,9 +73,9 @@ export function RecentSolvedList({ problems = [], onEdit, onToggleRevision }) {
                   type="button"
                   onClick={() => onToggleRevision(problem)}
                   title={problem.revision?.marked ? 'Marked for revision' : 'Mark for revision'}
-                  className={`p-1.5 rounded transition-colors ${
+                  className={`p-1.5 rounded transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-accent ${
                     problem.revision?.marked
-                      ? 'text-primary bg-primary/10'
+                      ? 'text-accent bg-accent-light'
                       : 'text-content-muted hover:text-content-primary'
                   }`}
                 >
@@ -85,7 +85,7 @@ export function RecentSolvedList({ problems = [], onEdit, onToggleRevision }) {
                   type="button"
                   onClick={() => onEdit(problem)}
                   title="Edit problem"
-                  className="p-1.5 text-content-muted hover:text-content-primary rounded transition-colors"
+                  className="p-1.5 text-content-muted hover:text-content-primary rounded transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-accent"
                 >
                   <Edit2 className="w-3.5 h-3.5" />
                 </button>

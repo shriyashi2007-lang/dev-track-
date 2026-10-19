@@ -41,12 +41,12 @@ export const Input = React.forwardRef(function Input(
           className={clsx(
             'w-full bg-base-elevated/60 text-content-primary text-sm rounded-card border px-3 py-2 transition-colors duration-150',
             'placeholder:text-content-muted',
-            'focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary',
+            'focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent',
             'disabled:opacity-50 disabled:cursor-not-allowed',
             leftIcon ? 'pl-9' : 'pl-3',
             rightIcon ? 'pr-9' : 'pr-3',
             error
-              ? 'border-rose-500 focus:border-rose-500 focus:ring-rose-500'
+              ? 'border-difficulty-hard focus:border-difficulty-hard focus:ring-difficulty-hard'
               : 'border-border-subtle hover:border-border-strong',
             className
           )}
@@ -59,7 +59,7 @@ export const Input = React.forwardRef(function Input(
         )}
       </div>
       {error ? (
-        <p className="mt-1 text-xs text-rose-400">{error}</p>
+        <p className="mt-1 text-xs text-difficulty-hard">{error}</p>
       ) : helperText ? (
         <p className="mt-1 text-xs text-content-muted">{helperText}</p>
       ) : null}
@@ -101,17 +101,17 @@ export const Textarea = React.forwardRef(function Textarea(
         className={clsx(
           'w-full bg-base-elevated/60 text-content-primary text-sm rounded-card border px-3 py-2 transition-colors duration-150 resize-y',
           'placeholder:text-content-muted',
-          'focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary',
+          'focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent',
           'disabled:opacity-50 disabled:cursor-not-allowed',
           error
-            ? 'border-rose-500 focus:border-rose-500 focus:ring-rose-500'
+            ? 'border-difficulty-hard focus:border-difficulty-hard focus:ring-difficulty-hard'
             : 'border-border-subtle hover:border-border-strong',
           className
         )}
         {...props}
       />
       {error ? (
-        <p className="mt-1 text-xs text-rose-400">{error}</p>
+        <p className="mt-1 text-xs text-difficulty-hard">{error}</p>
       ) : helperText ? (
         <p className="mt-1 text-xs text-content-muted">{helperText}</p>
       ) : null}

@@ -2,24 +2,25 @@ import React from 'react'
 import clsx from 'clsx'
 
 const variants = {
-  // Difficulty
-  Easy: 'bg-emerald-500/15 text-emerald-400 border-emerald-500/30',
-  Medium: 'bg-amber-500/15 text-amber-400 border-amber-500/30',
-  Hard: 'bg-rose-500/15 text-rose-400 border-rose-500/30',
+  // Difficulty (strictly distinct semantic tokens)
+  Easy: 'bg-difficulty-easy-bg text-difficulty-easy-text border-difficulty-easy-border',
+  Medium: 'bg-difficulty-medium-bg text-difficulty-medium-text border-difficulty-medium-border',
+  Hard: 'bg-difficulty-hard-bg text-difficulty-hard-text border-difficulty-hard-border',
   
   // Status
-  Todo: 'bg-slate-500/15 text-slate-300 border-slate-500/30',
-  Attempted: 'bg-sky-500/15 text-sky-400 border-sky-500/30',
-  Solved: 'bg-emerald-500/15 text-emerald-400 border-emerald-500/30',
+  Todo: 'bg-status-todo-bg text-status-todo-text border-status-todo-border',
+  Attempted: 'bg-status-attempted-bg text-status-attempted-text border-status-attempted-border',
+  Solved: 'bg-status-solved-bg text-status-solved-text border-status-solved-border',
 
   // Priority
-  High: 'bg-rose-500/15 text-rose-400 border-rose-500/30',
-  Low: 'bg-slate-500/15 text-slate-300 border-slate-500/30',
+  High: 'bg-difficulty-hard-bg text-difficulty-hard-text border-difficulty-hard-border',
+  Low: 'bg-status-todo-bg text-status-todo-text border-status-todo-border',
 
-  // Generic
-  primary: 'bg-primary/15 text-primary border-primary/30',
+  // Generic & Brand
+  primary: 'bg-primary-light text-primary border-primary/30',
+  accent: 'bg-accent-light text-accent border-accent/30',
   neutral: 'bg-base-elevated text-content-secondary border-border-subtle',
-  sample: 'bg-amber-500/20 text-amber-300 border-amber-500/40 font-semibold animate-pulse',
+  sample: 'bg-difficulty-medium-bg text-difficulty-medium-text border-difficulty-medium-border font-semibold animate-pulse',
 }
 
 const sizes = {
@@ -41,7 +42,7 @@ export function Badge({
   return (
     <span
       className={clsx(
-        'inline-flex items-center gap-1.5 rounded-full border font-mono uppercase tracking-wider',
+        'inline-flex items-center gap-1.5 rounded-full border uppercase tracking-wider',
         appliedVariant,
         sizes[size],
         className

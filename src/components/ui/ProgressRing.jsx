@@ -19,7 +19,7 @@ export function ProgressRing({
 
   return (
     <div
-      className={clsx('relative inline-flex flex-col items-center justify-center', className)}
+      className={clsx('relative inline-flex flex-col items-center justify-center select-none', className)}
       style={{ width: size, height: size }}
       role="progressbar"
       aria-valuenow={normalizedValue}
@@ -48,12 +48,12 @@ export function ProgressRing({
           strokeDashoffset={strokeDashoffset}
           strokeLinecap="round"
           fill="transparent"
-          style={{ transition: 'stroke-dashoffset 500ms ease-out' }}
+          style={{ transition: 'stroke-dashoffset 400ms ease-out' }}
         />
       </svg>
       {/* Center content */}
       <div className="absolute inset-0 flex flex-col items-center justify-center text-center">
-        <span className="text-xl sm:text-2xl font-bold font-mono text-content-primary">
+        <span className="text-xl sm:text-2xl font-bold tabular-nums text-content-primary">
           {normalizedValue}
           <span className="text-xs text-content-muted font-normal">/{max}</span>
         </span>

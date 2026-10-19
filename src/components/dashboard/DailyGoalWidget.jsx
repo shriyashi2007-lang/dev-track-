@@ -13,7 +13,7 @@ export function DailyGoalWidget({ stats, dailyGoal = 3 }) {
     <Card className="p-5 flex flex-col justify-between">
       <div className="flex items-center justify-between mb-3">
         <div className="flex items-center gap-2">
-          <div className="w-7 h-7 rounded-subtle bg-primary/10 flex items-center justify-center text-primary">
+          <div className="w-7 h-7 rounded-subtle bg-primary-light flex items-center justify-center text-primary">
             <Target className="w-4 h-4" />
           </div>
           <h3 className="text-xs font-semibold text-content-primary uppercase tracking-wider">
@@ -23,7 +23,7 @@ export function DailyGoalWidget({ stats, dailyGoal = 3 }) {
         <Link
           to="/settings"
           title="Adjust daily target"
-          className="text-content-muted hover:text-content-primary p-1 rounded transition-colors"
+          className="text-content-muted hover:text-content-primary p-1 rounded transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-accent"
         >
           <SettingsIcon className="w-3.5 h-3.5" />
         </Link>
@@ -36,25 +36,25 @@ export function DailyGoalWidget({ stats, dailyGoal = 3 }) {
           size={105}
           strokeWidth={9}
           sublabel="solved"
-          color={isGoalReached ? '#10B981' : 'var(--accent-primary)'}
+          color={isGoalReached ? 'var(--color-solved)' : 'var(--accent-coral)'}
         />
 
         <div className="space-y-1.5 max-w-[130px]">
           {isGoalReached ? (
-            <div className="flex items-center gap-1.5 text-emerald-400">
+            <div className="flex items-center gap-1.5 text-status-solved-text">
               <CheckCircle2 className="w-4 h-4 shrink-0" />
               <span className="text-xs font-bold leading-tight">Goal Complete!</span>
             </div>
           ) : (
             <div>
-              <p className="text-sm font-bold text-content-primary">
+              <p className="text-sm font-bold text-content-primary tabular-nums">
                 {remaining} more
               </p>
               <p className="text-[11px] text-content-muted">needed to hit target</p>
             </div>
           )}
           <p className="text-[10px] text-content-secondary leading-normal">
-            Target: {dailyGoal} problems per day
+            Target: {dailyGoal} problems/day
           </p>
         </div>
       </div>

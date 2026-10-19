@@ -229,15 +229,15 @@ export default function Problems() {
 
       {/* Floating Bulk Actions Bar when rows are selected */}
       {selectedIds.length > 0 && (
-        <div className="p-3 bg-primary/10 border border-primary/30 rounded-card flex flex-wrap items-center justify-between gap-3 animate-fade-in shadow-lg">
+        <div className="p-3 bg-accent-light border border-accent/30 rounded-card flex flex-wrap items-center justify-between gap-3 animate-fade-in shadow-lg">
           <div className="flex items-center gap-2">
-            <span className="font-semibold text-xs text-primary font-mono">
+            <span className="font-semibold text-xs text-accent tabular-nums">
               {selectedIds.length} problem{selectedIds.length === 1 ? '' : 's'} selected
             </span>
             <button
               type="button"
               onClick={() => setSelectedIds([])}
-              className="text-xs text-content-muted hover:text-content-primary underline cursor-pointer"
+              className="text-xs text-content-muted hover:text-content-primary underline cursor-pointer focus-visible:outline-none"
             >
               Deselect
             </button>
@@ -320,7 +320,7 @@ export default function Problems() {
               <select
                 value={pageSize}
                 onChange={(e) => setPageSize(Number(e.target.value))}
-                className="bg-base-surface border border-border-subtle rounded px-2 py-1 text-content-primary focus:outline-none focus:border-primary"
+                className="bg-base-surface border border-border-subtle rounded px-2 py-1 text-content-primary focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent"
               >
                 <option value={10}>10</option>
                 <option value={25}>25</option>
@@ -330,7 +330,7 @@ export default function Problems() {
             </div>
 
             <div className="flex items-center gap-2">
-              <span className="font-mono">
+              <span className="tabular-nums">
                 Page {currentPage} of {totalPages}
               </span>
               <div className="flex gap-1">

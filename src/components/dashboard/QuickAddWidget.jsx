@@ -48,13 +48,13 @@ export function QuickAddWidget({ onAdd }) {
           value={title}
           onChange={(e) => setTitle(e.target.value)}
           placeholder="Problem title (e.g. Valid Anagram)..."
-          className="flex-1 bg-base-elevated text-content-primary text-xs rounded-card border border-border-subtle px-3 py-2 focus:outline-none focus:border-primary placeholder:text-content-muted"
+          className="flex-1 bg-base-elevated text-content-primary text-xs rounded-card border border-border-subtle px-3 py-2 focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent placeholder:text-content-muted"
         />
 
         <select
           value={difficulty}
           onChange={(e) => setDifficulty(e.target.value)}
-          className="bg-base-elevated text-content-primary text-xs rounded-card border border-border-subtle px-2.5 py-2 focus:outline-none focus:border-primary"
+          className="bg-base-elevated text-content-primary text-xs rounded-card border border-border-subtle px-2.5 py-2 focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent"
         >
           {DIFFICULTIES.map((d) => (
             <option key={d} value={d}>
@@ -66,7 +66,7 @@ export function QuickAddWidget({ onAdd }) {
         <select
           value={topic}
           onChange={(e) => setTopic(e.target.value)}
-          className="bg-base-elevated text-content-primary text-xs rounded-card border border-border-subtle px-2.5 py-2 focus:outline-none focus:border-primary"
+          className="bg-base-elevated text-content-primary text-xs rounded-card border border-border-subtle px-2.5 py-2 focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent"
         >
           {TOPICS.slice(0, 10).map((t) => (
             <option key={t} value={t}>
@@ -78,7 +78,7 @@ export function QuickAddWidget({ onAdd }) {
         <select
           value={platform}
           onChange={(e) => setPlatform(e.target.value)}
-          className="bg-base-elevated text-content-primary text-xs rounded-card border border-border-subtle px-2.5 py-2 focus:outline-none focus:border-primary"
+          className="bg-base-elevated text-content-primary text-xs rounded-card border border-border-subtle px-2.5 py-2 focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent"
         >
           {PLATFORMS.map((p) => (
             <option key={p} value={p}>
@@ -93,7 +93,7 @@ export function QuickAddWidget({ onAdd }) {
           size="sm"
           isLoading={isSubmitting}
           disabled={!title.trim()}
-          leftIcon={justAdded ? <Check className="w-3.5 h-3.5 text-emerald-300" /> : <Plus className="w-3.5 h-3.5" />}
+          leftIcon={justAdded ? <Check className="w-3.5 h-3.5 text-white" /> : <Plus className="w-3.5 h-3.5" />}
         >
           {justAdded ? 'Logged!' : 'Log'}
         </Button>

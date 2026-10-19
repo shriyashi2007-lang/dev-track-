@@ -53,7 +53,7 @@ export default function Dashboard() {
             {greeting}, {settings.displayName || 'Developer'}
           </h2>
           <div className="flex items-center gap-1.5 text-xs text-content-secondary mt-1">
-            <Sparkles className="w-3.5 h-3.5 text-amber-400 shrink-0" />
+            <Sparkles className="w-3.5 h-3.5 text-accent shrink-0" />
             <span>{stats.insight}</span>
           </div>
         </div>
@@ -64,7 +64,7 @@ export default function Dashboard() {
             variant="secondary"
             size="sm"
             onClick={loadSampleData}
-            leftIcon={<Database className="w-3.5 h-3.5 text-amber-400" />}
+            leftIcon={<Database className="w-3.5 h-3.5 text-accent" />}
           >
             Load Sample Prep Data
           </Button>

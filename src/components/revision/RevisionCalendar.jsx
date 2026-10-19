@@ -43,7 +43,7 @@ export function RevisionCalendar({ problems = [], selectedDate, onSelectDate }) 
           <button
             type="button"
             onClick={() => onSelectDate(null)}
-            className="flex items-center gap-1 text-[11px] text-rose-400 hover:text-rose-300 font-semibold"
+            className="flex items-center gap-1 text-[11px] text-primary hover:text-primary-hover font-semibold cursor-pointer"
           >
             <X className="w-3 h-3" />
             Clear Date Filter
@@ -62,24 +62,24 @@ export function RevisionCalendar({ problems = [], selectedDate, onSelectDate }) 
               className={clsx(
                 'flex flex-col items-center justify-between p-2 rounded-card border min-w-[54px] h-[68px] transition-all cursor-pointer',
                 isSelected
-                  ? 'bg-primary text-white border-primary shadow-sm ring-1 ring-primary'
+                  ? 'bg-primary text-content-inverse border-primary shadow-sm ring-1 ring-primary'
                   : d.isToday
                   ? 'bg-base-elevated border-primary/40 text-content-primary'
                   : 'bg-base-surface border-border-subtle hover:border-border-strong text-content-secondary'
               )}
             >
-              <span className="text-[10px] uppercase font-mono font-semibold">
+              <span className="text-[10px] uppercase tabular-nums font-semibold">
                 {d.dayName}
               </span>
-              <span className="text-sm font-bold font-mono">
+              <span className="text-sm font-bold tabular-nums">
                 {d.dayNumber}
               </span>
               <span
                 className={clsx(
-                  'w-4 h-4 rounded-full text-[10px] font-mono flex items-center justify-center font-bold',
+                  'w-4 h-4 rounded-full text-[10px] tabular-nums flex items-center justify-center font-bold',
                   d.count > 0
                     ? isSelected
-                      ? 'bg-white text-primary'
+                      ? 'bg-content-inverse text-primary'
                       : 'bg-primary/20 text-primary'
                     : 'opacity-0'
                 )}

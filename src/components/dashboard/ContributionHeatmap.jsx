@@ -5,6 +5,7 @@ import { Drawer } from '../ui/Drawer'
 import { Badge } from '../ui/Badge'
 import { Calendar, ExternalLink } from 'lucide-react'
 import { getLocalDateString, subDays, formatDate, toDate } from '../../utils/dates'
+import { getHeatmapCellClass } from '../../styles/chartTheme'
 
 export function ContributionHeatmap({ problems = [] }) {
   const [rangeMode, setRangeMode] = useState('year') // 'year' (52 weeks) | 'sixMonths' (26 weeks)
@@ -79,14 +80,6 @@ export function ContributionHeatmap({ problems = [] }) {
     return weeksArray
   }, [numWeeks, problemsByDate])
 
-  const getColorClass = (count) => {
-    if (count === 0) return 'bg-base-elevated/70 border-border-subtle/50 hover:border-border-strong'
-    if (count === 1) return 'bg-emerald-500/30 border-emerald-500/40 hover:bg-emerald-500/40'
-    if (count === 2) return 'bg-emerald-500/55 border-emerald-500/60 hover:bg-emerald-500/65'
-    if (count === 3) return 'bg-emerald-500/80 border-emerald-500/90 hover:bg-emerald-500/90'
-    return 'bg-emerald-400 border-emerald-300 shadow-sm hover:brightness-110'
-  }
-
   return (
     <Card className="p-5">
       {/* Header with Title and Range Toggle */}
@@ -106,7 +99,7 @@ export function ContributionHeatmap({ problems = [] }) {
             type="button"
             onClick={() => setRangeMode('year')}
             className={clsx(
-              'px-2.5 py-1 text-xs font-medium rounded-subtle transition-colors cursor-pointer',
+              'px-2.5 py-1 text-xs font-medium rounded-subtle transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-accent',
               rangeMode === 'year'
                 ? 'bg-base-surface text-content-primary font-semibold shadow-sm'
                 : 'text-content-secondary hover:text-content-primary'
@@ -118,7 +111,7 @@ export function ContributionHeatmap({ problems = [] }) {
             type="button"
             onClick={() => setRangeMode('sixMonths')}
             className={clsx(
-              'px-2.5 py-1 text-xs font-medium rounded-subtle transition-colors cursor-pointer',
+              'px-2.5 py-1 text-xs font-medium rounded-subtle transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-accent',
               rangeMode === 'sixMonths'
                 ? 'bg-base-surface text-content-primary font-semibold shadow-sm'
                 : 'text-content-secondary hover:text-content-primary'
@@ -135,7 +128,7 @@ export function ContributionHeatmap({ problems = [] }) {
           {/* Days & Weeks container */}
           <div className="flex gap-1">
             {/* Weekday labels */}
-            <div className="grid grid-rows-7 gap-1 pr-2 text-[9px] font-mono text-content-muted text-right select-none pt-0.5">
+            <div className="grid grid-rows-7 gap-1 pr-2 text-[9px] text-content-muted text-right select-none pt-0.5">
               <span>Sun</span>
               <span>Mon</span>
               <span>Tue</span>
@@ -163,8 +156,8 @@ export function ContributionHeatmap({ problems = [] }) {
                         onMouseLeave={() => setHoveredCell(null)}
                         aria-label={`${day.count} problems solved on ${formatDate(day.dateStr, 'MMM d, yyyy')}`}
                         className={clsx(
-                          'w-3 h-3 sm:w-3.5 sm:h-3.5 rounded-[3px] border transition-all cursor-pointer focus-visible:ring-1 focus-visible:ring-primary',
-                          getColorClass(day.count)
+                          'w-3 h-3 sm:w-3.5 sm:h-3.5 rounded-[3px] border transition-all cursor-pointer focus-visible:ring-1 focus-visible:ring-accent',
+                          getHeatmapCellClass(day.count)
                         )}
                       />
                     )
@@ -187,16 +180,16 @@ export function ContributionHeatmap({ problems = [] }) {
         )}
       </div>
 
-      {/* Legend */}
+      {/* Legend using theme scale */}
       <div className="mt-4 pt-3 border-t border-border-subtle flex flex-wrap items-center justify-between gap-3 text-[11px] text-content-muted">
         <span>Click any cell to inspect logged submissions</span>
         <div className="flex items-center gap-1.5">
           <span>Less</span>
-          <span className="w-3 h-3 rounded-[2px] bg-base-elevated/70 border border-border-subtle" />
-          <span className="w-3 h-3 rounded-[2px] bg-emerald-500/30 border border-emerald-500/40" />
-          <span className="w-3 h-3 rounded-[2px] bg-emerald-500/55 border border-emerald-500/60" />
-          <span className="w-3 h-3 rounded-[2px] bg-emerald-500/80 border border-emerald-500/90" />
-          <span className="w-3 h-3 rounded-[2px] bg-emerald-400 border border-emerald-300" />
+          <span className={clsx('w-3 h-3 rounded-[2px]', getHeatmapCellClass(0))} />
+          <span className={clsx('w-3 h-3 rounded-[2px]', getHeatmapCellClass(1))} />
+          <span className={clsx('w-3 h-3 rounded-[2px]', getHeatmapCellClass(2))} />
+          <span className={clsx('w-3 h-3 rounded-[2px]', getHeatmapCellClass(3))} />
+          <span className={clsx('w-3 h-3 rounded-[2px]', getHeatmapCellClass(4))} />
           <span>More</span>
         </div>
       </div>
@@ -232,7 +225,7 @@ export function ContributionHeatmap({ problems = [] }) {
                 </div>
                 <div className="flex items-center gap-2 text-[11px] text-content-muted">
                   <span>{p.platform}</span>
-                  {p.timeTakenMinutes && <span>• {p.timeTakenMinutes} mins</span>}
+                  {p.timeTakenMinutes && <span className="tabular-nums">• {p.timeTakenMinutes} mins</span>}
                 </div>
                 {p.notes && (
                   <p className="text-[11px] text-content-secondary bg-base-surface p-2 rounded border border-border-subtle line-clamp-3">
@@ -244,7 +237,7 @@ export function ContributionHeatmap({ problems = [] }) {
                     href={p.url}
                     target="_blank"
                     rel="noreferrer"
-                    className="inline-flex items-center gap-1 text-[11px] text-primary hover:underline"
+                    className="inline-flex items-center gap-1 text-[11px] text-accent hover:underline focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-accent"
                   >
                     <span>View on {p.platform}</span>
                     <ExternalLink className="w-3 h-3" />

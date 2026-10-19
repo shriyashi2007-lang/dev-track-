@@ -147,7 +147,7 @@ export function ProblemDrawer({
     >
       <form onSubmit={handleSubmit} className="space-y-5 pb-6">
         {errors.form && (
-          <div className="p-3 text-xs bg-rose-500/15 border border-rose-500/30 text-rose-400 rounded-card">
+          <div className="p-3 text-xs bg-difficulty-hard-bg border border-difficulty-hard-border text-difficulty-hard-text rounded-card">
             {errors.form}
           </div>
         )}
@@ -205,22 +205,22 @@ export function ProblemDrawer({
                   type="button"
                   onClick={() => setDifficulty(diff)}
                   className={clsx(
-                    'py-2 px-3 rounded-card text-xs font-semibold border transition-all flex items-center justify-center gap-1.5 cursor-pointer',
+                    'py-2 px-3 rounded-card text-xs font-semibold border transition-all flex items-center justify-center gap-1.5 cursor-pointer focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-accent',
                     isSelected
                       ? diff === 'Easy'
-                        ? 'bg-emerald-500/20 text-emerald-400 border-emerald-500/50 shadow-sm'
+                        ? 'bg-difficulty-easy-bg text-difficulty-easy-text border-difficulty-easy-border shadow-sm'
                         : diff === 'Medium'
-                        ? 'bg-amber-500/20 text-amber-400 border-amber-500/50 shadow-sm'
-                        : 'bg-rose-500/20 text-rose-400 border-rose-500/50 shadow-sm'
+                        ? 'bg-difficulty-medium-bg text-difficulty-medium-text border-difficulty-medium-border shadow-sm'
+                        : 'bg-difficulty-hard-bg text-difficulty-hard-text border-difficulty-hard-border shadow-sm'
                       : 'bg-base-elevated text-content-muted border-border-subtle hover:border-border-strong'
                   )}
                 >
                   <span
                     className={clsx(
                       'w-2 h-2 rounded-full',
-                      diff === 'Easy' && 'bg-emerald-400',
-                      diff === 'Medium' && 'bg-amber-400',
-                      diff === 'Hard' && 'bg-rose-400'
+                      diff === 'Easy' && 'bg-difficulty-easy',
+                      diff === 'Medium' && 'bg-difficulty-medium',
+                      diff === 'Hard' && 'bg-difficulty-hard'
                     )}
                   />
                   <span>{diff}</span>
@@ -244,9 +244,9 @@ export function ProblemDrawer({
                   type="button"
                   onClick={() => handleStatusChange(st)}
                   className={clsx(
-                    'py-2 px-3 rounded-card text-xs font-semibold border transition-all flex items-center justify-center cursor-pointer',
+                    'py-2 px-3 rounded-card text-xs font-semibold border transition-all flex items-center justify-center cursor-pointer focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-accent',
                     isSelected
-                      ? 'bg-primary/20 text-primary border-primary/50 shadow-sm'
+                      ? 'bg-primary-light text-primary border-primary shadow-sm'
                       : 'bg-base-elevated text-content-muted border-border-subtle hover:border-border-strong'
                   )}
                 >
@@ -294,14 +294,14 @@ export function ProblemDrawer({
             {topics.map((t) => (
               <span
                 key={t}
-                className="inline-flex items-center gap-1 px-2.5 py-1 text-xs font-medium bg-primary/15 text-primary border border-primary/30 rounded-full"
+                className="inline-flex items-center gap-1 px-2.5 py-1 text-xs font-medium bg-primary-light text-primary border border-primary/30 rounded-full"
               >
                 <span>{t}</span>
                 <button
                   type="button"
                   onClick={() => handleRemoveTopic(t)}
                   aria-label={`Remove topic ${t}`}
-                  className="hover:text-rose-400 p-0.5 rounded-full cursor-pointer"
+                  className="hover:text-difficulty-hard p-0.5 rounded-full cursor-pointer focus-visible:outline-none"
                 >
                   <X className="w-3 h-3" />
                 </button>
@@ -316,7 +316,7 @@ export function ProblemDrawer({
                 key={t}
                 type="button"
                 onClick={() => setTopics([...topics, t])}
-                className="text-[11px] px-2 py-0.5 rounded bg-base-surface text-content-secondary hover:text-content-primary hover:border-border-strong border border-border-subtle transition-colors cursor-pointer"
+                className="text-[11px] px-2 py-0.5 rounded bg-base-surface text-content-secondary hover:text-content-primary hover:border-border-strong border border-border-subtle transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-accent"
               >
                 + {t}
               </button>
@@ -336,13 +336,13 @@ export function ProblemDrawer({
                   handleAddTopic()
                 }
               }}
-              className="flex-1 bg-base-elevated text-content-primary text-xs rounded-subtle border border-border-subtle px-2.5 py-1.5 focus:outline-none focus:border-primary"
+              className="flex-1 bg-base-elevated text-content-primary text-xs rounded-subtle border border-border-subtle px-2.5 py-1.5 focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent"
             />
             <Button variant="secondary" size="xs" onClick={handleAddTopic}>
               Add Tag
             </Button>
           </div>
-          {errors.topics && <p className="mt-1 text-xs text-rose-400">{errors.topics}</p>}
+          {errors.topics && <p className="mt-1 text-xs text-difficulty-hard">{errors.topics}</p>}
         </div>
 
         {/* Notes (Markdown-lite textarea) */}
@@ -359,7 +359,7 @@ export function ProblemDrawer({
         <div className="p-4 bg-base-elevated/60 rounded-card border border-border-subtle space-y-3">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <BookOpen className="w-4 h-4 text-primary" />
+              <BookOpen className="w-4 h-4 text-accent" />
               <div>
                 <p className="text-xs font-semibold text-content-primary">Schedule for Spaced Revision</p>
                 <p className="text-[11px] text-content-muted">Track this problem in your revision queue</p>
@@ -372,7 +372,7 @@ export function ProblemDrawer({
                 onChange={(e) => setMarkRevision(e.target.checked)}
                 className="sr-only peer"
               />
-              <div className="w-9 h-5 bg-base-elevated peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-primary border border-border-strong"></div>
+              <div className="w-9 h-5 bg-base-elevated peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-accent border border-border-strong"></div>
             </label>
           </div>
 

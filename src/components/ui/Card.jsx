@@ -12,10 +12,13 @@ export function Card({
   return (
     <div
       onClick={onClick}
+      tabIndex={onClick ? 0 : undefined}
+      onKeyDown={onClick ? (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onClick(e); } } : undefined}
       className={clsx(
         'bg-base-surface border border-border-subtle rounded-card transition-all duration-200',
         hover && 'hover:border-border-strong hover:shadow-card-hover hover:-translate-y-0.5 cursor-pointer',
         glow && 'hover:shadow-glow hover:border-primary/40',
+        onClick && 'focus-visible:ring-2 focus-visible:ring-accent focus-visible:outline-none cursor-pointer',
         className
       )}
       {...props}

@@ -15,6 +15,7 @@ import {
 } from 'recharts'
 import { Card } from '../ui/Card'
 import { Layers } from 'lucide-react'
+import { rechartsTheme } from '../../styles/chartTheme'
 import clsx from 'clsx'
 
 export function TopicChart({ stats }) {
@@ -38,7 +39,7 @@ export function TopicChart({ stats }) {
             type="button"
             onClick={() => setChartType('bar')}
             className={clsx(
-              'px-2 py-0.5 text-xs font-medium rounded-subtle transition-colors cursor-pointer',
+              'px-2 py-0.5 text-xs font-medium rounded-subtle transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-accent',
               chartType === 'bar'
                 ? 'bg-base-surface text-content-primary font-semibold shadow-sm'
                 : 'text-content-secondary hover:text-content-primary'
@@ -50,7 +51,7 @@ export function TopicChart({ stats }) {
             type="button"
             onClick={() => setChartType('radar')}
             className={clsx(
-              'px-2 py-0.5 text-xs font-medium rounded-subtle transition-colors cursor-pointer',
+              'px-2 py-0.5 text-xs font-medium rounded-subtle transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-accent',
               chartType === 'radar'
                 ? 'bg-base-surface text-content-primary font-semibold shadow-sm'
                 : 'text-content-secondary hover:text-content-primary'
@@ -73,24 +74,19 @@ export function TopicChart({ stats }) {
               layout="vertical"
               margin={{ top: 5, right: 20, left: 20, bottom: 5 }}
             >
-              <CartesianGrid strokeDasharray="3 3" stroke="var(--border-subtle)" horizontal={false} />
-              <XAxis type="number" stroke="var(--text-muted)" fontSize={11} allowDecimals={false} />
+              <CartesianGrid {...rechartsTheme.cartesianGrid} horizontal={false} />
+              <XAxis type="number" {...rechartsTheme.xAxis} allowDecimals={false} />
               <YAxis
                 type="category"
                 dataKey="name"
-                stroke="var(--text-muted)"
+                {...rechartsTheme.yAxis}
                 fontSize={10}
                 width={85}
-                tickLine={false}
               />
               <Tooltip
-                contentStyle={{
-                  backgroundColor: 'var(--bg-surface)',
-                  borderColor: 'var(--border-strong)',
-                  borderRadius: '8px',
-                  fontSize: '12px',
-                  color: 'var(--text-primary)',
-                }}
+                contentStyle={rechartsTheme.tooltip.contentStyle}
+                itemStyle={rechartsTheme.tooltip.itemStyle}
+                labelStyle={rechartsTheme.tooltip.labelStyle}
               />
               <Bar dataKey="count" fill="var(--accent-primary)" radius={[0, 4, 4, 0]} />
             </BarChart>
@@ -111,13 +107,9 @@ export function TopicChart({ stats }) {
                 fillOpacity={0.4}
               />
               <Tooltip
-                contentStyle={{
-                  backgroundColor: 'var(--bg-surface)',
-                  borderColor: 'var(--border-strong)',
-                  borderRadius: '8px',
-                  fontSize: '12px',
-                  color: 'var(--text-primary)',
-                }}
+                contentStyle={rechartsTheme.tooltip.contentStyle}
+                itemStyle={rechartsTheme.tooltip.itemStyle}
+                labelStyle={rechartsTheme.tooltip.labelStyle}
               />
             </RadarChart>
           </ResponsiveContainer>

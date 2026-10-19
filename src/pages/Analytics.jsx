@@ -123,7 +123,7 @@ export default function Analytics() {
                 <button
                   type="button"
                   onClick={() => setSelectedDifficulty(null)}
-                  className="text-xs text-rose-400 hover:text-rose-300 flex items-center gap-1 font-semibold cursor-pointer"
+                  className="text-xs text-primary hover:text-primary-hover flex items-center gap-1 font-semibold cursor-pointer"
                 >
                   <X className="w-3.5 h-3.5" />
                   Dismiss Slice Filter
@@ -137,13 +137,13 @@ export default function Analytics() {
                       <span className="font-medium text-content-primary truncate block">
                         {p.title}
                       </span>
-                      <span className="text-[10px] text-content-muted font-mono">
+                      <span className="text-[10px] text-content-muted">
                         {p.platform} • {(p.topics || []).slice(0, 2).join(', ')}
                       </span>
                     </div>
 
                     <div className="flex items-center gap-2 shrink-0">
-                      <span className="text-[11px] font-mono text-content-muted">
+                      <span className="text-[11px] tabular-nums text-content-muted">
                         {p.solvedDate ? formatDate(p.solvedDate, 'MMM d') : ''}
                       </span>
                       {p.url && (

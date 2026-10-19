@@ -32,13 +32,13 @@ export function ProblemsFilterBar({
             value={search}
             onChange={(e) => onSearchChange(e.target.value)}
             placeholder="Search problems, topics, notes (Press '/' to focus)..."
-            className="w-full bg-base-surface text-content-primary text-xs sm:text-sm rounded-card border border-border-subtle pl-9 pr-8 py-2 placeholder:text-content-muted focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-colors"
+            className="w-full bg-base-surface text-content-primary text-xs sm:text-sm rounded-card border border-border-subtle pl-9 pr-8 py-2 placeholder:text-content-muted focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent transition-colors"
           />
           {search && (
             <button
               type="button"
               onClick={() => onSearchChange('')}
-              className="absolute right-2.5 top-1/2 -translate-y-1/2 p-1 text-content-muted hover:text-content-primary rounded"
+              className="absolute right-2.5 top-1/2 -translate-y-1/2 p-1 text-content-muted hover:text-content-primary rounded focus-visible:outline-none"
               aria-label="Clear search"
             >
               <X className="w-3.5 h-3.5" />
@@ -56,7 +56,7 @@ export function ProblemsFilterBar({
               title="Table view"
               aria-label="Table view"
               className={clsx(
-                'p-1.5 rounded-subtle transition-colors cursor-pointer',
+                'p-1.5 rounded-subtle transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-accent',
                 viewMode === 'table'
                   ? 'bg-primary text-white shadow-sm'
                   : 'text-content-secondary hover:text-content-primary'
@@ -70,7 +70,7 @@ export function ProblemsFilterBar({
               title="Kanban board view"
               aria-label="Kanban board view"
               className={clsx(
-                'p-1.5 rounded-subtle transition-colors cursor-pointer',
+                'p-1.5 rounded-subtle transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-accent',
                 viewMode === 'board'
                   ? 'bg-primary text-white shadow-sm'
                   : 'text-content-secondary hover:text-content-primary'
@@ -93,7 +93,7 @@ export function ProblemsFilterBar({
           <Button
             variant="primary"
             size="sm"
-            leftIcon={<Plus className="w-4 h-4" />}
+            leftIcon={<Plus className="w-3.5 h-3.5" />}
             onClick={onOpenAdd}
           >
             Add Problem
@@ -114,13 +114,13 @@ export function ProblemsFilterBar({
                 type="button"
                 onClick={() => onDifficultyToggle(diff)}
                 className={clsx(
-                  'px-2 py-0.5 rounded text-[11px] font-medium transition-colors cursor-pointer',
+                  'px-2 py-0.5 rounded text-[11px] font-medium transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-accent',
                   isSelected
                     ? diff === 'Easy'
-                      ? 'bg-emerald-500/20 text-emerald-400 font-semibold'
+                      ? 'bg-difficulty-easy-bg text-difficulty-easy-text font-semibold'
                       : diff === 'Medium'
-                      ? 'bg-amber-500/20 text-amber-400 font-semibold'
-                      : 'bg-rose-500/20 text-rose-400 font-semibold'
+                      ? 'bg-difficulty-medium-bg text-difficulty-medium-text font-semibold'
+                      : 'bg-difficulty-hard-bg text-difficulty-hard-text font-semibold'
                     : 'text-content-secondary hover:text-content-primary'
                 )}
               >
@@ -141,9 +141,9 @@ export function ProblemsFilterBar({
                 type="button"
                 onClick={() => onStatusChange(st)}
                 className={clsx(
-                  'px-2 py-0.5 rounded text-[11px] font-medium transition-colors capitalize cursor-pointer',
+                  'px-2 py-0.5 rounded text-[11px] font-medium transition-colors capitalize cursor-pointer focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-accent',
                   isSelected
-                    ? 'bg-primary/20 text-primary font-semibold'
+                    ? 'bg-primary-light text-primary font-semibold'
                     : 'text-content-secondary hover:text-content-primary'
                 )}
               >
@@ -158,9 +158,9 @@ export function ProblemsFilterBar({
           type="button"
           onClick={onRevisionToggle}
           className={clsx(
-            'px-2.5 py-1.5 rounded-card border text-[11px] font-medium transition-colors cursor-pointer',
+            'px-2.5 py-1.5 rounded-card border text-[11px] font-medium transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-accent',
             revisionOnly
-              ? 'bg-primary/20 text-primary border-primary/40 font-semibold'
+              ? 'bg-accent-light text-accent border-accent/40 font-semibold'
               : 'bg-base-surface text-content-secondary border-border-subtle hover:border-border-strong'
           )}
         >
@@ -172,14 +172,14 @@ export function ProblemsFilterBar({
           <button
             type="button"
             onClick={onClearFilters}
-            className="flex items-center gap-1 px-2.5 py-1 text-[11px] font-semibold text-rose-400 hover:text-rose-300 bg-rose-500/10 rounded-card border border-rose-500/20 transition-colors"
+            className="flex items-center gap-1 px-2.5 py-1 text-[11px] font-semibold text-difficulty-hard-text hover:brightness-110 bg-difficulty-hard-bg rounded-card border border-difficulty-hard-border transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-accent"
           >
             <X className="w-3 h-3" />
             Clear filters
           </button>
         )}
 
-        <span className="ml-auto text-[11px] font-mono text-content-muted">
+        <span className="ml-auto text-[11px] tabular-nums text-content-muted">
           {totalFilteredCount} problem{totalFilteredCount === 1 ? '' : 's'}
         </span>
       </div>

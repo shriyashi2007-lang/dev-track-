@@ -29,9 +29,9 @@ export function RevisionCard({
     : 'No date set'
 
   const priorityColors = {
-    High: 'text-rose-400 bg-rose-500/10 border-rose-500/30',
-    Medium: 'text-amber-400 bg-amber-500/10 border-amber-500/30',
-    Low: 'text-slate-400 bg-slate-500/10 border-slate-500/30',
+    High: 'text-difficulty-hard-text bg-difficulty-hard-bg border-difficulty-hard-border',
+    Medium: 'text-difficulty-medium-text bg-difficulty-medium-bg border-difficulty-medium-border',
+    Low: 'text-content-secondary bg-base-elevated border-border-subtle',
   }
 
   const handleSelectConfidence = (confidence) => {
@@ -79,7 +79,7 @@ export function RevisionCard({
             ))}
           </select>
 
-          <span className="text-[11px] font-mono text-content-muted bg-base-elevated px-2 py-0.5 rounded border border-border-subtle">
+          <span className="text-[11px] tabular-nums text-content-muted bg-base-elevated px-2 py-0.5 rounded border border-border-subtle">
             Rev #{revision.revisionCount || 0}
           </span>
         </div>
@@ -95,7 +95,7 @@ export function RevisionCard({
           ))}
         </div>
 
-        <div className="flex items-center gap-1.5 text-[11px] text-content-muted font-mono">
+        <div className="flex items-center gap-1.5 text-[11px] text-content-muted tabular-nums">
           <Calendar className="w-3.5 h-3.5 text-primary" />
           <span>Due: {nextDateFormatted}</span>
         </div>
@@ -129,7 +129,7 @@ export function RevisionCard({
               variant="outline"
               size="xs"
               onClick={() => handleSelectConfidence('Hard')}
-              className="border-rose-500/40 text-rose-400 hover:border-rose-500"
+              className="border-difficulty-hard-border text-difficulty-hard-text hover:bg-difficulty-hard-bg"
             >
               Hard (1d)
             </Button>
@@ -137,7 +137,7 @@ export function RevisionCard({
               variant="outline"
               size="xs"
               onClick={() => handleSelectConfidence('Okay')}
-              className="border-amber-500/40 text-amber-400 hover:border-amber-500"
+              className="border-difficulty-medium-border text-difficulty-medium-text hover:bg-difficulty-medium-bg"
             >
               Okay
             </Button>
@@ -145,7 +145,7 @@ export function RevisionCard({
               variant="outline"
               size="xs"
               onClick={() => handleSelectConfidence('Easy')}
-              className="border-emerald-500/40 text-emerald-400 hover:border-emerald-500"
+              className="border-difficulty-easy-border text-difficulty-easy-text hover:bg-difficulty-easy-bg"
             >
               Easy (+interval)
             </Button>
@@ -218,7 +218,7 @@ export function RevisionCard({
         )}
 
         {revision.lastRevisedDate && (
-          <span className="text-[10px] text-content-muted font-mono">
+          <span className="text-[10px] text-content-muted tabular-nums">
             Last revised: {formatDate(revision.lastRevisedDate, 'MMM d')}
           </span>
         )}

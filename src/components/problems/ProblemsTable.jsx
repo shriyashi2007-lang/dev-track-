@@ -43,7 +43,7 @@ export function ProblemsTable({
     const parts = text.split(new RegExp(`(${query})`, 'gi'))
     return parts.map((part, i) =>
       part.toLowerCase() === query.toLowerCase() ? (
-        <mark key={i} className="bg-primary/30 text-content-primary rounded px-0.5">
+        <mark key={i} className="bg-accent-light text-accent rounded px-0.5 font-medium">
           {part}
         </mark>
       ) : (
@@ -65,7 +65,7 @@ export function ProblemsTable({
                   checked={isAllSelected}
                   onChange={onSelectAll}
                   aria-label="Select all problems on page"
-                  className="rounded border-border-strong text-primary focus:ring-primary h-4 w-4"
+                  className="rounded border-border-strong text-primary focus:ring-accent h-4 w-4"
                 />
               </th>
 
@@ -74,7 +74,7 @@ export function ProblemsTable({
                 <button
                   type="button"
                   onClick={() => handleHeaderSort('title')}
-                  className="flex items-center gap-1 hover:text-content-primary transition-colors cursor-pointer"
+                  className="flex items-center gap-1 hover:text-content-primary transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-accent"
                 >
                   <span>Problem</span>
                   <ArrowUpDown className="w-3.5 h-3.5 opacity-60" />
@@ -86,7 +86,7 @@ export function ProblemsTable({
                 <button
                   type="button"
                   onClick={() => handleHeaderSort('difficulty')}
-                  className="flex items-center gap-1 hover:text-content-primary transition-colors cursor-pointer"
+                  className="flex items-center gap-1 hover:text-content-primary transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-accent"
                 >
                   <span>Difficulty</span>
                   <ArrowUpDown className="w-3.5 h-3.5 opacity-60" />
@@ -104,7 +104,7 @@ export function ProblemsTable({
                 <button
                   type="button"
                   onClick={() => handleHeaderSort('newest')}
-                  className="flex items-center gap-1 hover:text-content-primary transition-colors cursor-pointer"
+                  className="flex items-center gap-1 hover:text-content-primary transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-accent"
                 >
                   <span>Date</span>
                   <ArrowUpDown className="w-3.5 h-3.5 opacity-60" />
@@ -139,7 +139,7 @@ export function ProblemsTable({
                         checked={isSelected}
                         onChange={() => onToggleSelect(problem.id)}
                         aria-label={`Select ${problem.title}`}
-                        className="rounded border-border-strong text-primary focus:ring-primary h-4 w-4"
+                        className="rounded border-border-strong text-primary focus:ring-accent h-4 w-4"
                       />
                     </td>
 
@@ -149,7 +149,7 @@ export function ProblemsTable({
                         <button
                           type="button"
                           onClick={() => setExpandedRowId(isExpanded ? null : problem.id)}
-                          className="text-content-muted hover:text-content-primary p-0.5 rounded"
+                          className="text-content-muted hover:text-content-primary p-0.5 rounded focus-visible:outline-none"
                           title="Expand notes"
                         >
                           {isExpanded ? (
@@ -170,7 +170,7 @@ export function ProblemsTable({
                                 target="_blank"
                                 rel="noreferrer"
                                 title="Open in platform"
-                                className="text-content-muted hover:text-primary transition-colors"
+                                className="text-content-muted hover:text-accent transition-colors"
                               >
                                 <ExternalLink className="w-3 h-3" />
                               </a>
@@ -220,7 +220,7 @@ export function ProblemsTable({
                         type="button"
                         onClick={() => onStatusCycle(problem)}
                         title="Click to cycle status: Todo → Attempted → Solved"
-                        className="cursor-pointer"
+                        className="cursor-pointer focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-accent rounded"
                       >
                         <Badge variant={problem.status} size="sm" dot>
                           {problem.status}
@@ -229,12 +229,12 @@ export function ProblemsTable({
                     </td>
 
                     {/* Solved Date */}
-                    <td className="py-3 px-4 hidden lg:table-cell text-content-secondary font-mono text-[11px]">
+                    <td className="py-3 px-4 hidden lg:table-cell text-content-secondary tabular-nums text-[11px]">
                       {problem.solvedDate ? formatDate(problem.solvedDate, 'MMM d, yyyy') : '—'}
                     </td>
 
                     {/* Time */}
-                    <td className="py-3 px-4 hidden xl:table-cell text-content-secondary font-mono text-[11px]">
+                    <td className="py-3 px-4 hidden xl:table-cell text-content-secondary tabular-nums text-[11px]">
                       {problem.timeTakenMinutes ? `${problem.timeTakenMinutes}m` : '—'}
                     </td>
 
@@ -247,9 +247,9 @@ export function ProblemsTable({
                           onClick={() => onToggleRevision(problem)}
                           title={problem.revision?.marked ? 'Marked for revision' : 'Mark for revision'}
                           className={clsx(
-                            'p-1.5 rounded transition-colors',
+                            'p-1.5 rounded transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-accent',
                             problem.revision?.marked
-                              ? 'text-primary bg-primary/10'
+                              ? 'text-accent bg-accent-light'
                               : 'text-content-muted hover:text-content-primary hover:bg-base-elevated'
                           )}
                         >
@@ -261,7 +261,7 @@ export function ProblemsTable({
                           type="button"
                           onClick={() => onEdit(problem)}
                           title="Edit problem"
-                          className="p-1.5 text-content-muted hover:text-content-primary hover:bg-base-elevated rounded transition-colors"
+                          className="p-1.5 text-content-muted hover:text-content-primary hover:bg-base-elevated rounded transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-accent"
                         >
                           <Edit2 className="w-3.5 h-3.5" />
                         </button>
@@ -271,7 +271,7 @@ export function ProblemsTable({
                           type="button"
                           onClick={() => onDelete(problem.id)}
                           title="Delete problem"
-                          className="p-1.5 text-content-muted hover:text-rose-400 hover:bg-rose-500/10 rounded transition-colors"
+                          className="p-1.5 text-content-muted hover:text-difficulty-hard hover:bg-difficulty-hard-bg rounded transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-accent"
                         >
                           <Trash2 className="w-3.5 h-3.5" />
                         </button>
@@ -286,7 +286,7 @@ export function ProblemsTable({
                         <div className="p-3 bg-base-surface border border-border-subtle rounded-card space-y-2">
                           <div className="flex items-center justify-between">
                             <span className="font-semibold text-content-primary">Solution Notes &amp; Intuition:</span>
-                            <span className="text-[11px] text-content-muted font-mono">Platform: {problem.platform}</span>
+                            <span className="text-[11px] text-content-muted">Platform: {problem.platform}</span>
                           </div>
                           <p className="text-content-secondary whitespace-pre-wrap leading-relaxed">
                             {problem.notes || 'No notes documented for this problem.'}

@@ -81,7 +81,7 @@ export default function RevisionSession() {
   if (totalDue === 0 && !sessionFinished) {
     return (
       <div className="min-h-screen bg-base text-content-primary flex flex-col items-center justify-center p-6 text-center">
-        <div className="w-16 h-16 rounded-full bg-emerald-500/15 border border-emerald-500/30 flex items-center justify-center text-emerald-400 mb-4">
+        <div className="w-16 h-16 rounded-full bg-difficulty-easy-bg border border-difficulty-easy-border flex items-center justify-center text-difficulty-easy-text mb-4">
           <CheckCircle2 className="w-8 h-8" />
         </div>
         <h2 className="text-xl font-bold mb-2">No Revisions Due Today</h2>
@@ -105,7 +105,7 @@ export default function RevisionSession() {
           <div className="w-16 h-16 rounded-full bg-primary/15 border border-primary/30 flex items-center justify-center text-primary mx-auto mb-4">
             <Trophy className="w-8 h-8" />
           </div>
-          <span className="text-xs font-mono uppercase font-bold text-primary tracking-wider block mb-1">
+          <span className="text-xs tabular-nums uppercase font-bold text-primary tracking-wider block mb-1">
             Session Completed!
           </span>
           <h2 className="text-2xl font-bold text-content-primary mb-2">
@@ -129,12 +129,12 @@ export default function RevisionSession() {
                   <span className="font-medium text-content-primary">{item.title}</span>
                 </div>
                 <span
-                  className={`font-semibold font-mono text-[11px] ${
+                  className={`font-semibold tabular-nums text-[11px] ${
                     item.confidence === 'Easy'
-                      ? 'text-emerald-400'
+                      ? 'text-difficulty-easy-text'
                       : item.confidence === 'Hard'
-                      ? 'text-rose-400'
-                      : 'text-amber-400'
+                      ? 'text-difficulty-hard-text'
+                      : 'text-difficulty-medium-text'
                   }`}
                 >
                   {item.confidence}
@@ -173,7 +173,7 @@ export default function RevisionSession() {
             <X className="w-5 h-5" />
           </button>
           <div>
-            <span className="text-xs font-mono font-bold text-primary">
+            <span className="text-xs tabular-nums font-bold text-primary">
               Problem {currentIndex + 1} of {totalDue}
             </span>
             <span className="text-xs text-content-muted block sm:inline sm:ml-2">
@@ -200,10 +200,10 @@ export default function RevisionSession() {
               <Badge variant={currentProblem.difficulty} size="sm">
                 {currentProblem.difficulty}
               </Badge>
-              <span className="text-xs text-content-muted font-mono">{currentProblem.platform}</span>
+              <span className="text-xs text-content-muted">{currentProblem.platform}</span>
             </div>
 
-            <span className="text-xs font-mono text-content-muted">
+            <span className="text-xs tabular-nums text-content-muted">
               Revision #{currentProblem.revision?.revisionCount || 0}
             </span>
           </div>
@@ -281,7 +281,7 @@ export default function RevisionSession() {
             variant="outline"
             size="md"
             onClick={() => handleConfidence('Hard')}
-            className="border-rose-500/40 text-rose-400 hover:bg-rose-500/10 flex flex-col py-3"
+            className="border-difficulty-hard-border text-difficulty-hard-text hover:bg-difficulty-hard-bg flex flex-col py-3"
           >
             <span className="font-bold">Hard</span>
             <span className="text-[10px] text-content-muted">Reset to 1 Day</span>
@@ -291,7 +291,7 @@ export default function RevisionSession() {
             variant="outline"
             size="md"
             onClick={() => handleConfidence('Okay')}
-            className="border-amber-500/40 text-amber-400 hover:bg-amber-500/10 flex flex-col py-3"
+            className="border-difficulty-medium-border text-difficulty-medium-text hover:bg-difficulty-medium-bg flex flex-col py-3"
           >
             <span className="font-bold">Okay</span>
             <span className="text-[10px] text-content-muted">Next Interval</span>
@@ -301,7 +301,7 @@ export default function RevisionSession() {
             variant="outline"
             size="md"
             onClick={() => handleConfidence('Easy')}
-            className="border-emerald-500/40 text-emerald-400 hover:bg-emerald-500/10 flex flex-col py-3"
+            className="border-difficulty-easy-border text-difficulty-easy-text hover:bg-difficulty-easy-bg flex flex-col py-3"
           >
             <span className="font-bold">Easy</span>
             <span className="text-[10px] text-content-muted">Skip Forward</span>

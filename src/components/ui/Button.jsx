@@ -3,12 +3,13 @@ import clsx from 'clsx'
 import { Loader2 } from 'lucide-react'
 
 const variants = {
-  primary: 'bg-primary text-white hover:bg-primary-hover shadow-sm active:scale-[0.98]',
+  primary: 'bg-primary text-white hover:bg-primary-hover active:bg-primary-active shadow-sm active:scale-[0.98]',
+  accent: 'bg-accent text-white hover:bg-accent-hover shadow-sm active:scale-[0.98]',
   secondary: 'bg-base-elevated text-content-primary hover:bg-opacity-80 border border-border-subtle active:scale-[0.98]',
   outline: 'border border-border-strong text-content-primary hover:bg-base-elevated active:scale-[0.98]',
   ghost: 'text-content-secondary hover:text-content-primary hover:bg-base-elevated active:scale-[0.98]',
-  danger: 'bg-rose-600 text-white hover:bg-rose-700 shadow-sm active:scale-[0.98]',
-  dangerGhost: 'text-rose-500 hover:bg-rose-500/10 active:scale-[0.98]',
+  danger: 'bg-difficulty-hard text-white hover:brightness-110 shadow-sm active:scale-[0.98]',
+  dangerGhost: 'text-difficulty-hard hover:bg-difficulty-hard-bg active:scale-[0.98]',
 }
 
 const sizes = {
@@ -39,7 +40,7 @@ export const Button = React.forwardRef(function Button(
       type={type}
       disabled={disabled || isLoading}
       className={clsx(
-        'inline-flex items-center justify-center font-medium transition-all duration-150 select-none cursor-pointer disabled:cursor-not-allowed disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary',
+        'inline-flex items-center justify-center font-medium transition-all duration-150 select-none cursor-pointer disabled:cursor-not-allowed disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-background',
         variants[variant],
         sizes[size],
         className

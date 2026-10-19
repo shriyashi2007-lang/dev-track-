@@ -25,25 +25,25 @@ export function TopicProgress({ stats }) {
         {(strongestTopic || weakestTopic) && (
           <div className="grid grid-cols-2 gap-2 mb-4">
             {strongestTopic && (
-              <div className="p-2.5 rounded-subtle bg-emerald-500/10 border border-emerald-500/20 text-xs">
-                <span className="text-[10px] uppercase font-semibold text-emerald-400 block mb-0.5">
+              <div className="p-2.5 rounded-subtle bg-difficulty-easy-bg border border-difficulty-easy-border text-xs">
+                <span className="text-[10px] uppercase font-semibold text-difficulty-easy-text block mb-0.5">
                   Strongest Topic
                 </span>
                 <span className="font-semibold text-content-primary truncate block">
                   {strongestTopic.name}
                 </span>
-                <span className="text-[10px] text-content-muted font-mono">{strongestTopic.count} solved</span>
+                <span className="text-[10px] text-content-muted tabular-nums">{strongestTopic.count} solved</span>
               </div>
             )}
             {weakestTopic && (
-              <div className="p-2.5 rounded-subtle bg-amber-500/10 border border-amber-500/20 text-xs">
-                <span className="text-[10px] uppercase font-semibold text-amber-400 block mb-0.5">
+              <div className="p-2.5 rounded-subtle bg-difficulty-medium-bg border border-difficulty-medium-border text-xs">
+                <span className="text-[10px] uppercase font-semibold text-difficulty-medium-text block mb-0.5">
                   Needs Practice
                 </span>
                 <span className="font-semibold text-content-primary truncate block">
                   {weakestTopic.name}
                 </span>
-                <span className="text-[10px] text-content-muted font-mono">{weakestTopic.count} solved</span>
+                <span className="text-[10px] text-content-muted tabular-nums">{weakestTopic.count} solved</span>
               </div>
             )}
           </div>
@@ -60,19 +60,23 @@ export function TopicProgress({ stats }) {
               <div
                 key={item.name}
                 onClick={() => navigate(`/problems?topic=${encodeURIComponent(item.name)}`)}
-                className="group cursor-pointer"
+                className="group cursor-pointer focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-accent rounded-subtle p-1"
+                tabIndex={0}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') navigate(`/problems?topic=${encodeURIComponent(item.name)}`)
+                }}
               >
                 <div className="flex items-center justify-between text-xs mb-1">
                   <span className="font-medium text-content-primary group-hover:text-primary transition-colors">
                     {item.name}
                   </span>
-                  <span className="font-mono text-content-muted text-[11px]">
+                  <span className="tabular-nums text-content-muted text-[11px]">
                     {item.count} ({item.percentage}%)
                   </span>
                 </div>
                 <div className="h-2 w-full bg-base-elevated rounded-full overflow-hidden">
                   <div
-                    className="h-full bg-primary rounded-full transition-all duration-500 group-hover:bg-primary-hover"
+                    className="h-full bg-gradient-to-r from-primary to-accent rounded-full transition-all duration-500 group-hover:brightness-110"
                     style={{ width: `${Math.max(item.percentage, 5)}%` }}
                   />
                 </div>

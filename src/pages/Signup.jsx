@@ -64,8 +64,8 @@ export default function Signup() {
     <div className="min-h-[85vh] flex items-center justify-center py-12 px-4 sm:px-6">
       <div className="max-w-md w-full space-y-6">
         {/* Persistent Demo Warning Banner */}
-        <div className="p-3.5 bg-amber-500/10 border border-amber-500/30 rounded-card flex items-start gap-2.5 text-xs text-amber-300">
-          <ShieldAlert className="w-4 h-4 shrink-0 text-amber-400 mt-0.5" />
+        <div className="p-3.5 bg-difficulty-medium-bg border border-difficulty-medium-border rounded-card flex items-start gap-2.5 text-xs text-difficulty-medium-text">
+          <ShieldAlert className="w-4 h-4 shrink-0 text-difficulty-medium-text mt-0.5" />
           <div>
             <strong className="font-semibold block">Demo Preview Mode</strong>
             <span>Demo only: no account is created and no data leaves your browser. Never enter a real personal password.</span>
@@ -75,7 +75,7 @@ export default function Signup() {
         {/* Card */}
         <div className="bg-base-surface border border-border-strong rounded-2xl p-6 sm:p-8 shadow-2xl space-y-6">
           <div className="text-center space-y-1">
-            <div className="w-10 h-10 rounded-card bg-gradient-to-tr from-indigo-500 to-violet-600 flex items-center justify-center text-white shadow-glow mx-auto mb-2">
+            <div className="w-10 h-10 rounded-card bg-gradient-to-br from-primary to-secondary flex items-center justify-center text-content-inverse shadow-sm mx-auto mb-2">
               <Code2 className="w-5 h-5" />
             </div>
             <h1 className="text-xl font-bold text-content-primary">Create Demo Workspace</h1>
@@ -129,10 +129,10 @@ export default function Signup() {
                     <div
                       className={clsx(
                         'h-full transition-all duration-300',
-                        strengthPercentage <= 25 && 'bg-rose-500',
-                        strengthPercentage === 50 && 'bg-amber-500',
-                        strengthPercentage === 75 && 'bg-sky-500',
-                        strengthPercentage === 100 && 'bg-emerald-500'
+                        strengthPercentage <= 25 && 'bg-difficulty-hard-text',
+                        strengthPercentage === 50 && 'bg-difficulty-medium-text',
+                        strengthPercentage === 75 && 'bg-accent',
+                        strengthPercentage === 100 && 'bg-difficulty-easy-text'
                       )}
                       style={{ width: `${strengthPercentage}%` }}
                     />
@@ -140,19 +140,19 @@ export default function Signup() {
 
                   {/* Checklist */}
                   <div className="grid grid-cols-2 gap-1 text-[11px] text-content-muted pt-1">
-                    <span className={clsx('flex items-center gap-1', checks.length ? 'text-emerald-400' : '')}>
+                    <span className={clsx('flex items-center gap-1', checks.length ? 'text-difficulty-easy-text' : '')}>
                       {checks.length ? <Check className="w-3 h-3" /> : <X className="w-3 h-3" />}
                       8+ characters
                     </span>
-                    <span className={clsx('flex items-center gap-1', checks.uppercase ? 'text-emerald-400' : '')}>
+                    <span className={clsx('flex items-center gap-1', checks.uppercase ? 'text-difficulty-easy-text' : '')}>
                       {checks.uppercase ? <Check className="w-3 h-3" /> : <X className="w-3 h-3" />}
                       Uppercase letter
                     </span>
-                    <span className={clsx('flex items-center gap-1', checks.number ? 'text-emerald-400' : '')}>
+                    <span className={clsx('flex items-center gap-1', checks.number ? 'text-difficulty-easy-text' : '')}>
                       {checks.number ? <Check className="w-3 h-3" /> : <X className="w-3 h-3" />}
                       Number
                     </span>
-                    <span className={clsx('flex items-center gap-1', checks.symbol ? 'text-emerald-400' : '')}>
+                    <span className={clsx('flex items-center gap-1', checks.symbol ? 'text-difficulty-easy-text' : '')}>
                       {checks.symbol ? <Check className="w-3 h-3" /> : <X className="w-3 h-3" />}
                       Symbol (!@#)
                     </span>

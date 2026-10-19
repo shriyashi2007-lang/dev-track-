@@ -3,6 +3,7 @@ import { Outlet, Link, useLocation } from 'react-router-dom'
 import { Code2, Sun, Moon, Menu, X, ArrowRight } from 'lucide-react'
 import { useSettings } from '../context/SettingsContext'
 import { Button } from '../components/ui/Button'
+import { WaveDivider } from '../components/ui/WaveDivider'
 
 export function PublicLayout() {
   const { settings, toggleTheme } = useSettings()
@@ -28,7 +29,7 @@ export function PublicLayout() {
       {/* Skip to Content for Accessibility */}
       <a
         href="#main-content"
-        className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-primary focus:text-white focus:rounded-card focus:shadow-lg"
+        className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-primary focus:text-white focus:rounded-card focus:shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
       >
         Skip to main content
       </a>
@@ -37,21 +38,21 @@ export function PublicLayout() {
       <header
         className={`sticky top-0 z-40 transition-all duration-200 ${
           isScrolled
-            ? 'bg-base-surface/85 backdrop-blur-md border-b border-border-subtle shadow-sm'
+            ? 'bg-base-surface/90 backdrop-blur-md border-b border-border-subtle shadow-sm'
             : 'bg-transparent border-b border-transparent'
         }`}
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
           {/* Logo */}
           <Link to="/" className="flex items-center gap-2.5 group">
-            <div className="w-9 h-9 rounded-card bg-gradient-to-tr from-indigo-500 to-violet-600 flex items-center justify-center text-white shadow-glow group-hover:scale-105 transition-transform">
+            <div className="w-9 h-9 rounded-card bg-gradient-to-tr from-primary to-accent flex items-center justify-center text-white shadow-glow group-hover:scale-105 transition-transform">
               <Code2 className="w-5 h-5" />
             </div>
             <div className="flex flex-col">
               <span className="font-bold text-base tracking-tight leading-none text-content-primary">
                 DevTrack
               </span>
-              <span className="text-[10px] font-mono text-content-muted leading-tight">
+              <span className="text-[10px] text-content-muted leading-tight">
                 DSA &amp; Prep Tracker
               </span>
             </div>
@@ -79,7 +80,7 @@ export function PublicLayout() {
               type="button"
               onClick={toggleTheme}
               aria-label="Toggle theme"
-              className="p-2 rounded-card text-content-secondary hover:text-content-primary hover:bg-base-elevated transition-colors cursor-pointer"
+              className="p-2 rounded-card text-content-secondary hover:text-content-primary hover:bg-base-elevated transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
             >
               {settings.theme === 'dark' ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
             </button>
@@ -156,11 +157,14 @@ export function PublicLayout() {
         <Outlet />
       </main>
 
+      {/* Wave Decorative Divider above Footer */}
+      <WaveDivider height="h-12 sm:h-16" opacity="opacity-35 dark:opacity-25" />
+
       {/* Footer */}
-      <footer className="border-t border-border-subtle bg-base-surface/50 py-10 mt-20">
+      <footer className="border-t border-border-subtle bg-base-surface/50 py-10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-2">
-            <div className="w-6 h-6 rounded-subtle bg-gradient-to-tr from-indigo-500 to-violet-600 flex items-center justify-center text-white">
+            <div className="w-6 h-6 rounded-subtle bg-gradient-to-tr from-primary to-accent flex items-center justify-center text-white">
               <Code2 className="w-3.5 h-3.5" />
             </div>
             <span className="text-xs font-semibold text-content-primary">DevTrack</span>
@@ -171,7 +175,7 @@ export function PublicLayout() {
 
           <div className="flex items-center gap-4 text-xs text-content-secondary">
             <span>Local-first • Zero tracking • Free forever</span>
-            <Link to="/dashboard" className="hover:text-content-primary underline">
+            <Link to="/dashboard" className="hover:text-content-primary underline focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-accent">
               Open App
             </Link>
           </div>

@@ -9,6 +9,7 @@ import { RevisionCalendar } from '../components/revision/RevisionCalendar'
 import { Tabs } from '../components/ui/Tabs'
 import { Button } from '../components/ui/Button'
 import { EmptyState } from '../components/ui/EmptyState'
+import { AnimatedGroup } from '../components/motion-primitives/AnimatedGroup'
 import { RotateCcw, Play, CheckCircle2 } from 'lucide-react'
 
 export default function Revision() {
@@ -113,7 +114,7 @@ export default function Revision() {
           <Button
             variant="primary"
             size="md"
-            leftIcon={<Play className="w-4 h-4 fill-white" />}
+            leftIcon={<Play className="w-4 h-4 fill-current" />}
           >
             Start Flashcard Session ({counts.dueToday + counts.overdue} due)
           </Button>
@@ -139,7 +140,7 @@ export default function Revision() {
         />
 
         {selectedCalendarDate && (
-          <span className="text-xs font-mono text-primary font-semibold">
+          <span className="text-xs tabular-nums text-primary font-semibold">
             Filtering by date: {selectedCalendarDate}
           </span>
         )}
@@ -170,7 +171,7 @@ export default function Revision() {
           }
         />
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <AnimatedGroup className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {displayedProblems.map((problem) => (
             <RevisionCard
               key={problem.id}
@@ -180,7 +181,7 @@ export default function Revision() {
               onPriorityChange={handlePriorityChange}
             />
           ))}
-        </div>
+        </AnimatedGroup>
       )}
     </div>
   )

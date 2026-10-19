@@ -12,6 +12,7 @@ import {
 import { Card } from '../ui/Card'
 import { BarChart3 } from 'lucide-react'
 import { computeActivitySeries } from '../../utils/stats'
+import { chartColors, rechartsTheme } from '../../styles/chartTheme'
 import clsx from 'clsx'
 
 export function ActivityChart({ problems = [] }) {
@@ -45,7 +46,7 @@ export function ActivityChart({ problems = [] }) {
               type="button"
               onClick={() => setRangeDays(r.days)}
               className={clsx(
-                'px-2.5 py-1 text-xs font-medium rounded-subtle transition-colors cursor-pointer',
+                'px-2.5 py-1 text-xs font-medium rounded-subtle transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-accent',
                 rangeDays === r.days
                   ? 'bg-base-surface text-content-primary font-semibold shadow-sm'
                   : 'text-content-secondary hover:text-content-primary'
@@ -60,37 +61,21 @@ export function ActivityChart({ problems = [] }) {
       <div className="h-64 w-full">
         <ResponsiveContainer width="100%" height="100%">
           <BarChart data={data} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
-            <CartesianGrid strokeDasharray="3 3" stroke="var(--border-subtle)" vertical={false} />
-            <XAxis
-              dataKey="displayDate"
-              stroke="var(--text-muted)"
-              fontSize={11}
-              tickLine={false}
-              axisLine={{ stroke: 'var(--border-subtle)' }}
-            />
-            <YAxis
-              stroke="var(--text-muted)"
-              fontSize={11}
-              allowDecimals={false}
-              tickLine={false}
-              axisLine={{ stroke: 'var(--border-subtle)' }}
-            />
+            <CartesianGrid {...rechartsTheme.cartesianGrid} vertical={false} />
+            <XAxis dataKey="displayDate" {...rechartsTheme.xAxis} />
+            <YAxis allowDecimals={false} {...rechartsTheme.yAxis} />
             <Tooltip
-              contentStyle={{
-                backgroundColor: 'var(--bg-surface)',
-                borderColor: 'var(--border-strong)',
-                borderRadius: '8px',
-                fontSize: '12px',
-                color: 'var(--text-primary)',
-              }}
+              contentStyle={rechartsTheme.tooltip.contentStyle}
+              itemStyle={rechartsTheme.tooltip.itemStyle}
+              labelStyle={rechartsTheme.tooltip.labelStyle}
             />
             <Legend
-              wrapperStyle={{ fontSize: '11px', paddingTop: '8px' }}
+              wrapperStyle={rechartsTheme.legend.wrapperStyle}
               iconType="circle"
             />
-            <Bar dataKey="Easy" stackId="a" fill="#10B981" radius={[0, 0, 0, 0]} />
-            <Bar dataKey="Medium" stackId="a" fill="#F59E0B" radius={[0, 0, 0, 0]} />
-            <Bar dataKey="Hard" stackId="a" fill="#F43F5E" radius={[3, 3, 0, 0]} />
+            <Bar dataKey="Easy" stackId="a" fill={chartColors.easy} radius={[0, 0, 0, 0]} />
+            <Bar dataKey="Medium" stackId="a" fill={chartColors.medium} radius={[0, 0, 0, 0]} />
+            <Bar dataKey="Hard" stackId="a" fill={chartColors.hard} radius={[3, 3, 0, 0]} />
           </BarChart>
         </ResponsiveContainer>
       </div>

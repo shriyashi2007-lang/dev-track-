@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import React, { useState } from 'react'
 import { Modal } from '../ui/Modal'
 import { Button } from '../ui/Button'
 import { FileJson, AlertCircle, CheckCircle2 } from 'lucide-react'
@@ -12,10 +12,10 @@ export function ImportModal({ isOpen, onClose, onImport }) {
   const [isLoading, setIsLoading] = useState(false)
 
   const handleFileChange = (e) => {
-    setError(null)
     const file = e.target.files?.[0]
     if (!file) return
 
+    setError(null)
     const reader = new FileReader()
     reader.onload = (event) => {
       try {
@@ -33,7 +33,7 @@ export function ImportModal({ isOpen, onClose, onImport }) {
         }
         setValidationResult(validated)
         setFileData(validated.validItems)
-      } catch (_err) {
+      } catch {
         setError('Failed to parse JSON file. Ensure it is valid JSON.')
         setValidationResult(null)
         setFileData(null)
@@ -72,7 +72,7 @@ export function ImportModal({ isOpen, onClose, onImport }) {
     >
       <div className="space-y-4 my-3">
         {/* File input drop zone */}
-        <div className="border-2 border-dashed border-border-strong hover:border-primary/50 rounded-card p-6 text-center transition-colors">
+        <div className="border-2 border-dashed border-border-strong hover:border-accent rounded-card p-6 text-center transition-colors">
           <input
             type="file"
             accept=".json,application/json"
@@ -81,7 +81,7 @@ export function ImportModal({ isOpen, onClose, onImport }) {
             id="import-json-file"
           />
           <label htmlFor="import-json-file" className="cursor-pointer block">
-            <div className="w-12 h-12 rounded-full bg-primary/10 border border-primary/20 flex items-center justify-center text-primary mx-auto mb-3">
+            <div className="w-12 h-12 rounded-full bg-accent-light border border-accent/25 flex items-center justify-center text-accent mx-auto mb-3">
               <FileJson className="w-6 h-6" />
             </div>
             <p className="text-xs font-semibold text-content-primary mb-1">
@@ -92,7 +92,7 @@ export function ImportModal({ isOpen, onClose, onImport }) {
         </div>
 
         {error && (
-          <div className="p-3 text-xs bg-rose-500/15 border border-rose-500/30 text-rose-400 rounded-card flex items-start gap-2">
+          <div className="p-3 text-xs bg-difficulty-hard-bg border border-difficulty-hard-border text-difficulty-hard-text rounded-card flex items-start gap-2">
             <AlertCircle className="w-4 h-4 shrink-0 mt-0.5" />
             <span>{error}</span>
           </div>
@@ -101,12 +101,12 @@ export function ImportModal({ isOpen, onClose, onImport }) {
         {/* Validation Preview */}
         {validationResult && (
           <div className="p-4 bg-base-elevated rounded-card border border-border-subtle space-y-3 animate-fade-in text-xs">
-            <div className="flex items-center gap-2 text-emerald-400 font-semibold">
+            <div className="flex items-center gap-2 text-status-solved-text font-semibold">
               <CheckCircle2 className="w-4 h-4" />
               <span>Validated {validationResult.validItems.length} problems ready to import</span>
             </div>
             {validationResult.rejectedCount > 0 && (
-              <p className="text-[11px] text-amber-400">
+              <p className="text-[11px] text-difficulty-medium-text">
                 Notice: {validationResult.rejectedCount} items skipped due to invalid schema.
               </p>
             )}
@@ -120,9 +120,9 @@ export function ImportModal({ isOpen, onClose, onImport }) {
                 <button
                   type="button"
                   onClick={() => setImportMode('merge')}
-                  className={`py-2 px-3 rounded-card text-xs font-medium border text-left cursor-pointer transition-colors ${
+                  className={`py-2 px-3 rounded-card text-xs font-medium border text-left cursor-pointer transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-accent ${
                     importMode === 'merge'
-                      ? 'bg-primary/20 text-primary border-primary/50 font-semibold'
+                      ? 'bg-accent-light text-accent border-accent/50 font-semibold'
                       : 'bg-base-surface text-content-secondary border-border-subtle'
                   }`}
                 >
@@ -132,9 +132,9 @@ export function ImportModal({ isOpen, onClose, onImport }) {
                 <button
                   type="button"
                   onClick={() => setImportMode('replace')}
-                  className={`py-2 px-3 rounded-card text-xs font-medium border text-left cursor-pointer transition-colors ${
+                  className={`py-2 px-3 rounded-card text-xs font-medium border text-left cursor-pointer transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-accent ${
                     importMode === 'replace'
-                      ? 'bg-rose-500/20 text-rose-400 border-rose-500/50 font-semibold'
+                      ? 'bg-difficulty-hard-bg text-difficulty-hard-text border-difficulty-hard-border font-semibold'
                       : 'bg-base-surface text-content-secondary border-border-subtle'
                   }`}
                 >

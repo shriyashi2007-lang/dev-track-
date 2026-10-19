@@ -3,9 +3,9 @@ import clsx from 'clsx'
 import { CheckCircle2, AlertCircle, Info, X, RotateCcw } from 'lucide-react'
 
 const icons = {
-  success: <CheckCircle2 className="w-5 h-5 text-emerald-400 shrink-0" />,
-  error: <AlertCircle className="w-5 h-5 text-rose-400 shrink-0" />,
-  info: <Info className="w-5 h-5 text-sky-400 shrink-0" />,
+  success: <CheckCircle2 className="w-5 h-5 text-status-solved shrink-0" />,
+  error: <AlertCircle className="w-5 h-5 text-difficulty-hard shrink-0" />,
+  info: <Info className="w-5 h-5 text-status-attempted shrink-0" />,
 }
 
 export function Toast({ toast, onDismiss }) {
@@ -17,7 +17,7 @@ export function Toast({ toast, onDismiss }) {
       aria-live="polite"
       className={clsx(
         'flex items-center gap-3 p-4 bg-base-surface/95 border rounded-card shadow-2xl backdrop-blur-md transition-all duration-200 animate-slide-up max-w-md w-full',
-        type === 'error' ? 'border-rose-500/40' : 'border-border-strong'
+        type === 'error' ? 'border-difficulty-hard/40' : 'border-border-strong'
       )}
     >
       <div className="shrink-0">{icons[type] || icons.info}</div>
@@ -33,7 +33,7 @@ export function Toast({ toast, onDismiss }) {
             onUndo()
             onDismiss(id)
           }}
-          className="flex items-center gap-1 px-2.5 py-1 text-xs font-semibold text-primary bg-primary/10 hover:bg-primary/20 rounded border border-primary/30 transition-colors"
+          className="flex items-center gap-1 px-2.5 py-1 text-xs font-semibold text-accent bg-accent-light hover:bg-accent/25 rounded border border-accent/30 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
         >
           <RotateCcw className="w-3.5 h-3.5" />
           <span>{actionLabel}</span>
@@ -44,7 +44,7 @@ export function Toast({ toast, onDismiss }) {
         type="button"
         onClick={() => onDismiss(id)}
         aria-label="Dismiss notification"
-        className="text-content-muted hover:text-content-primary p-1 rounded hover:bg-base-elevated transition-colors"
+        className="text-content-muted hover:text-content-primary p-1 rounded hover:bg-base-elevated transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
       >
         <X className="w-4 h-4" />
       </button>

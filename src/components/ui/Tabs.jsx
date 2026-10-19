@@ -28,7 +28,7 @@ export function Tabs({
             aria-selected={isSelected}
             onClick={() => onChange(tab.id)}
             className={clsx(
-              'flex items-center gap-2 font-medium text-xs sm:text-sm whitespace-nowrap transition-all duration-150 cursor-pointer select-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary',
+              'flex items-center gap-2 font-medium text-xs sm:text-sm whitespace-nowrap transition-all duration-150 cursor-pointer select-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent',
               variant === 'pills' && [
                 'px-3 py-1.5 rounded-subtle',
                 isSelected
@@ -38,7 +38,7 @@ export function Tabs({
               variant === 'underline' && [
                 'py-2 px-1 border-b-2',
                 isSelected
-                  ? 'border-primary text-primary font-semibold'
+                  ? 'border-accent text-accent font-semibold'
                   : 'border-transparent text-content-secondary hover:text-content-primary hover:border-border-strong',
               ]
             )}
@@ -48,9 +48,9 @@ export function Tabs({
             {tab.count !== undefined && (
               <span
                 className={clsx(
-                  'px-1.5 py-0.5 text-[10px] font-mono rounded-full',
+                  'px-1.5 py-0.5 text-[10px] rounded-full tabular-nums',
                   isSelected
-                    ? 'bg-primary/20 text-primary'
+                    ? 'bg-accent-light text-accent'
                     : 'bg-base-surface text-content-muted'
                 )}
               >

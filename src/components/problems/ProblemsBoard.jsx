@@ -4,9 +4,9 @@ import { MoreHorizontal, Edit2, Trash2, BookOpen, MoveRight } from 'lucide-react
 import { Badge } from '../ui/Badge'
 
 const COLUMNS = [
-  { id: 'Todo', title: 'To Do', border: 'border-slate-500/30', headerBg: 'bg-slate-500/10 text-slate-300' },
-  { id: 'Attempted', title: 'In Progress / Attempted', border: 'border-sky-500/30', headerBg: 'bg-sky-500/10 text-sky-400' },
-  { id: 'Solved', title: 'Solved & Mastered', border: 'border-emerald-500/30', headerBg: 'bg-emerald-500/10 text-emerald-400' },
+  { id: 'Todo', title: 'To Do', border: 'border-status-todo-border', headerBg: 'bg-status-todo-bg text-status-todo-text' },
+  { id: 'Attempted', title: 'In Progress / Attempted', border: 'border-status-attempted-border', headerBg: 'bg-status-attempted-bg text-status-attempted-text' },
+  { id: 'Solved', title: 'Solved & Mastered', border: 'border-status-solved-border', headerBg: 'bg-status-solved-bg text-status-solved-text' },
 ]
 
 export function ProblemsBoard({
@@ -54,7 +54,7 @@ export function ProblemsBoard({
             className={clsx(
               'bg-base-surface/60 border rounded-card transition-all duration-200 flex flex-col min-h-[450px]',
               col.border,
-              isTarget && 'ring-2 ring-primary bg-primary/5'
+              isTarget && 'ring-2 ring-accent bg-accent-light'
             )}
           >
             {/* Column Header */}
@@ -63,7 +63,7 @@ export function ProblemsBoard({
                 <span className={clsx('px-2.5 py-0.5 rounded-full text-xs font-semibold', col.headerBg)}>
                   {col.title}
                 </span>
-                <span className="text-xs font-mono font-medium text-content-muted">
+                <span className="text-xs font-medium text-content-muted tabular-nums">
                   {colProblems.length}
                 </span>
               </div>
@@ -86,7 +86,7 @@ export function ProblemsBoard({
                     <div className="flex items-start justify-between gap-2 mb-2">
                       <h4
                         onClick={() => onEdit(problem)}
-                        className="font-semibold text-xs text-content-primary hover:text-primary transition-colors cursor-pointer line-clamp-2"
+                        className="font-semibold text-xs text-content-primary hover:text-accent transition-colors cursor-pointer line-clamp-2"
                       >
                         {problem.title}
                       </h4>
@@ -96,7 +96,7 @@ export function ProblemsBoard({
                         <button
                           type="button"
                           onClick={() => setOpenMenuId(openMenuId === problem.id ? null : problem.id)}
-                          className="p-1 text-content-muted hover:text-content-primary rounded hover:bg-base-elevated transition-colors"
+                          className="p-1 text-content-muted hover:text-content-primary rounded hover:bg-base-elevated transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-accent"
                           aria-label="Options"
                         >
                           <MoreHorizontal className="w-3.5 h-3.5" />
@@ -115,7 +115,7 @@ export function ProblemsBoard({
                                   onUpdateStatus(problem.id, c.id)
                                   setOpenMenuId(null)
                                 }}
-                                className="w-full text-left px-2 py-1 text-content-primary hover:bg-primary/20 rounded flex items-center gap-1.5"
+                                className="w-full text-left px-2 py-1 text-content-primary hover:bg-accent-light rounded flex items-center gap-1.5 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-accent"
                               >
                                 <MoveRight className="w-3 h-3 text-content-muted" />
                                 <span>{c.title}</span>
@@ -128,7 +128,7 @@ export function ProblemsBoard({
                                 onEdit(problem)
                                 setOpenMenuId(null)
                               }}
-                              className="w-full text-left px-2 py-1 text-content-primary hover:bg-base-surface rounded flex items-center gap-1.5"
+                              className="w-full text-left px-2 py-1 text-content-primary hover:bg-base-surface rounded flex items-center gap-1.5 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-accent"
                             >
                               <Edit2 className="w-3 h-3 text-content-muted" />
                               <span>Edit Details</span>
@@ -139,9 +139,9 @@ export function ProblemsBoard({
                                 onDelete(problem.id)
                                 setOpenMenuId(null)
                               }}
-                              className="w-full text-left px-2 py-1 text-rose-400 hover:bg-rose-500/10 rounded flex items-center gap-1.5"
+                              className="w-full text-left px-2 py-1 text-difficulty-hard hover:bg-difficulty-hard-bg rounded flex items-center gap-1.5 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-accent"
                             >
-                              <Trash2 className="w-3 h-3 text-rose-400" />
+                              <Trash2 className="w-3 h-3 text-difficulty-hard" />
                               <span>Delete</span>
                             </button>
                           </div>
@@ -154,9 +154,9 @@ export function ProblemsBoard({
                       <Badge variant={problem.difficulty} size="xs">
                         {problem.difficulty}
                       </Badge>
-                      <span className="text-[10px] text-content-muted font-mono">{problem.platform}</span>
+                      <span className="text-[10px] text-content-muted">{problem.platform}</span>
                       {problem.revision?.marked && (
-                        <span className="ml-auto flex items-center gap-1 text-[10px] text-primary">
+                        <span className="ml-auto flex items-center gap-1 text-[10px] text-accent">
                           <BookOpen className="w-3 h-3" />
                           <span>Revise</span>
                         </span>

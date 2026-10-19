@@ -8,6 +8,7 @@ import { exportAllData } from '../services/exportService'
 import { Card } from '../components/ui/Card'
 import { Button } from '../components/ui/Button'
 import { Input } from '../components/ui/Input'
+import { Avatar } from '../components/ui/Avatar'
 import { ConfirmDialog } from '../components/ui/ConfirmDialog'
 import { ImportModal } from '../components/problems/ImportModal'
 import { OnboardingTour } from '../components/OnboardingTour'
@@ -124,9 +125,7 @@ export function SettingsPage() {
         </div>
 
         <form onSubmit={handleSaveProfile} className="flex flex-col sm:flex-row items-center gap-5">
-          <div className="w-16 h-16 rounded-full bg-gradient-to-tr from-indigo-500 to-violet-600 flex items-center justify-center text-white font-mono text-lg font-bold shadow-glow shrink-0">
-            {initials}
-          </div>
+          <Avatar name={displayName || 'Dev'} size="lg" className="shrink-0" />
 
           <div className="flex-1 w-full space-y-2">
             <Input
@@ -143,7 +142,7 @@ export function SettingsPage() {
             variant="primary"
             size="sm"
             disabled={!displayName.trim()}
-            leftIcon={nameSaved ? <Check className="w-3.5 h-3.5 text-emerald-300" /> : null}
+            leftIcon={nameSaved ? <Check className="w-3.5 h-3.5 text-content-inverse" /> : null}
             className="self-end sm:self-center"
           >
             {nameSaved ? 'Saved!' : 'Save Name'}
@@ -317,7 +316,7 @@ export function SettingsPage() {
               Local Data &amp; Backup
             </h3>
           </div>
-          <div className="flex items-center gap-1.5 text-xs text-content-muted font-mono">
+          <div className="flex items-center gap-1.5 text-xs text-content-muted tabular-nums">
             <HardDrive className="w-3.5 h-3.5" />
             <span>Usage: {storageUsage.formatted}</span>
           </div>
@@ -365,9 +364,9 @@ export function SettingsPage() {
         </div>
 
         {/* Hard Reset Zone */}
-        <div className="mt-6 pt-4 border-t border-rose-500/20 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <div className="mt-6 pt-4 border-t border-difficulty-hard-border/40 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div>
-            <p className="text-xs font-bold text-rose-400">Danger Zone: Purge All Workspace Data</p>
+            <p className="text-xs font-bold text-difficulty-hard-text">Danger Zone: Purge All Workspace Data</p>
             <p className="text-[11px] text-content-muted">
               Permanently clears all solved problems, streaks, revision history, and settings from this browser.
             </p>
@@ -386,7 +385,7 @@ export function SettingsPage() {
       {/* 5. Onboarding Tour Replay */}
       <Card className="p-4 bg-base-surface flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <Sparkles className="w-4 h-4 text-amber-400" />
+          <Sparkles className="w-4 h-4 text-primary" />
           <div>
             <p className="text-xs font-semibold text-content-primary">Onboarding Walkthrough</p>
             <p className="text-[11px] text-content-muted">Replay the guided feature tour anytime.</p>

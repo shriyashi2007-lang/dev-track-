@@ -11,6 +11,7 @@ import {
 import { Card } from '../ui/Card'
 import { Activity } from 'lucide-react'
 import { computeActivitySeries } from '../../utils/stats'
+import { rechartsTheme } from '../../styles/chartTheme'
 
 export function ConsistencyChart({ problems = [], rangeDays = 30 }) {
   const data = useMemo(() => {
@@ -26,22 +27,22 @@ export function ConsistencyChart({ problems = [], rangeDays = 30 }) {
     <Card className="p-5">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
         <div className="flex items-center gap-2">
-          <Activity className="w-4 h-4 text-emerald-400" />
+          <Activity className="w-4 h-4 text-status-solved-text" />
           <h3 className="text-xs font-semibold text-content-primary uppercase tracking-wider">
             Consistency Trend ({rangeDays}d Window)
           </h3>
         </div>
 
         {/* Consistency metric badges */}
-        <div className="flex items-center gap-3 text-xs font-mono">
+        <div className="flex items-center gap-3 text-xs tabular-nums">
           <span className="text-content-secondary">
             Active: <strong className="text-content-primary">{activeDays}/{rangeDays}d</strong>
           </span>
           <span className="text-content-secondary">
-            Consistency: <strong className="text-emerald-400">{consistencyRate}%</strong>
+            Consistency: <strong className="text-status-solved-text">{consistencyRate}%</strong>
           </span>
           <span className="text-content-secondary">
-            Avg/Active Day: <strong className="text-primary">{avgPerActive}</strong>
+            Avg/Active Day: <strong className="text-accent">{avgPerActive}</strong>
           </span>
         </div>
       </div>
@@ -51,38 +52,22 @@ export function ConsistencyChart({ problems = [], rangeDays = 30 }) {
           <AreaChart data={data} margin={{ top: 10, right: 10, left: -25, bottom: 0 }}>
             <defs>
               <linearGradient id="colorTotal" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor="#10B981" stopOpacity={0.4} />
-                <stop offset="95%" stopColor="#10B981" stopOpacity={0.0} />
+                <stop offset="5%" stopColor="var(--accent-primary)" stopOpacity={0.4} />
+                <stop offset="95%" stopColor="var(--accent-primary)" stopOpacity={0.0} />
               </linearGradient>
             </defs>
-            <CartesianGrid strokeDasharray="3 3" stroke="var(--border-subtle)" vertical={false} />
-            <XAxis
-              dataKey="displayDate"
-              stroke="var(--text-muted)"
-              fontSize={10}
-              tickLine={false}
-              axisLine={{ stroke: 'var(--border-subtle)' }}
-            />
-            <YAxis
-              stroke="var(--text-muted)"
-              fontSize={10}
-              allowDecimals={false}
-              tickLine={false}
-              axisLine={{ stroke: 'var(--border-subtle)' }}
-            />
+            <CartesianGrid {...rechartsTheme.cartesianGrid} vertical={false} />
+            <XAxis dataKey="displayDate" {...rechartsTheme.xAxis} fontSize={10} />
+            <YAxis allowDecimals={false} {...rechartsTheme.yAxis} fontSize={10} />
             <Tooltip
-              contentStyle={{
-                backgroundColor: 'var(--bg-surface)',
-                borderColor: 'var(--border-strong)',
-                borderRadius: '8px',
-                fontSize: '12px',
-                color: 'var(--text-primary)',
-              }}
+              contentStyle={rechartsTheme.tooltip.contentStyle}
+              itemStyle={rechartsTheme.tooltip.itemStyle}
+              labelStyle={rechartsTheme.tooltip.labelStyle}
             />
             <Area
               type="monotone"
               dataKey="total"
-              stroke="#10B981"
+              stroke="var(--accent-primary)"
               strokeWidth={2}
               fillOpacity={1}
               fill="url(#colorTotal)"

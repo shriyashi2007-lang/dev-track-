@@ -2,11 +2,12 @@ import React from 'react'
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, Legend } from 'recharts'
 import { Card } from '../ui/Card'
 import { PieChart as PieIcon } from 'lucide-react'
+import { chartColors, rechartsTheme } from '../../styles/chartTheme'
 
 const COLORS = {
-  Easy: '#10B981',
-  Medium: '#F59E0B',
-  Hard: '#F43F5E',
+  Easy: chartColors.easy,
+  Medium: chartColors.medium,
+  Hard: chartColors.hard,
 }
 
 export function DifficultyDonut({ stats, selectedDifficulty, onSelectDifficulty }) {
@@ -29,9 +30,9 @@ export function DifficultyDonut({ stats, selectedDifficulty, onSelectDifficulty 
           <button
             type="button"
             onClick={() => onSelectDifficulty(null)}
-            className="text-[11px] text-rose-400 hover:underline"
+            className="text-[11px] text-difficulty-hard-text hover:underline focus-visible:outline-none"
           >
-            Clear slice filter ({selectedDifficulty})
+            Clear filter ({selectedDifficulty})
           </button>
         )}
       </div>
@@ -74,16 +75,12 @@ export function DifficultyDonut({ stats, selectedDifficulty, onSelectDifficulty 
                 ))}
               </Pie>
               <Tooltip
-                contentStyle={{
-                  backgroundColor: 'var(--bg-surface)',
-                  borderColor: 'var(--border-strong)',
-                  borderRadius: '8px',
-                  fontSize: '12px',
-                  color: 'var(--text-primary)',
-                }}
+                contentStyle={rechartsTheme.tooltip.contentStyle}
+                itemStyle={rechartsTheme.tooltip.itemStyle}
+                labelStyle={rechartsTheme.tooltip.labelStyle}
               />
               <Legend
-                wrapperStyle={{ fontSize: '11px', paddingTop: '10px' }}
+                wrapperStyle={rechartsTheme.legend.wrapperStyle}
                 iconType="circle"
               />
             </PieChart>
