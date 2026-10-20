@@ -117,19 +117,19 @@ export function AppLayout() {
       </a>
 
       {/* DESKTOP SIDEBAR */}
-      <aside className="hidden md:flex flex-col w-64 border-r border-border-subtle bg-base-surface shrink-0 h-screen sticky top-0">
-        {/* Brand Header */}
+      <aside className="hidden md:flex flex-col w-64 border-r border-border-subtle bg-base-surface/90 backdrop-blur-md shrink-0 h-screen sticky top-0">
+        {/* Brand Header with Em-dash */}
         <div className="p-5 border-b border-border-subtle flex items-center justify-between">
           <NavLink to="/dashboard" className="flex items-center gap-2.5 group">
-            <div className="w-8 h-8 rounded-card bg-gradient-to-tr from-primary to-accent flex items-center justify-center text-white shadow-glow group-hover:scale-105 transition-transform">
+            <div className="w-8 h-8 rounded-card bg-gradient-to-tr from-primary to-accent flex items-center justify-center text-white shadow-glow group-hover:scale-105 group-hover:shadow-glow-rose transition-all">
               <Code2 className="w-4 h-4" />
             </div>
             <div>
-              <span className="font-bold text-sm tracking-tight block text-content-primary">
-                DevTrack 🌊
+              <span className="font-display font-bold text-sm tracking-tight block text-content-primary">
+                DevTrack <span aria-hidden="true">🌊</span>
               </span>
-              <span className="text-[10px] text-content-muted">
-                DSA Progress Hub
+              <span className="text-[10px] text-content-muted font-sans">
+                DSA Tracker &bull; Spaced Repetition
               </span>
             </div>
           </NavLink>
@@ -140,13 +140,13 @@ export function AppLayout() {
           <button
             type="button"
             onClick={handleOpenNewProblem}
-            className="w-full flex items-center justify-between px-3 py-2 bg-primary/10 hover:bg-primary/20 text-primary border border-primary/25 rounded-card transition-all font-medium text-xs shadow-sm cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
+            className="w-full flex items-center justify-between px-3 py-2 bg-primary/10 hover:bg-primary/20 text-primary border border-primary/25 rounded-button transition-all font-display font-medium text-xs shadow-sm hover:shadow-ambient cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent group"
           >
             <div className="flex items-center gap-2">
-              <Plus className="w-4 h-4" />
+              <Plus className="w-4 h-4 transition-transform group-hover:rotate-90" />
               <span>Log Problem</span>
             </div>
-            <kbd className="px-1.5 py-0.5 text-[10px] bg-base-surface text-primary rounded border border-primary/30">
+            <kbd className="px-1.5 py-0.5 text-[10px] bg-base-surface text-primary rounded-subtle border border-primary/30 font-mono">
               N
             </kbd>
           </button>
@@ -162,10 +162,10 @@ export function AppLayout() {
                 to={item.to}
                 className={({ isActive }) =>
                   clsx(
-                    'flex items-center justify-between px-3 py-2 rounded-card text-xs font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent',
+                    'flex items-center justify-between px-3.5 py-2.5 rounded-button text-xs font-display font-medium transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent select-none',
                     isActive
-                      ? 'bg-primary text-white font-semibold shadow-sm'
-                      : 'text-content-secondary hover:text-content-primary hover:bg-base-elevated'
+                      ? 'bg-primary text-white font-semibold shadow-glow-rose border-l-4 border-l-accent'
+                      : 'text-content-secondary hover:text-content-primary hover:bg-base-elevated hover:translate-x-1'
                   )
                 }
               >
