@@ -1,18 +1,20 @@
 /**
  * DevTrack Motion Language & Animation Presets
  * =====================================================================
- * Centralized motion tokens, easing curves, springs, and variants.
+ * Centralized motion tokens, easing curves, springs, and hover presets.
  * Tuning this single file adjusts the motion personality across the app.
  * Fully respects prefers-reduced-motion and in-app settings.
  * =====================================================================
  */
 
 export const transitions = {
+  instant: { duration: 0.08, ease: 'easeOut' },
   fast: { duration: 0.15, ease: [0.16, 1, 0.3, 1] },
-  normal: { duration: 0.25, ease: [0.16, 1, 0.3, 1] },
-  slow: { duration: 0.4, ease: [0.16, 1, 0.3, 1] },
+  normal: { duration: 0.22, ease: [0.16, 1, 0.3, 1] },
+  slow: { duration: 0.36, ease: [0.16, 1, 0.3, 1] },
   spring: { type: 'spring', stiffness: 380, damping: 28 },
   gentleSpring: { type: 'spring', stiffness: 220, damping: 24 },
+  bouncySpring: { type: 'spring', stiffness: 420, damping: 22 },
 }
 
 /**
@@ -60,4 +62,33 @@ export const pageTransitionVariants = {
   initial: { opacity: 0, y: 8 },
   animate: { opacity: 1, y: 0, transition: { duration: 0.18, ease: 'easeOut' } },
   exit: { opacity: 0, transition: { duration: 0.12, ease: 'easeIn' } },
+}
+
+/**
+ * Shared Interactive Hover & Tap Presets (120-220ms, transform/opacity only)
+ * On reduced motion, transform transitions are nullified.
+ */
+export const hoverPresets = {
+  cardLift: {
+    whileHover: { y: -4, transition: transitions.fast },
+    whileTap: { y: -1, scale: 0.99 },
+  },
+  bentoTile: {
+    whileHover: { y: -5, scale: 1.012, transition: transitions.fast },
+    whileTap: { scale: 0.985 },
+  },
+  buttonPrimary: {
+    whileHover: { scale: 1.03, transition: transitions.fast },
+    whileTap: { scale: 0.96 },
+  },
+  chip: {
+    whileHover: { scale: 1.05, y: -1, transition: transitions.fast },
+    whileTap: { scale: 0.95 },
+  },
+  iconWiggle: {
+    whileHover: { rotate: [0, -8, 8, 0], transition: { duration: 0.28 } },
+  },
+  arrowSlide: {
+    whileHover: { x: 4, transition: transitions.fast },
+  },
 }

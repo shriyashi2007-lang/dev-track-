@@ -23,7 +23,7 @@ export const Input = React.forwardRef(function Input(
       {label && (
         <label
           htmlFor={inputId}
-          className="block text-xs font-medium text-content-secondary mb-1.5"
+          className="block text-xs font-display font-medium text-content-secondary mb-1.5"
         >
           {label}
         </label>
@@ -39,14 +39,14 @@ export const Input = React.forwardRef(function Input(
           id={inputId}
           disabled={disabled}
           className={clsx(
-            'w-full bg-base-elevated/60 text-content-primary text-sm rounded-card border px-3 py-2 transition-colors duration-150',
-            'placeholder:text-content-muted',
-            'focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent',
+            'w-full bg-base-elevated/70 text-content-primary text-sm rounded-input border px-3.5 py-2.5 transition-all duration-150',
+            'placeholder:text-content-muted font-sans',
+            'focus:outline-none focus:border-accent focus:ring-2 focus:ring-accent/30 focus:bg-base-surface',
             'disabled:opacity-50 disabled:cursor-not-allowed',
-            leftIcon ? 'pl-9' : 'pl-3',
-            rightIcon ? 'pr-9' : 'pr-3',
+            leftIcon ? 'pl-9' : 'pl-3.5',
+            rightIcon ? 'pr-9' : 'pr-3.5',
             error
-              ? 'border-difficulty-hard focus:border-difficulty-hard focus:ring-difficulty-hard'
+              ? 'border-difficulty-hard focus:border-difficulty-hard focus:ring-difficulty-hard/30'
               : 'border-border-subtle hover:border-border-strong',
             className
           )}

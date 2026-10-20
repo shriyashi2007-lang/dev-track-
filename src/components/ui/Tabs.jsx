@@ -28,15 +28,15 @@ export function Tabs({
             aria-selected={isSelected}
             onClick={() => onChange(tab.id)}
             className={clsx(
-              'flex items-center gap-2 font-medium text-xs sm:text-sm whitespace-nowrap transition-all duration-150 cursor-pointer select-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent',
+              'flex items-center gap-2 font-display font-medium text-xs sm:text-sm whitespace-nowrap transition-all duration-150 cursor-pointer select-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent',
               variant === 'pills' && [
-                'px-3 py-1.5 rounded-subtle',
+                'px-3.5 py-1.5 rounded-button',
                 isSelected
                   ? 'bg-base-surface text-content-primary shadow-sm font-semibold border border-border-subtle'
-                  : 'text-content-secondary hover:text-content-primary hover:bg-base-surface/50',
+                  : 'text-content-secondary hover:text-content-primary hover:bg-base-surface/60',
               ],
               variant === 'underline' && [
-                'py-2 px-1 border-b-2',
+                'py-2 px-1 border-b-2 font-display',
                 isSelected
                   ? 'border-accent text-accent font-semibold'
                   : 'border-transparent text-content-secondary hover:text-content-primary hover:border-border-strong',
@@ -48,9 +48,9 @@ export function Tabs({
             {tab.count !== undefined && (
               <span
                 className={clsx(
-                  'px-1.5 py-0.5 text-[10px] rounded-full tabular-nums',
+                  'px-2 py-0.5 text-[10px] rounded-full tabular-nums font-mono',
                   isSelected
-                    ? 'bg-accent-light text-accent'
+                    ? 'bg-accent-light text-accent font-semibold'
                     : 'bg-base-surface text-content-muted'
                 )}
               >

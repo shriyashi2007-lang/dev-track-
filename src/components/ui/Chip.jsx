@@ -2,15 +2,27 @@ import React from 'react'
 import clsx from 'clsx'
 import { X } from 'lucide-react'
 
+import { getTopicBadgeStyle } from '../../styles/chartTheme'
+
 export function Chip({
   children,
   selected = false,
+  topic,
+  variant,
   onSelect,
   onRemove,
   className = '',
   disabled = false,
 }) {
   const isInteractive = Boolean(onSelect)
+
+  let customPastelClass = ''
+  if (topic) {
+    const style = getTopicBadgeStyle(typeof children === 'string' ? children : topic)
+    customPastelClass = style.className
+  } else if (variant?.startsWith('pastel-')) {
+    customPastelClass = `bg-${variant} text-content-primary border-border-subtle`
+  }
 
   return (
     <span
@@ -28,11 +40,11 @@ export function Chip({
           : undefined
       }
       className={clsx(
-        'inline-flex items-center gap-1.5 px-2.5 py-1 text-xs rounded-full border transition-all duration-150 select-none',
+        'inline-flex items-center gap-1.5 px-3 py-1 text-xs rounded-full border transition-all duration-150 select-none font-sans',
         selected
           ? 'bg-primary text-white border-primary shadow-sm font-medium'
-          : 'bg-base-elevated text-content-secondary border-border-subtle hover:border-border-strong hover:text-content-primary',
-        isInteractive && !disabled && 'cursor-pointer active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent',
+          : customPastelClass || 'bg-base-elevated text-content-secondary border-border-subtle hover:border-border-strong hover:text-content-primary',
+        isInteractive && !disabled && 'cursor-pointer hover:-translate-y-0.5 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent shadow-sm hover:shadow-ambient',
         disabled && 'opacity-50 cursor-not-allowed',
         className
       )}

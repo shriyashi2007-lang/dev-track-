@@ -58,7 +58,7 @@ export function Modal({
       <div
         ref={modalRef}
         className={clsx(
-          'relative w-full bg-base-surface border border-border-strong rounded-card shadow-2xl p-6 z-10 animate-scale-in my-8',
+          'relative w-full glass-liquid border border-border-strong rounded-modal shadow-ambient hover:shadow-sticker p-6 z-10 animate-scale-in my-8 transition-shadow duration-200',
           maxWidth,
           className
         )}
@@ -66,7 +66,7 @@ export function Modal({
         <div className="flex items-start justify-between gap-4 mb-4">
           <div>
             {title && (
-              <h2 id="modal-title" className="text-lg font-semibold text-content-primary">
+              <h2 id="modal-title" className="text-xl font-display font-bold text-content-primary tracking-tight">
                 {title}
               </h2>
             )}

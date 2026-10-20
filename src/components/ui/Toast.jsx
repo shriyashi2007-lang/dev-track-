@@ -8,32 +8,45 @@ const icons = {
   info: <Info className="w-5 h-5 text-status-attempted shrink-0" />,
 }
 
+const typeStripeClasses = {
+  success: 'border-l-4 border-l-status-solved stripe-success shadow-glow-mint',
+  error: 'border-l-4 border-l-difficulty-hard stripe-hard shadow-glow-rose',
+  info: 'border-l-4 border-l-rainbow-6 stripe-sky shadow-ambient',
+}
+
 const typeEmojis = {
-  success: '✅ ',
-  error: '⚠️ ',
-  info: 'ℹ️ ',
+  success: '✅',
+  error: '⚠️',
+  info: 'ℹ️',
 }
 
 export function Toast({ toast, onDismiss }) {
   const { id, type = 'info', title, message, onUndo, actionLabel = 'Undo' } = toast
 
-  const displayTitle = title && !title.startsWith('✅') && !title.startsWith('⚠️') && !title.startsWith('ℹ️')
-    ? `${typeEmojis[type] || ''}${title}`
+  const rawTitle = title && (title.startsWith('✅') || title.startsWith('⚠️') || title.startsWith('ℹ️'))
+    ? title.slice(2).trim()
     : title
+
+  const emoji = typeEmojis[type] || 'ℹ️'
 
   return (
     <div
       role="status"
       aria-live="polite"
       className={clsx(
-        'flex items-center gap-3 p-4 bg-base-surface/95 border rounded-card shadow-2xl backdrop-blur-md transition-all duration-200 animate-slide-up max-w-md w-full',
-        type === 'error' ? 'border-difficulty-hard/40' : 'border-border-strong'
+        'group flex items-center gap-3 p-4 glass-liquid rounded-card shadow-ambient hover:shadow-sticker transition-all duration-200 animate-slide-up max-w-md w-full border border-border-subtle relative overflow-hidden',
+        typeStripeClasses[type] || typeStripeClasses.info
       )}
     >
       <div className="shrink-0">{icons[type] || icons.info}</div>
       <div className="flex-1 min-w-0">
-        {displayTitle && <p className="text-sm font-semibold text-content-primary">{displayTitle}</p>}
-        {message && <p className="text-xs text-content-secondary truncate">{message}</p>}
+        {rawTitle && (
+          <p className="text-sm font-display font-semibold text-content-primary flex items-center gap-1.5">
+            <span aria-hidden="true">{emoji}</span>
+            <span>{rawTitle}</span>
+          </p>
+        )}
+        {message && <p className="text-xs text-content-secondary truncate mt-0.5">{message}</p>}
       </div>
 
       {onUndo && (
@@ -43,7 +56,7 @@ export function Toast({ toast, onDismiss }) {
             onUndo()
             onDismiss(id)
           }}
-          className="flex items-center gap-1 px-2.5 py-1 text-xs font-semibold text-accent bg-accent-light hover:bg-accent/25 rounded border border-accent/30 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
+          className="flex items-center gap-1 px-2.5 py-1 text-xs font-display font-semibold text-accent bg-accent-light hover:bg-accent/25 rounded-button border border-accent/30 transition-all duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent active:scale-95"
         >
           <RotateCcw className="w-3.5 h-3.5" />
           <span>{actionLabel}</span>
@@ -54,7 +67,7 @@ export function Toast({ toast, onDismiss }) {
         type="button"
         onClick={() => onDismiss(id)}
         aria-label="Dismiss notification"
-        className="text-content-muted hover:text-content-primary p-1 rounded hover:bg-base-elevated transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
+        className="text-content-muted hover:text-content-primary p-1.5 rounded-button hover:bg-base-elevated transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
       >
         <X className="w-4 h-4" />
       </button>
