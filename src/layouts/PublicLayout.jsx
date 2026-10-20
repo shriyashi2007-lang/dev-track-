@@ -35,46 +35,49 @@ export function PublicLayout() {
         Skip to main content
       </a>
 
-      {/* Top Navbar */}
+      {/* Top Navbar with Liquid Glass */}
       <header
         className={`sticky top-0 z-40 transition-all duration-200 ${
           isScrolled
-            ? 'bg-base-surface/90 backdrop-blur-md border-b border-border-subtle shadow-sm'
-            : 'bg-transparent border-b border-transparent'
+            ? 'glass-liquid border-b border-border-subtle shadow-ambient'
+            : 'bg-base/70 backdrop-blur-sm border-b border-transparent'
         }`}
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
           {/* Logo */}
           <Link to="/" className="flex items-center gap-2.5 group">
-            <div className="w-9 h-9 rounded-card bg-gradient-to-tr from-primary to-accent flex items-center justify-center text-white shadow-glow group-hover:scale-105 transition-transform">
+            <div className="w-9 h-9 rounded-card bg-gradient-to-tr from-primary to-accent flex items-center justify-center text-white shadow-glow group-hover:scale-105 group-hover:shadow-glow-rose transition-all">
               <Code2 className="w-5 h-5" />
             </div>
             <div className="flex flex-col">
-              <span className="font-bold text-base tracking-tight leading-none text-content-primary">
-                DevTrack 🌊
+              <span className="font-display font-bold text-base tracking-tight leading-none text-content-primary">
+                DevTrack <span aria-hidden="true">🌊</span>
               </span>
-              <span className="text-[10px] text-content-muted leading-tight">
-                DSA Progress Tracker
+              <span className="text-[10px] text-content-muted leading-tight font-sans">
+                DSA Tracker &bull; Spaced Repetition
               </span>
             </div>
           </Link>
 
-          {/* Desktop Links with Emojis */}
-          <nav className="hidden md:flex items-center gap-6 text-sm font-medium text-content-secondary">
+          {/* Desktop Links */}
+          <nav className="hidden md:flex items-center gap-6 text-sm font-display font-medium text-content-secondary">
             <a href="/#features" className="hover:text-content-primary transition-colors flex items-center gap-1.5">
-              <span>🔁</span> Features
+              <span>Features</span>
+            </a>
+            <a href="/#terminal-demo" className="hover:text-content-primary transition-colors flex items-center gap-1.5">
+              <span>CLI Demo</span>
             </a>
             <a href="/#interactive-demo" className="hover:text-content-primary transition-colors flex items-center gap-1.5">
-              <span>🃏</span> Live Sandbox
+              <span>Sandbox</span>
             </a>
             <a href="/#how-it-works" className="hover:text-content-primary transition-colors flex items-center gap-1.5">
-              <span>🧠</span> How It Works
+              <span>How It Works</span>
             </a>
             <Link to="/problems" className="hover:text-content-primary transition-colors flex items-center gap-1.5">
-              <span>📊</span> Problems
+              <span>Problems</span>
             </Link>
             <Link to="/revision" className="hover:text-content-primary transition-colors flex items-center gap-1.5">
-              <span>⚡</span> Revision
+              <span>Revision</span>
             </Link>
           </nav>
 
@@ -84,7 +87,7 @@ export function PublicLayout() {
               type="button"
               onClick={toggleTheme}
               aria-label="Toggle theme"
-              className="p-2 rounded-card text-content-secondary hover:text-content-primary hover:bg-base-elevated transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
+              className="p-2 rounded-button text-content-secondary hover:text-content-primary hover:bg-base-elevated transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
             >
               {settings.theme === 'dark' ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
             </button>
@@ -95,9 +98,14 @@ export function PublicLayout() {
               </Button>
             </Link>
 
-            <Link to="/dashboard">
-              <Button variant="primary" size="sm" rightIcon={<ArrowRight className="w-4 h-4" />}>
-                Dive In 🚀
+            <Link to="/dashboard" className="group">
+              <Button
+                variant="primary"
+                size="sm"
+                rightIcon={<ArrowRight className="w-4 h-4 transition-transform duration-150 group-hover:translate-x-1" />}
+              >
+                <span>Dive In</span>
+                <span aria-hidden="true" className="ml-1">🚀</span>
               </Button>
             </Link>
           </div>
