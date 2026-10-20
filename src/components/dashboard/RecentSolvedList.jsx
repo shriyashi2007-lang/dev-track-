@@ -5,6 +5,12 @@ import { Badge } from '../ui/Badge'
 import { CheckCircle2, ArrowRight, ExternalLink, Edit2, BookOpen } from 'lucide-react'
 import { formatDate } from '../../utils/dates'
 
+const difficultyStripes = {
+  Easy: 'border-l-4 border-l-difficulty-easy stripe-easy',
+  Medium: 'border-l-4 border-l-difficulty-medium stripe-medium',
+  Hard: 'border-l-4 border-l-difficulty-hard stripe-hard',
+}
+
 export function RecentSolvedList({ problems = [], onEdit, onToggleRevision }) {
   const recent = problems
     .filter((p) => p.status === 'Solved')
@@ -14,22 +20,22 @@ export function RecentSolvedList({ problems = [], onEdit, onToggleRevision }) {
     <Card className="p-5">
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-2">
-          <CheckCircle2 className="w-4 h-4 text-status-solved-text" />
-          <h3 className="text-xs font-semibold text-content-primary uppercase tracking-wider">
-            Recently Solved
+          <CheckCircle2 className="w-4 h-4 text-status-solved" />
+          <h3 className="text-xs font-display font-semibold text-content-primary uppercase tracking-wider">
+            Recently Solved — Latest Activity
           </h3>
         </div>
         <Link
           to="/problems?status=Solved"
-          className="text-xs text-primary hover:text-primary-hover flex items-center gap-1 transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-accent"
+          className="text-xs font-display font-medium text-primary hover:text-primary-hover flex items-center gap-1 transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-accent group"
         >
           <span>View all</span>
-          <ArrowRight className="w-3 h-3" />
+          <ArrowRight className="w-3 h-3 transition-transform group-hover:translate-x-1" />
         </Link>
       </div>
 
       {recent.length === 0 ? (
-        <p className="text-xs text-content-muted py-6 text-center">
+        <p className="text-xs text-content-muted py-6 text-center font-sans">
           No problems marked as solved yet.
         </p>
       ) : (
@@ -37,7 +43,9 @@ export function RecentSolvedList({ problems = [], onEdit, onToggleRevision }) {
           {recent.map((problem) => (
             <div
               key={problem.id}
-              className="p-3 bg-base-elevated/40 hover:bg-base-elevated border border-border-subtle rounded-card flex items-center justify-between gap-3 transition-colors"
+              className={`p-3 bg-base-elevated/40 hover:bg-base-elevated border border-border-subtle rounded-card flex items-center justify-between gap-3 transition-all duration-150 hover:shadow-ambient hover:-translate-y-0.5 ${
+                difficultyStripes[problem.difficulty] || 'stripe-primary'
+              }`}
             >
               <div className="min-w-0">
                 <div className="flex items-center gap-2 mb-1">

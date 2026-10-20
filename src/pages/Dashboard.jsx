@@ -1,9 +1,7 @@
 import React, { useState } from 'react'
 import { useProblems } from '../context/ProblemsContext'
 import { useSettings } from '../context/SettingsContext'
-import { StatCards } from '../components/dashboard/StatCards'
-import { DailyGoalWidget } from '../components/dashboard/DailyGoalWidget'
-import { StreakCard } from '../components/dashboard/StreakCard'
+import { DashboardBentoOverview } from '../components/dashboard/DashboardBentoOverview'
 import { QuickAddWidget } from '../components/dashboard/QuickAddWidget'
 import { ContributionHeatmap } from '../components/dashboard/ContributionHeatmap'
 import { ActivityChart } from '../components/dashboard/ActivityChart'
@@ -46,13 +44,13 @@ export default function Dashboard() {
 
   return (
     <div className="space-y-6">
-      {/* Top Greeting & Dynamic Motivational Banner */}
+      {/* Top Greeting & Dynamic Motivational Banner with Em-dash */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-2 border-b border-border-subtle">
         <div>
-          <h2 className="text-xl sm:text-2xl font-bold text-content-primary">
-            {greeting}, {settings.displayName || 'Developer'}
+          <h2 className="text-xl sm:text-2xl font-display font-bold text-content-primary">
+            {greeting}, {settings.displayName || 'Developer'} — DevTrack Hub
           </h2>
-          <div className="flex items-center gap-1.5 text-xs text-content-secondary mt-1">
+          <div className="flex items-center gap-1.5 text-xs text-content-secondary mt-1 font-sans">
             <Sparkles className="w-3.5 h-3.5 text-accent shrink-0" />
             <span>{stats.insight}</span>
           </div>
@@ -71,14 +69,12 @@ export default function Dashboard() {
         )}
       </div>
 
-      {/* 4 Animated Stat Cards */}
-      <StatCards stats={stats} />
-
-      {/* Daily Goal & Streak Section */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <DailyGoalWidget stats={stats} dailyGoal={settings.dailyGoal} />
-        <StreakCard streaks={streaks} />
-      </div>
+      {/* Asymmetric Bento Grid Overview (Total Solved, Streak Ring, Daily Target, Revision) */}
+      <DashboardBentoOverview
+        stats={stats}
+        streaks={streaks}
+        dailyGoal={settings.dailyGoal}
+      />
 
       {/* Inline Quick-Add Widget */}
       <QuickAddWidget onAdd={addProblem} />
