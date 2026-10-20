@@ -11,6 +11,13 @@ import {
 } from 'lucide-react'
 import { Badge } from '../ui/Badge'
 import { formatDate } from '../../utils/dates'
+import { getTopicBadgeStyle } from '../../styles/chartTheme'
+
+const difficultyStripes = {
+  Easy: 'border-l-4 border-l-difficulty-easy stripe-easy',
+  Medium: 'border-l-4 border-l-difficulty-medium stripe-medium',
+  Hard: 'border-l-4 border-l-difficulty-hard stripe-hard',
+}
 
 export function ProblemsTable({
   problems = [],
@@ -128,7 +135,8 @@ export function ProblemsTable({
                 <React.Fragment key={problem.id}>
                   <tr
                     className={clsx(
-                      'hover:bg-base-elevated/40 transition-colors group',
+                      'hover:bg-base-elevated/50 transition-all duration-150 group',
+                      difficultyStripes[problem.difficulty] || 'border-l-4 border-l-transparent',
                       isSelected && 'bg-primary/5'
                     )}
                   >
@@ -161,7 +169,7 @@ export function ProblemsTable({
 
                         <div className="min-w-0">
                           <div className="flex items-center gap-2">
-                            <span className="font-medium text-content-primary truncate hover:underline cursor-pointer" onClick={() => onEdit(problem)}>
+                            <span className="font-display font-medium text-content-primary truncate hover:underline cursor-pointer" onClick={() => onEdit(problem)}>
                               {renderHighlightedText(problem.title, searchQuery)}
                             </span>
                             {problem.url && (
@@ -181,7 +189,7 @@ export function ProblemsTable({
                               </Badge>
                             )}
                           </div>
-                          <span className="text-[11px] text-content-muted block sm:hidden">
+                          <span className="text-[11px] text-content-muted block sm:hidden font-sans">
                             {problem.platform}
                           </span>
                         </div>
@@ -195,19 +203,25 @@ export function ProblemsTable({
                       </Badge>
                     </td>
 
-                    {/* Topics */}
+                    {/* Topics with pastel rainbow styling */}
                     <td className="py-3 px-4 hidden md:table-cell">
                       <div className="flex flex-wrap gap-1 max-w-xs">
-                        {(problem.topics || []).slice(0, 3).map((topic) => (
-                          <span
-                            key={topic}
-                            className="px-2 py-0.5 text-[10px] bg-base-elevated text-content-secondary rounded-full border border-border-subtle"
-                          >
-                            {renderHighlightedText(topic, searchQuery)}
-                          </span>
-                        ))}
+                        {(problem.topics || []).slice(0, 3).map((topic) => {
+                          const topicStyle = getTopicBadgeStyle(topic)
+                          return (
+                            <span
+                              key={topic}
+                              className={clsx(
+                                'px-2 py-0.5 text-[10px] rounded-full border transition-colors',
+                                topicStyle.className
+                              )}
+                            >
+                              {renderHighlightedText(topic, searchQuery)}
+                            </span>
+                          )
+                        })}
                         {(problem.topics || []).length > 3 && (
-                          <span className="text-[10px] text-content-muted self-center">
+                          <span className="text-[10px] text-content-muted self-center font-mono">
                             +{(problem.topics || []).length - 3}
                           </span>
                         )}
