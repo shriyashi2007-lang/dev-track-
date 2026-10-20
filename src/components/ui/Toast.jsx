@@ -8,8 +8,18 @@ const icons = {
   info: <Info className="w-5 h-5 text-status-attempted shrink-0" />,
 }
 
+const typeEmojis = {
+  success: '✅ ',
+  error: '⚠️ ',
+  info: 'ℹ️ ',
+}
+
 export function Toast({ toast, onDismiss }) {
   const { id, type = 'info', title, message, onUndo, actionLabel = 'Undo' } = toast
+
+  const displayTitle = title && !title.startsWith('✅') && !title.startsWith('⚠️') && !title.startsWith('ℹ️')
+    ? `${typeEmojis[type] || ''}${title}`
+    : title
 
   return (
     <div
@@ -22,7 +32,7 @@ export function Toast({ toast, onDismiss }) {
     >
       <div className="shrink-0">{icons[type] || icons.info}</div>
       <div className="flex-1 min-w-0">
-        {title && <p className="text-sm font-semibold text-content-primary">{title}</p>}
+        {displayTitle && <p className="text-sm font-semibold text-content-primary">{displayTitle}</p>}
         {message && <p className="text-xs text-content-secondary truncate">{message}</p>}
       </div>
 

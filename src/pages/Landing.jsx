@@ -1,388 +1,266 @@
-import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import {
-  Code2,
-  Flame,
-  BarChart3,
-  RotateCcw,
-  Command,
-  ShieldCheck,
   ArrowRight,
-  Sparkles,
   Database,
+  CheckCircle2,
+  Lock,
+  Layers,
 } from 'lucide-react'
-import { Button } from '../components/ui/Button'
-import { Badge } from '../components/ui/Badge'
-import { ProgressRing } from '../components/ui/ProgressRing'
 import { WaveDivider } from '../components/ui/WaveDivider'
+import { BubblesCanvas } from '../components/landing/BubblesCanvas'
 import { TextEffect } from '../components/motion-primitives/TextEffect'
-import { AnimatedGroup } from '../components/motion-primitives/AnimatedGroup'
 import { InView } from '../components/motion-primitives/InView'
+import { TopicTicker } from '../components/landing/TopicTicker'
+import { FeatureCarousel } from '../components/landing/FeatureCarousel'
+import { SwipeDeckDemo } from '../components/landing/SwipeDeckDemo'
+import { ConnectedHowItWorks } from '../components/landing/ConnectedHowItWorks'
+import { HeroPreviewCard } from '../components/landing/HeroPreviewCard'
+import { MagneticButton } from '../components/landing/MagneticButton'
+import { UnderlineDoodle, WaveSquiggleDoodle } from '../components/landing/HandDrawnDoodle'
 import { useProblems } from '../context/ProblemsContext'
 
 export default function Landing() {
   const navigate = useNavigate()
   const { loadSampleData } = useProblems()
 
-  // Interactive "Try It Live" Mini Demo State (isolated local demo)
-  const [demoSolved, setDemoSolved] = useState(2)
-  const [demoStreak, setDemoStreak] = useState(3)
-  const [demoTarget] = useState(4)
-  const [demoRecent, setDemoRecent] = useState([
-    { title: 'Reverse Linked List', diff: 'Easy' },
-    { title: 'Binary Tree Level Order', diff: 'Medium' },
-  ])
-
-  const handleDemoSolve = (diff) => {
-    setDemoSolved((prev) => prev + 1)
-    if (demoSolved + 1 >= demoTarget) {
-      setDemoStreak((prev) => prev + 1)
-    }
-    const sampleTitles = {
-      Easy: 'Valid Palindrome',
-      Medium: 'Subarray Sum Equals K',
-      Hard: 'Merge k Sorted Lists',
-    }
-    setDemoRecent((prev) => [
-      { title: sampleTitles[diff] || 'Algorithm Problem', diff },
-      ...prev.slice(0, 2),
-    ])
-  }
-
-  const handleLoadAndExplore = async () => {
+  const handleLoadSampleAndGo = async () => {
     await loadSampleData()
     navigate('/dashboard')
   }
 
   return (
-    <div className="space-y-20 sm:space-y-28 py-10 overflow-hidden">
-      {/* 1. HERO SECTION WITH CSS GRADIENT BACKDROP */}
-      <section className="relative max-w-5xl mx-auto px-4 sm:px-6 text-center space-y-6">
-        {/* Soft, non-distracting CSS gradient background using palette tokens */}
+    <div className="relative overflow-hidden space-y-24 sm:space-y-32">
+      {/* 1. HERO SECTION: "DIVE IN" 🌊 */}
+      <section className="relative pt-8 sm:pt-16 pb-12 sm:pb-20 overflow-hidden">
+        {/* Rising Bubbles Background Canvas */}
+        <div aria-hidden="true" className="absolute inset-0 pointer-events-none z-0">
+          <BubblesCanvas className="w-full h-full opacity-65" />
+        </div>
+
+        {/* Soft Radial CSS Gradient Aura */}
         <div
           aria-hidden="true"
-          className="absolute -top-24 left-1/2 -translate-x-1/2 w-[600px] h-[350px] bg-gradient-to-b from-primary/15 via-accent/10 to-transparent blur-3xl pointer-events-none rounded-full"
+          className="absolute -top-32 left-1/2 -translate-x-1/2 w-[650px] h-[450px] bg-gradient-to-b from-accent-coral/15 via-primary/10 to-transparent blur-3xl pointer-events-none rounded-full"
         />
 
-        <div className="relative z-10 inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-accent-light border border-accent/25 text-accent text-xs font-medium animate-fade-in">
-          <Sparkles className="w-3.5 h-3.5 text-accent" />
-          <span>Engineered for BTech students &amp; DSA interview candidates</span>
-        </div>
+        <div className="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 text-center space-y-6">
+          {/* Sticker Badge */}
+          <div className="inline-flex items-center gap-2">
+            <span className="sticker-badge bg-accent-coral text-content-inverse text-xs sm:text-sm -rotate-2">
+              🌊 Dive into your DSA streak
+            </span>
+            <span className="text-xs text-content-muted uppercase tracking-wider font-semibold hidden sm:inline">
+              • Built for BTech Students &amp; Candidates
+            </span>
+          </div>
 
-        {/* Text Effect on Hero Headline */}
-        <div className="relative z-10">
-          <TextEffect
-            as="h1"
-            per="word"
-            className="text-3xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-content-primary leading-tight"
-          >
-            Track every problem. Build every habit. Crack every interview.
-          </TextEffect>
-        </div>
-
-        <p className="relative z-10 max-w-2xl mx-auto text-sm sm:text-base text-content-secondary leading-relaxed">
-          The high-performance, private, local-first DSA tracking workspace. Schedule spaced repetition, maintain contribution streaks, visualize topic depth, and review intuition notes with zero latency.
-        </p>
-
-        {/* Hero CTAs */}
-        <div className="relative z-10 flex flex-wrap items-center justify-center gap-3 pt-2">
-          <Link to="/dashboard">
-            <Button
-              variant="primary"
-              size="lg"
-              rightIcon={<ArrowRight className="w-4 h-4" />}
-              className="hover:shadow-glow transition-all duration-200"
+          {/* Hero Headline with Text Effect and Italic Accent */}
+          <div className="max-w-4xl mx-auto">
+            <TextEffect
+              as="h1"
+              per="word"
+              className="hero-headline font-bold text-content-primary"
             >
-              Launch Dashboard
-            </Button>
-          </Link>
+              Dive deep into your DSA consistency.
+            </TextEffect>
 
-          <Button
-            variant="secondary"
-            size="lg"
-            leftIcon={<Database className="w-4 h-4 text-accent" />}
-            onClick={handleLoadAndExplore}
-          >
-            Load Sample Data &amp; Explore
-          </Button>
-        </div>
-
-        {/* Hero Mockup Preview with subtle hover lift */}
-        <div className="relative z-10 pt-8 max-w-4xl mx-auto group">
-          <div className="p-3 bg-gradient-to-b from-primary/25 via-border-subtle to-transparent rounded-2xl shadow-2xl transition-all duration-300 group-hover:shadow-glow">
-            <div className="bg-base-surface border border-border-strong rounded-card overflow-hidden shadow-card">
-              {/* Fake app bar */}
-              <div className="px-4 py-3 border-b border-border-subtle bg-base-elevated/40 flex items-center justify-between text-xs">
-                <div className="flex items-center gap-2">
-                  <div className="w-3 h-3 rounded-full bg-difficulty-hard/80" />
-                  <div className="w-3 h-3 rounded-full bg-difficulty-medium/80" />
-                  <div className="w-3 h-3 rounded-full bg-difficulty-easy/80" />
-                  <span className="text-content-muted ml-2">devtrack.local/dashboard</span>
-                </div>
-                <div className="flex items-center gap-2 text-content-muted text-[11px] tabular-nums">
-                  <span>14 Solved</span>
-                  <span>•</span>
-                  <span className="text-accent font-semibold">5d Streak</span>
-                </div>
-              </div>
-
-              {/* Mockup content stats */}
-              <div className="p-5 grid grid-cols-2 sm:grid-cols-4 gap-3 bg-base-surface text-left">
-                <div className="p-3 bg-base-elevated/50 rounded border border-border-subtle">
-                  <span className="text-[10px] text-content-muted uppercase">Solved</span>
-                  <p className="text-xl font-bold tabular-nums text-content-primary">14</p>
-                </div>
-                <div className="p-3 bg-base-elevated/50 rounded border border-border-subtle">
-                  <span className="text-[10px] text-difficulty-easy-text uppercase">Easy</span>
-                  <p className="text-xl font-bold tabular-nums text-difficulty-easy-text">5</p>
-                </div>
-                <div className="p-3 bg-base-elevated/50 rounded border border-border-subtle">
-                  <span className="text-[10px] text-difficulty-medium-text uppercase">Medium</span>
-                  <p className="text-xl font-bold tabular-nums text-difficulty-medium-text">7</p>
-                </div>
-                <div className="p-3 bg-base-elevated/50 rounded border border-border-subtle">
-                  <span className="text-[10px] text-difficulty-hard-text uppercase">Hard</span>
-                  <p className="text-xl font-bold tabular-nums text-difficulty-hard-text">2</p>
-                </div>
-              </div>
+            {/* Hand-drawn SVG doodle underline accent */}
+            <div className="relative inline-block mt-2">
+              <span className="text-2xl sm:text-4xl lg:text-5xl font-bold italic text-accent-coral">
+                Retain every algorithm for interview day.
+              </span>
+              <UnderlineDoodle className="h-4 sm:h-5 mt-1 text-accent-coral" />
             </div>
           </div>
-        </div>
-      </section>
 
-      {/* Decorative Wave Divider at Hero Bottom */}
-      <WaveDivider height="h-16 sm:h-20" opacity="opacity-40 dark:opacity-30" />
-
-      {/* 2. "TRY IT LIVE" INTERACTIVE MINI DEMO */}
-      <section className="max-w-4xl mx-auto px-4 sm:px-6">
-        <div className="p-6 sm:p-8 bg-base-surface border border-accent/30 rounded-2xl shadow-xl relative overflow-hidden">
-          <div className="absolute top-0 right-0 w-64 h-64 bg-accent/10 rounded-full blur-3xl pointer-events-none" />
-
-          <div className="flex flex-col md:flex-row items-center justify-between gap-8">
-            <div className="space-y-4 max-w-md text-left">
-              <Badge variant="primary" size="xs">
-                Interactive Playground
-              </Badge>
-              <h2 className="text-xl sm:text-2xl font-bold text-content-primary">
-                Experience the instant feedback loop
-              </h2>
-              <p className="text-xs sm:text-sm text-content-secondary leading-relaxed">
-                Click a difficulty below to simulate solving a question. Watch your daily target progress ring and consistency streak update in real-time.
-              </p>
-
-              {/* Clickable Difficulty Buttons */}
-              <div className="flex flex-wrap gap-2 pt-1">
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => handleDemoSolve('Easy')}
-                  className="border-difficulty-easy-border text-difficulty-easy-text hover:bg-difficulty-easy-bg"
-                >
-                  + Log Easy Solve
-                </Button>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => handleDemoSolve('Medium')}
-                  className="border-difficulty-medium-border text-difficulty-medium-text hover:bg-difficulty-medium-bg"
-                >
-                  + Log Medium Solve
-                </Button>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => handleDemoSolve('Hard')}
-                  className="border-difficulty-hard-border text-difficulty-hard-text hover:bg-difficulty-hard-bg"
-                >
-                  + Log Hard Solve
-                </Button>
-              </div>
-            </div>
-
-            {/* Live Interactive Widget Display */}
-            <div className="p-5 bg-base-elevated/70 border border-border-strong rounded-card flex flex-col items-center text-center w-full sm:w-72 shadow-lg">
-              <ProgressRing
-                value={demoSolved}
-                max={demoTarget}
-                size={110}
-                strokeWidth={9}
-                sublabel="Solved Today"
-                color="var(--accent-coral)"
-              />
-
-              <div className="flex items-center gap-2 mt-4 text-xs font-bold text-accent">
-                <Flame className="w-4 h-4 fill-accent" />
-                <span className="tabular-nums">{demoStreak} Days Streak</span>
-              </div>
-
-              {/* Demo recent list */}
-              <div className="w-full mt-4 pt-3 border-t border-border-subtle space-y-1.5 text-left">
-                <span className="text-[10px] text-content-muted uppercase font-semibold block">
-                  Simulated Submissions:
-                </span>
-                {demoRecent.map((item, i) => (
-                  <div key={i} className="flex items-center justify-between text-[11px]">
-                    <span className="text-content-primary truncate">{item.title}</span>
-                    <Badge variant={item.diff} size="xs">
-                      {item.diff}
-                    </Badge>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Decorative Wave Divider */}
-      <WaveDivider height="h-14 sm:h-16" opacity="opacity-30 dark:opacity-20" flip />
-
-      {/* 3. 6 CORE FEATURES WITH ANIMATED GROUP */}
-      <section id="features" className="max-w-6xl mx-auto px-4 sm:px-6">
-        <div className="text-center max-w-2xl mx-auto mb-12 space-y-2">
-          <Badge variant="neutral" size="xs">
-            Architecture &amp; Features
-          </Badge>
-          <h2 className="text-2xl sm:text-3xl font-bold text-content-primary">
-            Designed for serious technical preparation
-          </h2>
-          <p className="text-xs sm:text-sm text-content-secondary">
-            Everything you need to systematically crack top tech product engineering interviews.
+          <p className="max-w-2xl mx-auto text-base sm:text-lg text-content-secondary leading-relaxed">
+            The private, local-first tracker designed around human memory. Automated spaced repetition intervals, GitHub-style consistency heatmaps, and zero latency—right on your device.
           </p>
+
+          {/* Magnetic Primary CTA & Secondary Demo Trigger */}
+          <div className="flex flex-wrap items-center justify-center gap-4 pt-4">
+            <Link to="/dashboard">
+              <MagneticButton className="px-7 py-3.5 rounded-card bg-primary text-content-inverse font-bold text-base shadow-lg hover:bg-accent-hover flex items-center gap-2">
+                <span>Start Tracking Now 🚀</span>
+                <ArrowRight className="w-4 h-4" />
+              </MagneticButton>
+            </Link>
+
+            <a href="#interactive-demo">
+              <MagneticButton className="px-6 py-3.5 rounded-card bg-base-surface border border-border-strong hover:border-accent-coral text-content-primary font-bold text-base shadow-sm flex items-center gap-2">
+                <span>Try Live Sandbox 🃏</span>
+              </MagneticButton>
+            </a>
+          </div>
+
+          {/* Floating Dashboard Preview Card with 3D Tilt */}
+          <div className="pt-8">
+            <HeroPreviewCard />
+          </div>
         </div>
 
-        <AnimatedGroup className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {/* Card 1 */}
-          <div className="p-6 bg-base-surface border border-border-subtle rounded-card hover:border-border-strong transition-all">
-            <div className="w-10 h-10 rounded-card bg-primary-light flex items-center justify-center text-primary mb-4">
-              <Code2 className="w-5 h-5" />
-            </div>
-            <h3 className="font-semibold text-sm text-content-primary mb-1.5">Problem Tracking &amp; Board</h3>
-            <p className="text-xs text-content-secondary leading-relaxed">
-              Track LeetCode, GFG, and Codeforces questions with tags, time taken, solution notes, and an interactive Kanban board.
-            </p>
-          </div>
-
-          {/* Card 2 */}
-          <div className="p-6 bg-base-surface border border-border-subtle rounded-card hover:border-border-strong transition-all">
-            <div className="w-10 h-10 rounded-card bg-accent-light flex items-center justify-center text-accent mb-4">
-              <Flame className="w-5 h-5" />
-            </div>
-            <h3 className="font-semibold text-sm text-content-primary mb-1.5">Streaks &amp; Contribution Heatmap</h3>
-            <p className="text-xs text-content-secondary leading-relaxed">
-              GitHub-style 52-week activity calendar with hover tooltips, click-to-inspect day panel, and streak-at-risk warnings.
-            </p>
-          </div>
-
-          {/* Card 3 */}
-          <div className="p-6 bg-base-surface border border-border-subtle rounded-card hover:border-border-strong transition-all">
-            <div className="w-10 h-10 rounded-card bg-difficulty-easy-bg flex items-center justify-center text-difficulty-easy-text mb-4">
-              <BarChart3 className="w-5 h-5" />
-            </div>
-            <h3 className="font-semibold text-sm text-content-primary mb-1.5">Analytics &amp; Topic Depth</h3>
-            <p className="text-xs text-content-secondary leading-relaxed">
-              Interactive difficulty donut charts, solve velocity ranges, and weakest/strongest topic insights derived from real logs.
-            </p>
-          </div>
-
-          {/* Card 4 */}
-          <div className="p-6 bg-base-surface border border-border-subtle rounded-card hover:border-border-strong transition-all">
-            <div className="w-10 h-10 rounded-card bg-primary-light flex items-center justify-center text-primary mb-4">
-              <RotateCcw className="w-5 h-5" />
-            </div>
-            <h3 className="font-semibold text-sm text-content-primary mb-1.5">Spaced Repetition Scheduler</h3>
-            <p className="text-xs text-content-secondary leading-relaxed">
-              Automated 1 &rarr; 3 &rarr; 7 &rarr; 14 &rarr; 30 day intervals with full-screen flashcard sessions to test your intuition.
-            </p>
-          </div>
-
-          {/* Card 5 */}
-          <div className="p-6 bg-base-surface border border-border-subtle rounded-card hover:border-border-strong transition-all">
-            <div className="w-10 h-10 rounded-card bg-accent-light flex items-center justify-center text-accent mb-4">
-              <Command className="w-5 h-5" />
-            </div>
-            <h3 className="font-semibold text-sm text-content-primary mb-1.5">Command Palette &amp; Shortcuts</h3>
-            <p className="text-xs text-content-secondary leading-relaxed">
-              Power user Cmd/Ctrl+K palette, chord navigation (G &rarr; P), and keyboard shortcuts to fly without reaching for the mouse.
-            </p>
-          </div>
-
-          {/* Card 6 */}
-          <div className="p-6 bg-base-surface border border-border-subtle rounded-card hover:border-border-strong transition-all">
-            <div className="w-10 h-10 rounded-card bg-difficulty-easy-bg flex items-center justify-center text-difficulty-easy-text mb-4">
-              <ShieldCheck className="w-5 h-5" />
-            </div>
-            <h3 className="font-semibold text-sm text-content-primary mb-1.5">Private &amp; Local-First</h3>
-            <p className="text-xs text-content-secondary leading-relaxed">
-              Zero backend latency. Data stays in your browser with JSON backups, instant loading, and zero account hurdles.
-            </p>
-          </div>
-        </AnimatedGroup>
+        {/* Wave Divider at Bottom of Hero */}
+        <div className="mt-12">
+          <WaveDivider height="h-16 sm:h-24 md:h-28" />
+        </div>
       </section>
 
-      {/* 4. HOW IT WORKS WITH IN-VIEW SCROLL REVEAL */}
-      <InView className="max-w-4xl mx-auto px-4 sm:px-6">
-        <section id="how-it-works">
-          <div className="text-center max-w-xl mx-auto mb-12 space-y-2">
-            <Badge variant="neutral" size="xs">
-              Simple 3-Step Routine
-            </Badge>
-            <h2 className="text-2xl sm:text-3xl font-bold text-content-primary">How DevTrack accelerates prep</h2>
-          </div>
+      {/* 2. SCROLLING TOPIC TICKER */}
+      <section className="relative z-10 -mt-16 sm:-mt-24">
+        <TopicTicker />
+      </section>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-left">
-            <div className="p-5 bg-base-surface border border-border-subtle rounded-card space-y-2">
-              <span className="text-2xl font-bold text-primary block tabular-nums">01</span>
-              <h4 className="font-semibold text-sm text-content-primary">Solve &amp; Log</h4>
-              <p className="text-xs text-content-secondary leading-relaxed">
-                Solve on LeetCode or GFG, press &ldquo;N&rdquo;, log your time, and capture the core pattern intuition.
-              </p>
+      {/* 3. SWIPEABLE FEATURE CAROUSEL */}
+      <section id="features" className="relative max-w-6xl mx-auto px-4 sm:px-6">
+        <InView
+          variants={{
+            hidden: { opacity: 0, y: 20 },
+            visible: { opacity: 1, y: 0, transition: { duration: 0.4 } },
+          }}
+        >
+          <div className="text-center max-w-2xl mx-auto mb-10 space-y-3">
+            <div className="flex items-center justify-center gap-2">
+              <span className="sticker-badge bg-primary text-content-inverse text-xs rotate-1">
+                🔁 The Retention Engine
+              </span>
             </div>
-
-            <div className="p-5 bg-base-surface border border-border-subtle rounded-card space-y-2">
-              <span className="text-2xl font-bold text-accent block tabular-nums">02</span>
-              <h4 className="font-semibold text-sm text-content-primary">Maintain Streaks</h4>
-              <p className="text-xs text-content-secondary leading-relaxed">
-                Hit your daily goal ring to keep consecutive day streaks alive on your contribution heatmap.
-              </p>
-            </div>
-
-            <div className="p-5 bg-base-surface border border-border-subtle rounded-card space-y-2">
-              <span className="text-2xl font-bold text-difficulty-easy-text block tabular-nums">03</span>
-              <h4 className="font-semibold text-sm text-content-primary">Spaced Recall</h4>
-              <p className="text-xs text-content-secondary leading-relaxed">
-                Review flagged problems in flashcard mode at optimal spaced intervals right before interviews.
-              </p>
-            </div>
-          </div>
-        </section>
-      </InView>
-
-      {/* 5. FINAL CALL TO ACTION */}
-      <InView className="max-w-4xl mx-auto px-4 sm:px-6 text-center">
-        <section>
-          <div className="p-10 sm:p-14 bg-gradient-to-b from-primary/15 via-base-surface to-base-surface border border-accent/30 rounded-2xl space-y-5 shadow-2xl relative overflow-hidden">
-            <h2 className="text-2xl sm:text-4xl font-bold text-content-primary">
-              Ready to upgrade your DSA preparation?
+            <h2 className="text-3xl sm:text-4xl font-bold text-content-primary">
+              <span className="italic text-accent-coral">Engineered</span> for genuine algorithmic recall.
             </h2>
-            <p className="text-xs sm:text-sm text-content-secondary max-w-md mx-auto leading-relaxed">
-              Start tracking your algorithmic journey today. No signups, no fees, no lock-in.
+            <p className="text-sm sm:text-base text-content-secondary">
+              Drag left or right across cards with spring physics. Built to eliminate the dreaded &ldquo;I solved this a month ago but can&rsquo;t remember the trick&rdquo; feeling.
             </p>
-            <div className="flex flex-wrap items-center justify-center gap-3 pt-2">
-              <Link to="/dashboard">
-                <Button variant="primary" size="lg">
-                  Open App Now
-                </Button>
-              </Link>
-              <Link to="/signup">
-                <Button variant="outline" size="lg">
-                  Explore Demo Signup
-                </Button>
-              </Link>
-            </div>
           </div>
-        </section>
-      </InView>
+        </InView>
+
+        <FeatureCarousel />
+
+        <div className="mt-16">
+          <WaveDivider height="h-12 sm:h-20" opacity="opacity-40 dark:opacity-30" />
+        </div>
+      </section>
+
+      {/* 4. INTERACTIVE "TRY IT LIVE" SWIPE DECK DEMO */}
+      <section id="interactive-demo" className="relative max-w-6xl mx-auto px-4 sm:px-6">
+        <InView
+          variants={{
+            hidden: { opacity: 0, y: 20 },
+            visible: { opacity: 1, y: 0, transition: { duration: 0.4 } },
+          }}
+        >
+          <div className="text-center max-w-2xl mx-auto mb-8 space-y-2">
+            <div className="flex items-center justify-center gap-2">
+              <span className="sticker-badge bg-base-elevated border border-border-subtle text-accent-coral text-xs -rotate-1">
+                🃏 Test Drive the Engine
+              </span>
+            </div>
+            <h2 className="text-3xl sm:text-4xl font-bold text-content-primary">
+              Swipe right if you know it, left if you need a refresh.
+            </h2>
+            <p className="text-sm sm:text-base text-content-secondary">
+              Fully interactive sandbox. Experience the spaced repetition workflow with realistic interview questions.
+            </p>
+          </div>
+        </InView>
+
+        <SwipeDeckDemo />
+
+        <div className="mt-16">
+          <WaveDivider height="h-12 sm:h-20" opacity="opacity-40 dark:opacity-30" />
+        </div>
+      </section>
+
+      {/* 5. CONNECTED HOW IT WORKS */}
+      <section id="how-it-works" className="relative max-w-5xl mx-auto px-4 sm:px-6">
+        <InView
+          variants={{
+            hidden: { opacity: 0, y: 20 },
+            visible: { opacity: 1, y: 0, transition: { duration: 0.4 } },
+          }}
+        >
+          <div className="text-center max-w-2xl mx-auto mb-12 space-y-3">
+            <div className="flex items-center justify-center gap-2">
+              <WaveSquiggleDoodle className="w-16 h-4" />
+              <span className="text-xs font-bold uppercase tracking-wider text-accent-coral">
+                The Science of Consistency
+              </span>
+              <WaveSquiggleDoodle className="w-16 h-4 -scale-x-100" />
+            </div>
+            <h2 className="text-3xl sm:text-4xl font-bold text-content-primary">
+              <span className="italic text-primary">How</span> you retain 300+ algorithms without burning out.
+            </h2>
+            <p className="text-sm sm:text-base text-content-secondary">
+              A continuous, frictionless workflow designed to turn short-term LeetCode grinds into lifelong problem-solving intuition.
+            </p>
+          </div>
+        </InView>
+
+        <ConnectedHowItWorks />
+      </section>
+
+      {/* 6. FINAL IMMERSIVE CTA */}
+      <section className="relative max-w-4xl mx-auto px-4 sm:px-6 text-center">
+        <div className="p-8 sm:p-14 rounded-3xl bg-gradient-to-b from-base-surface to-base-elevated border border-border-strong shadow-2xl space-y-6 relative overflow-hidden">
+          {/* Subtle ocean wave aura */}
+          <div
+            aria-hidden="true"
+            className="absolute top-0 right-0 w-80 h-80 bg-gradient-to-br from-primary/20 via-accent-coral/15 to-transparent blur-3xl pointer-events-none rounded-full"
+          />
+
+          <div className="relative z-10 flex items-center justify-center gap-2">
+            <span className="sticker-badge bg-primary text-content-inverse text-xs rotate-1">
+              🌊 Ready to Dive In?
+            </span>
+          </div>
+
+          <h2 className="relative z-10 text-3xl sm:text-5xl font-bold text-content-primary leading-tight">
+            Stop losing track of your prep. <br />
+            <span className="italic text-accent-coral">Start building your streak today.</span>
+          </h2>
+
+          <p className="relative z-10 max-w-xl mx-auto text-sm sm:text-base text-content-secondary leading-relaxed">
+            Free forever. Zero account creation required. All data stored directly in your browser.
+          </p>
+
+          <div className="relative z-10 flex flex-wrap items-center justify-center gap-4 pt-4">
+            <Link to="/dashboard">
+              <MagneticButton className="px-8 py-4 rounded-card bg-primary text-content-inverse font-bold text-base shadow-xl hover:bg-accent-hover flex items-center gap-2">
+                <span>Launch DevTrack 🚀</span>
+                <ArrowRight className="w-4 h-4" />
+              </MagneticButton>
+            </Link>
+
+            <MagneticButton
+              onClick={handleLoadSampleAndGo}
+              className="px-6 py-4 rounded-card bg-base-surface border border-border-strong hover:border-primary text-content-primary font-bold text-base shadow-sm flex items-center gap-2"
+            >
+              <Database className="w-4 h-4 text-accent-coral" />
+              <span>Load 25 Sample Questions &amp; Explore</span>
+            </MagneticButton>
+          </div>
+
+          {/* Privacy & Guarantee Micro-badges */}
+          <div className="relative z-10 pt-6 border-t border-border-subtle flex flex-wrap items-center justify-center gap-6 text-xs text-content-muted">
+            <span className="flex items-center gap-1.5">
+              <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
+              100% Free &amp; Open
+            </span>
+            <span className="flex items-center gap-1.5">
+              <Lock className="w-3.5 h-3.5 text-accent-coral" />
+              Local-first Privacy
+            </span>
+            <span className="flex items-center gap-1.5">
+              <Layers className="w-3.5 h-3.5 text-primary" />
+              No Account Required
+            </span>
+          </div>
+        </div>
+      </section>
+
+      {/* Decorative Wave Divider Leading Smoothly into Footer */}
+      <div className="pt-6">
+        <WaveDivider height="h-16 sm:h-24 md:h-32" />
+      </div>
     </div>
   )
 }

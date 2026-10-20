@@ -3,6 +3,7 @@ import { Outlet, Link, useLocation } from 'react-router-dom'
 import { Code2, Sun, Moon, Menu, X, ArrowRight } from 'lucide-react'
 import { useSettings } from '../context/SettingsContext'
 import { Button } from '../components/ui/Button'
+import { WaveWipeTransition } from '../components/motion-primitives/WaveWipeTransition'
 import { WaveDivider } from '../components/ui/WaveDivider'
 
 export function PublicLayout() {
@@ -50,27 +51,30 @@ export function PublicLayout() {
             </div>
             <div className="flex flex-col">
               <span className="font-bold text-base tracking-tight leading-none text-content-primary">
-                DevTrack
+                DevTrack 🌊
               </span>
               <span className="text-[10px] text-content-muted leading-tight">
-                DSA &amp; Prep Tracker
+                DSA Progress Tracker
               </span>
             </div>
           </Link>
 
-          {/* Desktop Links */}
-          <nav className="hidden md:flex items-center gap-6 text-xs sm:text-sm font-medium text-content-secondary">
-            <a href="/#features" className="hover:text-content-primary transition-colors">
-              Features
+          {/* Desktop Links with Emojis */}
+          <nav className="hidden md:flex items-center gap-6 text-sm font-medium text-content-secondary">
+            <a href="/#features" className="hover:text-content-primary transition-colors flex items-center gap-1.5">
+              <span>🔁</span> Features
             </a>
-            <a href="/#how-it-works" className="hover:text-content-primary transition-colors">
-              How It Works
+            <a href="/#interactive-demo" className="hover:text-content-primary transition-colors flex items-center gap-1.5">
+              <span>🃏</span> Live Sandbox
             </a>
-            <Link to="/problems" className="hover:text-content-primary transition-colors">
-              Problems
+            <a href="/#how-it-works" className="hover:text-content-primary transition-colors flex items-center gap-1.5">
+              <span>🧠</span> How It Works
+            </a>
+            <Link to="/problems" className="hover:text-content-primary transition-colors flex items-center gap-1.5">
+              <span>📊</span> Problems
             </Link>
-            <Link to="/revision" className="hover:text-content-primary transition-colors">
-              Revision
+            <Link to="/revision" className="hover:text-content-primary transition-colors flex items-center gap-1.5">
+              <span>⚡</span> Revision
             </Link>
           </nav>
 
@@ -93,7 +97,7 @@ export function PublicLayout() {
 
             <Link to="/dashboard">
               <Button variant="primary" size="sm" rightIcon={<ArrowRight className="w-4 h-4" />}>
-                Launch App
+                Dive In 🚀
               </Button>
             </Link>
           </div>
@@ -124,22 +128,25 @@ export function PublicLayout() {
           <div className="md:hidden border-b border-border-subtle bg-base-surface p-4 space-y-3 animate-slide-up">
             <nav className="flex flex-col gap-2.5 text-sm font-medium text-content-secondary">
               <a href="/#features" className="px-3 py-2 rounded-subtle hover:bg-base-elevated hover:text-content-primary">
-                Features
+                🔁 Features
+              </a>
+              <a href="/#interactive-demo" className="px-3 py-2 rounded-subtle hover:bg-base-elevated hover:text-content-primary">
+                🃏 Live Sandbox
               </a>
               <a href="/#how-it-works" className="px-3 py-2 rounded-subtle hover:bg-base-elevated hover:text-content-primary">
-                How It Works
+                🧠 How It Works
               </a>
               <Link to="/problems" className="px-3 py-2 rounded-subtle hover:bg-base-elevated hover:text-content-primary">
-                Problems
+                📊 Problems
               </Link>
               <Link to="/revision" className="px-3 py-2 rounded-subtle hover:bg-base-elevated hover:text-content-primary">
-                Revision
+                ⚡ Revision
               </Link>
             </nav>
             <div className="pt-3 border-t border-border-subtle flex flex-col gap-2">
               <Link to="/dashboard" className="w-full">
                 <Button variant="primary" size="sm" className="w-full">
-                  Launch Dashboard
+                  Launch Dashboard 🚀
                 </Button>
               </Link>
               <Link to="/login" className="w-full">
@@ -152,9 +159,11 @@ export function PublicLayout() {
         )}
       </header>
 
-      {/* Main Page Content */}
+      {/* Main Page Content with Layered Wave-Wipe Route Transition */}
       <main id="main-content" className="flex-1">
-        <Outlet />
+        <WaveWipeTransition>
+          <Outlet />
+        </WaveWipeTransition>
       </main>
 
       {/* Wave Decorative Divider above Footer */}
@@ -167,16 +176,16 @@ export function PublicLayout() {
             <div className="w-6 h-6 rounded-subtle bg-gradient-to-tr from-primary to-accent flex items-center justify-center text-white">
               <Code2 className="w-3.5 h-3.5" />
             </div>
-            <span className="text-xs font-semibold text-content-primary">DevTrack</span>
+            <span className="text-xs font-semibold text-content-primary">DevTrack 🌊</span>
             <span className="text-xs text-content-muted">
-              — Built for students and developers preparing for DSA interviews.
+              — Ocean-depth consistency tracker for DSA &amp; coding preparation.
             </span>
           </div>
 
           <div className="flex items-center gap-4 text-xs text-content-secondary">
-            <span>Local-first • Zero tracking • Free forever</span>
+            <span>🔒 Local-first • 🫧 Zero tracking • 100% Free</span>
             <Link to="/dashboard" className="hover:text-content-primary underline focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-accent">
-              Open App
+              Open App 🚀
             </Link>
           </div>
         </div>

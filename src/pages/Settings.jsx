@@ -99,13 +99,6 @@ export function SettingsPage() {
     })
   }
 
-  const initials = (settings.displayName || 'Dev')
-    .split(' ')
-    .map((n) => n[0])
-    .join('')
-    .substring(0, 2)
-    .toUpperCase()
-
   return (
     <div className="max-w-4xl space-y-6">
       <div>

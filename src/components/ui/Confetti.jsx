@@ -7,7 +7,9 @@ export function Confetti({ trigger = false, onComplete }) {
 
   useEffect(() => {
     if (!trigger) return
-    if (!settings.confetti || settings.reduceMotion) {
+    const allowConfetti = settings ? settings.confetti : true
+    const reduceMotion = settings ? settings.reduceMotion : false
+    if (!allowConfetti || reduceMotion) {
       onComplete?.()
       return
     }
@@ -21,7 +23,7 @@ export function Confetti({ trigger = false, onComplete }) {
 
     const particles = []
     const particleCount = 70
-    const colors = ['#6366F1', '#8B5CF6', '#10B981', '#F59E0B', '#EC4899', '#38BDF8']
+    const colors = ['#FA7268', '#EF5F67', '#E34C67', '#D53867', '#C62368', '#10B981']
 
     for (let i = 0; i < particleCount; i++) {
       particles.push({
@@ -74,7 +76,7 @@ export function Confetti({ trigger = false, onComplete }) {
     return () => {
       if (animationFrameId) cancelAnimationFrame(animationFrameId)
     }
-  }, [trigger, settings.confetti, settings.reduceMotion, onComplete])
+  }, [trigger, settings, onComplete])
 
   if (!trigger) return null
 

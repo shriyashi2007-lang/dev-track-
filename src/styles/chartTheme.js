@@ -15,7 +15,7 @@ export function getCssVar(name, fallback = '') {
   if (typeof window === 'undefined' || !document?.documentElement) {
     return fallback
   }
-  const val = getComputedStyle(document.documentElement).getPropertyValue(name).trim()
+  const val = window.getComputedStyle(document.documentElement).getPropertyValue(name).trim()
   return val || fallback
 }
 

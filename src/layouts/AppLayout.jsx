@@ -28,6 +28,8 @@ import { OnboardingTour } from '../components/OnboardingTour'
 import { Confetti } from '../components/ui/Confetti'
 import { Button } from '../components/ui/Button'
 import { Avatar } from '../components/ui/Avatar'
+import { WaveDivider } from '../components/ui/WaveDivider'
+import { WaveWipeTransition } from '../components/motion-primitives/WaveWipeTransition'
 import { categorizeRevisions } from '../utils/spacedRepetition'
 
 export function AppLayout() {
@@ -69,32 +71,32 @@ export function AppLayout() {
   const navItems = [
     {
       to: '/dashboard',
-      label: 'Dashboard',
+      label: 'Dashboard 📊',
       icon: LayoutDashboard,
       shortcut: 'G D',
     },
     {
       to: '/problems',
-      label: 'Problems',
+      label: 'Problems ⚡',
       icon: Code2,
       shortcut: 'G P',
     },
     {
       to: '/analytics',
-      label: 'Analytics',
+      label: 'Analytics 📈',
       icon: BarChart3,
       shortcut: 'G A',
     },
     {
       to: '/revision',
-      label: 'Revision',
+      label: 'Revision 🔁',
       icon: RotateCcw,
       badge: overdueCount > 0 ? overdueCount : null,
       shortcut: 'G R',
     },
     {
       to: '/settings',
-      label: 'Settings',
+      label: 'Settings ⚙️',
       icon: Settings,
       shortcut: 'G S',
     },
@@ -102,7 +104,7 @@ export function AppLayout() {
 
   // Get current section title
   const currentNav = navItems.find((item) => location.pathname.startsWith(item.to))
-  const pageTitle = currentNav ? currentNav.label : 'DevTrack'
+  const pageTitle = currentNav ? currentNav.label : 'DevTrack 🌊'
 
   return (
     <div className="min-h-screen bg-base text-content-primary flex flex-col md:flex-row">
@@ -124,7 +126,7 @@ export function AppLayout() {
             </div>
             <div>
               <span className="font-bold text-sm tracking-tight block text-content-primary">
-                DevTrack
+                DevTrack 🌊
               </span>
               <span className="text-[10px] text-content-muted">
                 DSA Progress Hub
@@ -316,11 +318,15 @@ export function AppLayout() {
               {settings.theme === 'dark' ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
             </button>
           </div>
+          {/* Subtle faint wave accent in top bar */}
+          <WaveDivider height="h-2" opacity="opacity-20" className="absolute bottom-0 left-0 right-0 pointer-events-none" />
         </header>
 
-        {/* Routed Page Content */}
+        {/* Routed Page Content with Wave Wipe */}
         <main id="app-content" className="flex-1 p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto w-full">
-          <Outlet />
+          <WaveWipeTransition>
+            <Outlet />
+          </WaveWipeTransition>
         </main>
       </div>
 

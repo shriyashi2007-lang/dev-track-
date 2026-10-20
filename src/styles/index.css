@@ -4,9 +4,15 @@
 @tailwind components;
 @tailwind utilities;
 
+html {
+  font-size: 112.5%; /* 18px base root size */
+}
+
 /* Global transitions & typography defaults */
 body {
   font-family: var(--font-family-base);
+  font-size: 1.125rem;
+  line-height: 1.6;
   background-color: var(--bg-base);
   color: var(--text-primary);
   min-height: 100vh;
@@ -21,6 +27,18 @@ body {
 /* Ensure headings and inputs honor the system font */
 h1, h2, h3, h4, h5, h6, p, span, button, input, textarea, select {
   font-family: var(--font-family-base);
+}
+
+/* Nav & buttons font size standard: >= 1.05rem */
+button, nav a, .btn-text {
+  font-size: 1.05rem;
+}
+
+/* Fluid Hero Heading using clamp up to 5.5-6rem */
+.hero-headline {
+  font-size: clamp(2.5rem, 5.5vw + 1rem, 5.5rem);
+  line-height: 1.08;
+  letter-spacing: -0.025em;
 }
 
 /* Tabular numbers for statistics to prevent jitter */
@@ -90,4 +108,92 @@ h1, h2, h3, h4, h5, h6, p, span, button, input, textarea, select {
   overflow: hidden;
   line-height: 0;
   pointer-events: none;
+}
+
+/* Wave Parallax / Drift Keyframes (transform only, slow, paused on reduced motion) */
+@keyframes wave-drift-slow {
+  0%, 100% { transform: translateX(0); }
+  50% { transform: translateX(-16px); }
+}
+
+@keyframes wave-drift-medium {
+  0%, 100% { transform: translateX(0); }
+  50% { transform: translateX(14px); }
+}
+
+@keyframes wave-drift-fast {
+  0%, 100% { transform: translateX(0); }
+  50% { transform: translateX(-20px); }
+}
+
+.wave-layer-1 {
+  animation: wave-drift-slow 18s ease-in-out infinite;
+  will-change: transform;
+}
+.wave-layer-2 {
+  animation: wave-drift-medium 14s ease-in-out infinite;
+  will-change: transform;
+}
+.wave-layer-3 {
+  animation: wave-drift-fast 20s ease-in-out infinite;
+  will-change: transform;
+}
+.wave-layer-4 {
+  animation: wave-drift-slow 16s ease-in-out infinite;
+  will-change: transform;
+}
+.wave-layer-5 {
+  animation: wave-drift-medium 22s ease-in-out infinite;
+  will-change: transform;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .wave-layer-1, .wave-layer-2, .wave-layer-3, .wave-layer-4, .wave-layer-5 {
+    animation: none !important;
+  }
+}
+[data-reduce-motion="true"] .wave-layer-1,
+[data-reduce-motion="true"] .wave-layer-2,
+[data-reduce-motion="true"] .wave-layer-3,
+[data-reduce-motion="true"] .wave-layer-4,
+[data-reduce-motion="true"] .wave-layer-5 {
+  animation: none !important;
+}
+
+/* Sticker badge style */
+.sticker-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.3rem 0.85rem;
+  border-radius: 9999px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  box-shadow: 0 4px 12px -2px rgba(0, 0, 0, 0.25);
+  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.sticker-badge:hover {
+  transform: scale(1.04) rotate(0deg) !important;
+}
+
+/* Topic ticker animation */
+@keyframes ticker-scroll {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+.topic-ticker-track {
+  display: flex;
+  width: max-content;
+  animation: ticker-scroll 32s linear infinite;
+}
+.topic-ticker-track:hover {
+  animation-play-state: paused;
+}
+@media (prefers-reduced-motion: reduce) {
+  .topic-ticker-track {
+    animation: none !important;
+  }
+}
+[data-reduce-motion="true"] .topic-ticker-track {
+  animation: none !important;
 }
