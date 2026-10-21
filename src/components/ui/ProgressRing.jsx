@@ -62,7 +62,7 @@ export function ProgressRing({
           strokeDashoffset={strokeDashoffset}
           strokeLinecap="round"
           fill="transparent"
-          style={{ transition: 'stroke-dashoffset 400ms ease-out' }}
+          style={{ transition: 'stroke-dashoffset var(--motion-ring)' }}
         />
       </svg>
       {/* Center content */}

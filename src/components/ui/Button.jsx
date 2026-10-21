@@ -3,7 +3,7 @@ import clsx from 'clsx'
 import { Loader2 } from 'lucide-react'
 
 const variants = {
-  primary: 'bg-primary text-white hover:bg-primary-hover active:bg-primary-active shadow-card hover:shadow-glow-primary hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.98]',
+  primary: 'button-gradient-edge bg-primary text-white hover:bg-primary-hover active:bg-primary-active shadow-card hover:shadow-glow-primary hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.98]',
   accent: 'bg-accent text-white hover:bg-accent-hover shadow-card hover:shadow-glow-coral hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.98]',
   secondary: 'bg-base-elevated text-content-primary hover:bg-opacity-85 border border-border-subtle shadow-sm hover:border-border-strong hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.98]',
   outline: 'border-2 border-border-strong text-content-primary hover:bg-base-elevated hover:border-primary hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.98]',
