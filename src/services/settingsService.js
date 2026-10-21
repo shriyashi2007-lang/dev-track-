@@ -38,6 +38,7 @@ class SettingsService {
       document.documentElement.classList.add('light')
       document.documentElement.classList.remove('dark')
     }
+    document.documentElement.setAttribute('data-theme', effectiveTheme)
 
     // Accent
     document.documentElement.setAttribute('data-accent', settings.accent || 'indigo')

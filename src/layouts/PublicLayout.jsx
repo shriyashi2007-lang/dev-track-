@@ -60,7 +60,7 @@ export function PublicLayout() {
           </Link>
 
           {/* Desktop Links */}
-          <nav className="hidden md:flex items-center gap-6 text-sm font-display font-medium text-content-secondary">
+          <nav className="hidden lg:flex items-center gap-6 text-sm font-display font-medium text-content-secondary">
             <a href="/#features" className="hover:text-content-primary transition-colors flex items-center gap-1.5">
               <span>Features</span>
             </a>
@@ -82,7 +82,7 @@ export function PublicLayout() {
           </nav>
 
           {/* Right Actions */}
-          <div className="hidden md:flex items-center gap-3">
+          <div className="hidden lg:flex items-center gap-3">
             <button
               type="button"
               onClick={toggleTheme}
@@ -111,7 +111,7 @@ export function PublicLayout() {
           </div>
 
           {/* Mobile hamburger */}
-          <div className="flex items-center gap-2 md:hidden">
+          <div className="flex items-center gap-2 lg:hidden">
             <button
               type="button"
               onClick={toggleTheme}
@@ -133,7 +133,7 @@ export function PublicLayout() {
 
         {/* Mobile menu dropdown */}
         {mobileMenuOpen && (
-          <div className="md:hidden border-b border-border-subtle bg-base-surface p-4 space-y-3 animate-slide-up">
+          <div className="lg:hidden border-b border-border-subtle bg-base-surface p-4 space-y-3 animate-slide-up">
             <nav className="flex flex-col gap-2.5 text-sm font-medium text-content-secondary">
               <a href="/#features" className="px-3 py-2 rounded-subtle hover:bg-base-elevated hover:text-content-primary">
                 🔁 Features
