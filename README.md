@@ -52,44 +52,25 @@ The landing page takes inspiration from the ocean-depth journey of algorithmic p
 
 ---
 
-## 🎨 Design System & Theming
+## 🎨 Design System
 
-All colors, typography tokens, border radii, shadows, and motion constants are centralized in **one single place**:
-- **Tokens**: `src/styles/tokens.css`
-- **Tailwind Mapping**: `tailwind.config.js`
-- **Motion Constants**: `src/styles/motion.js`
-- **Chart Theming**: `src/styles/chartTheme.js`
-
-### Color Palette
-- **Base / Background**: `#001220` (Dark Navy)
-- **Accent Coral 1**: `#FA7268`
-- **Wave Coral 2**: `#EF5F67`
-- **Wave Rose 3 (Primary)**: `#E34C67`
-- **Wave Raspberry 4**: `#D53867`
-- **Deep Raspberry 5 (Secondary)**: `#C62368`
-- **Easy (Semantic)**: `#10B981` (Emerald)
-- **Medium (Semantic)**: `#F59E0B` (Amber)
-- **Hard (Semantic)**: `#8B5CF6` (Violet / Distinct from brand pinks)
-
-### How to Swap the Palette in One Step
-To swap in custom values or an exported Figma palette:
-1. Open `src/styles/tokens.css`.
-2. Edit the hex values in the `:root` (dark mode) and `html.light` (light mode) variable blocks.
-3. Because all components and charts strictly reference CSS variables (`var(--bg-base)`, `var(--accent-primary)`, etc.), the entire application restyles instantly without modifying any component files.
+The shared design system lives in three places:
+- `src/styles/tokens.css` defines both themes, typography, brand and rainbow colors, pastel surfaces, hard-stop gradients, glass surfaces, stripes, shadows, radii, and timing tokens.
+- `tailwind.config.js` maps those CSS variables to the utility classes used throughout the app.
+- `src/styles/motion.js` defines shared interaction and transition presets, including reduced-motion checks.
 
 ### Typography
-- **Font Family**: `"Times New Roman", Times, "Liberation Serif", serif` applied app-wide as a single unified token across sans, serif, and mono in Tailwind and CSS.
-- **Larger Root Scale**: `html { font-size: 112.5%; }` (18px base root size). Body font size is maintained at $\ge 1.125\text{rem}$ with fluid display headings via `clamp()` up to $5.5\text{rem}$. Tabular numerals (`tabular-nums`) are applied to all statistics.
+Inter is self-hosted for body and interface text. Space Grotesk is self-hosted for display headings, navigation, and prominent numbers. The root size is 112.5%, body text starts at 1.125rem, and statistics use tabular numerals.
 
-### WCAG AA Contrast Compliance
-All text-to-background pairings meet or exceed WCAG AA standards:
-- `#F1F5F9` on `#001220` (Dark Base): **16.7:1** (Passes AAA)
-- `#CBD5E1` on `#001220` (Secondary Text): **12.0:1** (Passes AAA)
-- `#FFFFFF` on `#C62368` (Primary Action): **5.4:1** (Passes AA)
-- `#001220` on `#FA7268` (Coral Accent): **8.3:1** (Passes AAA)
+### Color and surfaces
+The dark and light themes share the coral, rose, and raspberry wave palette, extended by amber, mint, sky, blue, and violet. `rainbow-1` through `rainbow-8` support topic badges, charts, heatmaps, and progress visuals; the pastel tokens provide paired surfaces and readable text colors. Hard-stop gradients keep the palette crisp. Cards use semantic left stripes, layered shadows, and 12px, 20px, 28px, or pill radii. Glass surfaces use translucent backgrounds and backdrop blur with a solid-surface fallback.
+
+### Accessibility and motion
+Focus rings use the theme focus token. Difficulty and status colors remain distinct in both themes. Shared hover and press effects use short transform, opacity, and color changes, and reduced-motion preferences disable movement. The landing page feature and dashboard overviews use responsive asymmetric bento layouts.
+
+The landing dashboard and CLI views are explicitly labeled sample previews. Sample problems enter the app only through the labeled **Load Sample Data** action.
 
 ---
-
 ## 🛠️ Tech Stack & Credits
 
 - **Core**: React 19, Vite 8, React Router 7
