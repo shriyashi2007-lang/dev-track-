@@ -91,4 +91,25 @@ describe('Filtering and Sorting', () => {
     const desc = sortProblems(problems, 'difficulty-desc')
     expect(desc.map((p) => p.difficulty)).toEqual(['Hard', 'Medium', 'Easy'])
   })
+
+  it('sorts titles and times without mutating the source array', () => {
+    const originalOrder = problems.map((problem) => problem.id)
+
+    expect(sortProblems(problems, 'title-asc').map((problem) => problem.id)).toEqual([
+      '2',
+      '3',
+      '1',
+    ])
+    expect(sortProblems(problems, 'time-desc').map((problem) => problem.id)).toEqual([
+      '3',
+      '2',
+      '1',
+    ])
+    expect(problems.map((problem) => problem.id)).toEqual(originalOrder)
+  })
+
+  it('places missing times after real values in ascending order', () => {
+    const withMissingTime = [...problems, { id: '4', title: 'Untimed' }]
+    expect(sortProblems(withMissingTime, 'time-asc').at(-1).id).toBe('4')
+  })
 })
