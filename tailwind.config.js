@@ -150,6 +150,7 @@ export default {
         'glow-coral': 'var(--shadow-glow-coral)',
         'glow-primary': 'var(--shadow-glow-primary)',
         'glow-mint': 'var(--shadow-glow-mint)',
+        'glow-rose': 'var(--shadow-glow-primary)',
         sticker: 'var(--shadow-sticker)',
       },
       borderRadius: {
@@ -157,6 +158,9 @@ export default {
         card: 'var(--radius-card)',
         large: 'var(--radius-large)',
         bento: 'var(--radius-bento)',
+        button: 'var(--radius-card)',
+        input: 'var(--radius-input)',
+        modal: 'var(--radius-large)',
         pill: 'var(--radius-pill)',
       },
     },
