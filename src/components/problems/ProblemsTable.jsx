@@ -157,6 +157,8 @@ export function ProblemsTable({
                         <button
                           type="button"
                           onClick={() => setExpandedRowId(isExpanded ? null : problem.id)}
+                          aria-expanded={isExpanded}
+                          aria-label={`${isExpanded ? 'Collapse' : 'Expand'} notes for ${problem.title}`}
                           className="text-content-muted hover:text-content-primary p-0.5 rounded focus-visible:outline-none"
                           title="Expand notes"
                         >
@@ -169,9 +171,14 @@ export function ProblemsTable({
 
                         <div className="min-w-0">
                           <div className="flex items-center gap-2">
-                            <span className="font-display font-medium text-content-primary truncate hover:underline cursor-pointer" onClick={() => onEdit(problem)}>
+                            <button
+                              type="button"
+                              className="max-w-full truncate text-left font-display font-medium text-content-primary hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
+                              onClick={() => onEdit(problem)}
+                              aria-label={`Edit ${problem.title}`}
+                            >
                               {renderHighlightedText(problem.title, searchQuery)}
-                            </span>
+                            </button>
                             {problem.url && (
                               <a
                                 href={problem.url}
