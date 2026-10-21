@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { computeStats } from '../utils/stats'
+import { computeActivitySeries, computeStats } from '../utils/stats'
 import { getLocalDateString } from '../utils/dates'
 
 describe('Stats Calculation', () => {
@@ -43,5 +43,24 @@ describe('Stats Calculation', () => {
     expect(stats.averageTimeMinutes).toBe(30) // (15+25+50)/3 = 30
     expect(stats.strongestTopic?.name).toBe('Arrays')
     expect(stats.strongestTopic?.count).toBe(2)
+  })
+
+  it('builds a bounded activity series and ignores out-of-range solves', () => {
+    const problems = [
+      { status: 'Solved', difficulty: 'Easy', solvedDate: '2026-10-17' },
+      { status: 'Solved', difficulty: 'Hard', solvedDate: '2026-10-19' },
+      { status: 'Solved', difficulty: 'Medium', solvedDate: '2026-10-16' },
+      { status: 'Attempted', difficulty: 'Hard', solvedDate: '2026-10-19' },
+    ]
+
+    const series = computeActivitySeries(problems, 3, refDate)
+    expect(series).toHaveLength(3)
+    expect(series.map((day) => day.date)).toEqual([
+      '2026-10-17',
+      '2026-10-18',
+      '2026-10-19',
+    ])
+    expect(series[0]).toMatchObject({ Easy: 1, Medium: 0, Hard: 0, total: 1 })
+    expect(series[2]).toMatchObject({ Easy: 0, Medium: 0, Hard: 1, total: 1 })
   })
 })
