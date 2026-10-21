@@ -38,6 +38,7 @@ export function TopicChart({ stats }) {
           <button
             type="button"
             onClick={() => setChartType('bar')}
+            aria-pressed={chartType === 'bar'}
             className={clsx(
               'px-2 py-0.5 text-xs font-medium rounded-subtle transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-accent',
               chartType === 'bar'
@@ -50,6 +51,7 @@ export function TopicChart({ stats }) {
           <button
             type="button"
             onClick={() => setChartType('radar')}
+            aria-pressed={chartType === 'radar'}
             className={clsx(
               'px-2 py-0.5 text-xs font-medium rounded-subtle transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-accent',
               chartType === 'radar'
