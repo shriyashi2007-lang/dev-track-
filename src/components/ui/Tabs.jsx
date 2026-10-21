@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useRef } from 'react'
 import clsx from 'clsx'
 
 export function Tabs({
@@ -8,6 +8,24 @@ export function Tabs({
   variant = 'pills',
   className = '',
 }) {
+  const tabRefs = useRef([])
+
+  const handleKeyDown = (event, index) => {
+    let nextIndex
+    if (event.key === 'ArrowRight') nextIndex = (index + 1) % tabs.length
+    else if (event.key === 'ArrowLeft') nextIndex = (index - 1 + tabs.length) % tabs.length
+    else if (event.key === 'Home') nextIndex = 0
+    else if (event.key === 'End') nextIndex = tabs.length - 1
+    else return
+
+    event.preventDefault()
+    const nextTab = tabs[nextIndex]
+    if (nextTab) {
+      onChange(nextTab.id)
+      tabRefs.current[nextIndex]?.focus()
+    }
+  }
+
   return (
     <div
       role="tablist"
@@ -18,7 +36,7 @@ export function Tabs({
         className
       )}
     >
-      {tabs.map((tab) => {
+      {tabs.map((tab, index) => {
         const isSelected = activeTab === tab.id
         return (
           <button
@@ -26,7 +44,12 @@ export function Tabs({
             role="tab"
             type="button"
             aria-selected={isSelected}
+            tabIndex={isSelected ? 0 : -1}
+            ref={(element) => {
+              tabRefs.current[index] = element
+            }}
             onClick={() => onChange(tab.id)}
+            onKeyDown={(event) => handleKeyDown(event, index)}
             className={clsx(
               'flex items-center gap-2 font-display font-medium text-xs sm:text-sm whitespace-nowrap transition-all duration-150 cursor-pointer select-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent',
               variant === 'pills' && [
