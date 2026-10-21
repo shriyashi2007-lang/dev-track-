@@ -154,7 +154,7 @@ export function AppLayout() {
         </div>
 
         {/* Navigation Items */}
-        <nav className="flex-1 px-3 py-2 space-y-1 overflow-y-auto">
+        <nav aria-label="Primary navigation" className="flex-1 px-3 py-2 space-y-1 overflow-y-auto">
           {navItems.map((item) => {
             const Icon = item.icon
             return (
@@ -215,6 +215,7 @@ export function AppLayout() {
               type="button"
               onClick={clearSampleData}
               title="Clear sample problems"
+              aria-label="Clear sample problems"
               className="p-1 hover:bg-black/10 rounded transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-accent"
             >
               <Trash2 className="w-3.5 h-3.5" />
@@ -256,6 +257,7 @@ export function AppLayout() {
               onClick={() => setMobileDrawerOpen(true)}
               className="p-1.5 md:hidden text-content-secondary hover:text-content-primary rounded hover:bg-base-elevated focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
               aria-label="Open navigation menu"
+              aria-expanded={mobileDrawerOpen}
             >
               <Menu className="w-5 h-5" />
             </button>
@@ -277,6 +279,7 @@ export function AppLayout() {
             <button
               type="button"
               onClick={openCommandPalette}
+              aria-label="Search problems and commands"
               className="flex items-center gap-2 px-2.5 py-1.5 text-xs text-content-secondary bg-base-elevated/70 hover:bg-base-elevated border border-border-subtle rounded-card transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
             >
               <Search className="w-3.5 h-3.5" />
@@ -313,7 +316,8 @@ export function AppLayout() {
               type="button"
               onClick={toggleTheme}
               title="Toggle theme (T)"
-              aria-label="Toggle theme"
+              aria-label={settings.theme === 'dark' ? 'Switch to light theme' : 'Switch to dark theme'}
+              aria-pressed={settings.theme === 'dark'}
               className="p-2 text-content-secondary hover:text-content-primary hover:bg-base-elevated rounded-card transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
             >
               {settings.theme === 'dark' ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
