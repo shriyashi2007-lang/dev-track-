@@ -98,6 +98,7 @@ export function ContributionHeatmap({ problems = [] }) {
           <button
             type="button"
             onClick={() => setRangeMode('year')}
+            aria-pressed={rangeMode === 'year'}
             className={clsx(
               'px-2.5 py-1 text-xs font-medium rounded-subtle transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-accent',
               rangeMode === 'year'
@@ -110,6 +111,7 @@ export function ContributionHeatmap({ problems = [] }) {
           <button
             type="button"
             onClick={() => setRangeMode('sixMonths')}
+            aria-pressed={rangeMode === 'sixMonths'}
             className={clsx(
               'px-2.5 py-1 text-xs font-medium rounded-subtle transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-accent',
               rangeMode === 'sixMonths'
@@ -155,6 +157,7 @@ export function ContributionHeatmap({ problems = [] }) {
                         onMouseEnter={() => setHoveredCell(day)}
                         onMouseLeave={() => setHoveredCell(null)}
                         aria-label={`${day.count} problems solved on ${formatDate(day.dateStr, 'MMM d, yyyy')}`}
+                        aria-pressed={selectedDay?.dateStr === day.dateStr}
                         className={clsx(
                           'w-3 h-3 sm:w-3.5 sm:h-3.5 rounded-[3px] border transition-all cursor-pointer focus-visible:ring-1 focus-visible:ring-accent',
                           getHeatmapCellClass(day.count)
