@@ -60,7 +60,7 @@ export function PublicLayout() {
           </Link>
 
           {/* Desktop Links */}
-          <nav className="hidden lg:flex items-center gap-6 text-sm font-display font-medium text-content-secondary">
+          <nav aria-label="Public navigation" className="hidden lg:flex items-center gap-6 text-sm font-display font-medium text-content-secondary">
             <a href="/#features" className="hover:text-content-primary transition-colors flex items-center gap-1.5">
               <span>Features</span>
             </a>
@@ -86,7 +86,8 @@ export function PublicLayout() {
             <button
               type="button"
               onClick={toggleTheme}
-              aria-label="Toggle theme"
+              aria-label={settings.theme === 'dark' ? 'Switch to light theme' : 'Switch to dark theme'}
+              aria-pressed={settings.theme === 'dark'}
               className="p-2 rounded-button text-content-secondary hover:text-content-primary hover:bg-base-elevated transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
             >
               {settings.theme === 'dark' ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
@@ -115,7 +116,8 @@ export function PublicLayout() {
             <button
               type="button"
               onClick={toggleTheme}
-              aria-label="Toggle theme"
+              aria-label={settings.theme === 'dark' ? 'Switch to light theme' : 'Switch to dark theme'}
+              aria-pressed={settings.theme === 'dark'}
               className="p-2 rounded-card text-content-secondary hover:text-content-primary hover:bg-base-elevated transition-colors"
             >
               {settings.theme === 'dark' ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
@@ -123,7 +125,9 @@ export function PublicLayout() {
             <button
               type="button"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              aria-label="Open navigation menu"
+              aria-label={mobileMenuOpen ? 'Close navigation menu' : 'Open navigation menu'}
+              aria-expanded={mobileMenuOpen}
+              aria-controls="public-mobile-menu"
               className="p-2 rounded-card text-content-secondary hover:text-content-primary hover:bg-base-elevated"
             >
               {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
@@ -133,8 +137,8 @@ export function PublicLayout() {
 
         {/* Mobile menu dropdown */}
         {mobileMenuOpen && (
-          <div className="lg:hidden border-b border-border-subtle bg-base-surface p-4 space-y-3 animate-slide-up">
-            <nav className="flex flex-col gap-2.5 text-sm font-medium text-content-secondary">
+          <div id="public-mobile-menu" className="lg:hidden border-b border-border-subtle bg-base-surface p-4 space-y-3 animate-slide-up">
+            <nav aria-label="Mobile public navigation" className="flex flex-col gap-2.5 text-sm font-medium text-content-secondary">
               <a href="/#features" className="px-3 py-2 rounded-subtle hover:bg-base-elevated hover:text-content-primary">
                 🔁 Features
               </a>
