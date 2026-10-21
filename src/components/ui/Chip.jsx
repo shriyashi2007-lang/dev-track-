@@ -28,6 +28,8 @@ export function Chip({
     <span
       onClick={isInteractive && !disabled ? onSelect : undefined}
       role={isInteractive ? 'button' : undefined}
+      aria-pressed={isInteractive ? selected : undefined}
+      aria-disabled={isInteractive && disabled ? true : undefined}
       tabIndex={isInteractive && !disabled ? 0 : undefined}
       onKeyDown={
         isInteractive && !disabled
