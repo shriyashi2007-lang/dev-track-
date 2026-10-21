@@ -26,6 +26,31 @@
   --font-display: 'Space Grotesk', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
   --font-family-base: var(--font-sans);
+  --font-stat: var(--font-display);
+  --icon-size-sm: 0.875rem;
+  --icon-size-md: 1.125rem;
+  --icon-stroke: 1.8;
+  --motion-fast: 160ms cubic-bezier(0.16, 1, 0.3, 1);
+  --motion-normal: 220ms cubic-bezier(0.16, 1, 0.3, 1);
+  --motion-terminal-char: 54ms;
+  --motion-terminal-line: 180ms;
+  --motion-ring: 400ms ease-out;
+  --motion-wave-1: 18s;
+  --motion-wave-2: 14s;
+  --motion-wave-3: 20s;
+  --motion-wave-4: 16s;
+  --motion-wave-5: 22s;
+  --motion-ticker: 32s;
+  --radius-input: 12px;
+  --stripe-width: 5px;
+  --stripe-width-hover: 8px;
+  --terminal-bg: #0D1520;
+  --terminal-header: #142131;
+  --terminal-footer: #101C29;
+  --terminal-text: #E7EDF5;
+  --terminal-control-close: #FF5F56;
+  --terminal-control-minimize: #FFBD2E;
+  --terminal-control-expand: #27C93F;
 
   /* Theme Surfaces - Dark Mode (Default) */
   --bg-base: #001220;
@@ -162,6 +187,17 @@
   --shadow-glow-primary: 0 0 28px -4px rgba(198, 35, 104, 0.45);
   --shadow-glow-mint: 0 0 28px -4px rgba(16, 185, 129, 0.35);
   --shadow-sticker: 4px 4px 0px rgba(0, 0, 0, 0.65);
+  --gradient-button-edge: var(--gradient-hard-wave);
+  --gradient-headline: var(--gradient-hard-wave);
+  --gradient-divider: var(--gradient-hard-rainbow);
+  --glass-blur: 16px;
+  --glass-sheen: rgba(255, 255, 255, 0.12);
+  --heatmap-demo-1: rgba(16, 185, 129, 0.38);
+  --heatmap-demo-2: rgba(16, 185, 129, 0.5);
+  --heatmap-demo-3: rgba(16, 185, 129, 0.62);
+  --heatmap-demo-4: rgba(16, 185, 129, 0.74);
+  --heatmap-demo-5: rgba(16, 185, 129, 0.86);
+  --heatmap-demo-6: rgba(16, 185, 129, 0.98);
 }
 
 /* Light Theme Variables */
@@ -266,4 +302,9 @@ html.light,
   --shadow-glow-primary: 0 0 28px -4px rgba(198, 35, 104, 0.2);
   --shadow-glow-mint: 0 0 28px -4px rgba(16, 185, 129, 0.2);
   --shadow-sticker: 4px 4px 0px rgba(0, 18, 32, 0.9);
+  --terminal-bg: #17202B;
+  --terminal-header: #202C39;
+  --terminal-footer: #1B2733;
+  --terminal-text: #F8FAFC;
+  --glass-sheen: rgba(255, 255, 255, 0.58);
 }
