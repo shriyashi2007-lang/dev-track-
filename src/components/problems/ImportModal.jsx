@@ -77,6 +77,7 @@ export function ImportModal({ isOpen, onClose, onImport }) {
             type="file"
             accept=".json,application/json"
             onChange={handleFileChange}
+            aria-describedby="import-json-help"
             className="hidden"
             id="import-json-file"
           />
@@ -87,12 +88,14 @@ export function ImportModal({ isOpen, onClose, onImport }) {
             <p className="text-xs font-semibold text-content-primary mb-1">
               Click to select JSON backup file
             </p>
-            <p className="text-[11px] text-content-muted">Accepts .json format</p>
+            <p id="import-json-help" className="text-[11px] text-content-muted">
+              Accepts a DevTrack .json backup file
+            </p>
           </label>
         </div>
 
         {error && (
-          <div className="p-3 text-xs bg-difficulty-hard-bg border border-difficulty-hard-border text-difficulty-hard-text rounded-card flex items-start gap-2">
+          <div role="alert" className="p-3 text-xs bg-difficulty-hard-bg border border-difficulty-hard-border text-difficulty-hard-text rounded-card flex items-start gap-2">
             <AlertCircle className="w-4 h-4 shrink-0 mt-0.5" />
             <span>{error}</span>
           </div>
@@ -120,6 +123,7 @@ export function ImportModal({ isOpen, onClose, onImport }) {
                 <button
                   type="button"
                   onClick={() => setImportMode('merge')}
+                  aria-pressed={importMode === 'merge'}
                   className={`py-2 px-3 rounded-card text-xs font-medium border text-left cursor-pointer transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-accent ${
                     importMode === 'merge'
                       ? 'bg-accent-light text-accent border-accent/50 font-semibold'
@@ -132,6 +136,7 @@ export function ImportModal({ isOpen, onClose, onImport }) {
                 <button
                   type="button"
                   onClick={() => setImportMode('replace')}
+                  aria-pressed={importMode === 'replace'}
                   className={`py-2 px-3 rounded-card text-xs font-medium border text-left cursor-pointer transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-accent ${
                     importMode === 'replace'
                       ? 'bg-difficulty-hard-bg text-difficulty-hard-text border-difficulty-hard-border font-semibold'
