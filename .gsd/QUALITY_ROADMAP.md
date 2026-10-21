@@ -1,5 +1,7 @@
 # Quality Hardening Roadmap
 
+Status: COMPLETE
+
 This roadmap breaks the finalized quality addendum into 40 independently reviewable changes.
 
 1. Finalize the quality hardening specification.
