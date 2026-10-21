@@ -72,4 +72,32 @@ describe('Streak Calculation Logic', () => {
     expect(res.currentStreak).toBe(1)
     expect(res.longestStreak).toBe(5)
   })
+
+  it('counts unique active days when multiple problems are solved together', () => {
+    const problems = [
+      { id: '1', status: 'Solved', solvedDate: todayStr },
+      { id: '2', status: 'Solved', solvedDate: todayStr },
+      { id: '3', status: 'Solved', solvedDate: yestStr },
+    ]
+
+    const res = calculateStreaks(problems, refDate)
+    expect(res.currentStreak).toBe(2)
+    expect(res.activeDaysCount).toBe(2)
+    expect(res.datesMap[todayStr]).toBe(2)
+  })
+
+  it('marks every day in the seven-day calendar with today identified', () => {
+    const res = calculateStreaks(
+      [{ id: '1', status: 'Solved', solvedDate: yestStr }],
+      refDate
+    )
+
+    expect(res.last7Days).toHaveLength(7)
+    expect(res.last7Days.at(-1)).toMatchObject({
+      dateStr: todayStr,
+      isToday: true,
+      isSolved: false,
+    })
+    expect(res.last7Days.at(-2).isSolved).toBe(true)
+  })
 })
