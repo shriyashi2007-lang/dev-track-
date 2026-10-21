@@ -59,6 +59,8 @@ export function RevisionCalendar({ problems = [], selectedDate, onSelectDate }) 
               key={d.dateStr}
               type="button"
               onClick={() => onSelectDate(isSelected ? null : d.dateStr)}
+              aria-pressed={isSelected}
+              aria-label={`${formatDate(d.dateStr, 'MMMM d, yyyy')}: ${d.count} revision${d.count === 1 ? '' : 's'} due`}
               className={clsx(
                 'flex flex-col items-center justify-between p-2 rounded-card border min-w-[54px] h-[68px] transition-all cursor-pointer',
                 isSelected
