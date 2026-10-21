@@ -102,3 +102,11 @@ npm run lint
 # Build production bundle
 npm run build
 ```
+
+### Quality checks
+
+Before opening a pull request or publishing a build, run the test suite, linter, and production build. Tests live in `src/test` and cover the date, filtering, scheduling, statistics, persistence, export, authentication, and hook boundaries that drive the interface.
+
+Interactive controls should remain usable without a pointer. Keep visible focus styles, expose selected state with `aria-pressed` or `aria-selected`, label icon-only controls, and preserve focus trapping and trigger restoration in dialogs and drawers. Verify navigation, forms, filters, and data views at mobile and desktop widths after changing shared components.
+
+For architectural context, see [ARCHITECTURE.md](ARCHITECTURE.md). For dependency and tooling details, see [STACK.md](STACK.md).
