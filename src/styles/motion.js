@@ -15,7 +15,39 @@ export const transitions = {
   spring: { type: 'spring', stiffness: 380, damping: 28 },
   gentleSpring: { type: 'spring', stiffness: 220, damping: 24 },
   bouncySpring: { type: 'spring', stiffness: 420, damping: 22 },
+  wipe: { duration: 0.3, ease: [0.22, 1, 0.36, 1] },
+  swipe: { duration: 0.22, ease: 'easeOut' },
 }
+
+export const springPresets = {
+  animatedNumber: { mass: 0.8, stiffness: 85, damping: 15 },
+  connectedPath: { stiffness: 100, damping: 24, restDelta: 0.001 },
+  magnetic: { damping: 18, stiffness: 220, mass: 0.1 },
+  swipeDeck: { type: 'spring', stiffness: 340, damping: 26 },
+  featureCarousel: { type: 'spring', stiffness: 320, damping: 26 },
+  activeBackground: { type: 'spring', bounce: 0.15, duration: 0.35 },
+}
+
+export const motionValues = {
+  terminalCharDelay: 54,
+  terminalOutputDelay: 180,
+  terminalIntroDelay: 350,
+  copyFeedbackDelay: 2000,
+  quickCaptureFeedbackDelay: 1500,
+  routeWipeDelay: 320,
+  routeWipeStagger: 0.018,
+  textCharStagger: 0.02,
+  textWordStagger: 0.06,
+  confettiCount: 70,
+  confettiGravity: 0.35,
+  confettiLifetime: 3000,
+  previewTilt: { damping: 20, stiffness: 180, mass: 0.1 },
+}
+
+export const confettiColors = [
+  'var(--rainbow-1)', 'var(--rainbow-2)', 'var(--rainbow-3)', 'var(--rainbow-4)',
+  'var(--rainbow-5)', 'var(--rainbow-6)', 'var(--rainbow-7)', 'var(--rainbow-8)',
+]
 
 /**
  * Checks if reduced motion is requested via media query or DOM attribute.
@@ -46,6 +78,12 @@ export const scaleInVariants = {
   initial: { opacity: 0, scale: 0.96 },
   animate: { opacity: 1, scale: 1, transition: transitions.gentleSpring },
   exit: { opacity: 0, scale: 0.96, transition: transitions.fast },
+}
+
+export const bentoTile = {
+  initial: { y: 0, scale: 1 },
+  hover: { y: -5, scale: 1.012, transition: transitions.fast },
+  tap: { y: 0, scale: 0.985, transition: transitions.instant },
 }
 
 export const staggerContainer = (staggerDelay = 0.06, delayChildren = 0.02) => ({
