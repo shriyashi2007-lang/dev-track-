@@ -1,6 +1,6 @@
 import { useRef } from 'react'
 import { motion, useMotionValue, useSpring } from 'motion/react'
-import { isReducedMotion } from '../../styles/motion'
+import { isReducedMotion, springPresets } from '../../styles/motion'
 
 /**
  * Magnetic Button with subtle pull toward cursor and press squish.
@@ -13,7 +13,7 @@ export function MagneticButton({ children, className = '', onClick, ...props }) 
   const x = useMotionValue(0)
   const y = useMotionValue(0)
 
-  const springConfig = { damping: 18, stiffness: 220, mass: 0.1 }
+  const springConfig = springPresets.magnetic
   const springX = useSpring(x, springConfig)
   const springY = useSpring(y, springConfig)
 

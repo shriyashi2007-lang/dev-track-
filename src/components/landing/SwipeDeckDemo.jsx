@@ -4,7 +4,7 @@ import { CheckCircle2, RotateCcw, Flame, Sparkles, RefreshCw, Layers } from 'luc
 import { Badge } from '../ui/Badge'
 import { Confetti } from '../ui/Confetti'
 import { ProgressRing } from '../ui/ProgressRing'
-import { isReducedMotion } from '../../styles/motion'
+import { isReducedMotion, springPresets, transitions } from '../../styles/motion'
 
 const SAMPLE_DECK = [
   {
@@ -78,9 +78,9 @@ function SwipeCard({ card, onSwipe, isTop }) {
         x: direction === 'solved' ? 320 : -320,
         opacity: 0,
         rotate: direction === 'solved' ? 18 : -18,
-        transition: { duration: 0.22, ease: 'easeOut' },
+        transition: transitions.swipe,
       })}
-      transition={{ type: 'spring', stiffness: 340, damping: 26 }}
+      transition={springPresets.swipeDeck}
       className={`absolute inset-0 rounded-2xl bg-base-surface border border-border-strong p-6 shadow-2xl flex flex-col justify-between select-none ${
         isTop ? 'cursor-grab active:cursor-grabbing z-20' : 'z-10 pointer-events-none'
       }`}

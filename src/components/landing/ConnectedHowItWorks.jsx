@@ -2,7 +2,7 @@ import { useRef } from 'react'
 import { motion, useScroll, useSpring } from 'motion/react'
 import { InView } from '../motion-primitives/InView'
 import { PenTool, RotateCcw, Trophy, MoveDown } from 'lucide-react'
-import { isReducedMotion } from '../../styles/motion'
+import { isReducedMotion, springPresets, transitions } from '../../styles/motion'
 
 const STEPS = [
   {
@@ -49,11 +49,7 @@ export function ConnectedHowItWorks() {
     offset: ['start 70%', 'end 70%'],
   })
 
-  const scaleY = useSpring(scrollYProgress, {
-    stiffness: 100,
-    damping: 24,
-    restDelta: 0.001,
-  })
+  const scaleY = useSpring(scrollYProgress, springPresets.connectedPath)
 
   return (
     <div ref={containerRef} className="relative max-w-4xl mx-auto px-4 py-8">
@@ -78,7 +74,7 @@ export function ConnectedHowItWorks() {
               key={step.num}
               variants={{
                 hidden: { opacity: 0, y: 24 },
-                visible: { opacity: 1, y: 0, transition: { duration: 0.45, ease: 'easeOut' } },
+                visible: { opacity: 1, y: 0, transition: transitions.slow },
               }}
             >
               <div

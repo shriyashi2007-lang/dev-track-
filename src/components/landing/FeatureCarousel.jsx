@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from 'react'
 import { motion, useMotionValue, useTransform } from 'motion/react'
 import { ChevronLeft, ChevronRight, RotateCcw, Flame, Brain, Zap, ShieldCheck } from 'lucide-react'
-import { isReducedMotion } from '../../styles/motion'
+import { isReducedMotion, springPresets } from '../../styles/motion'
 
 const FEATURES = [
   {
@@ -131,7 +131,7 @@ export function FeatureCarousel() {
         initial={{ opacity: 0, y: 12, scale: 0.98 }}
         animate={{ opacity: 1, y: 0, scale: 1 }}
         exit={{ opacity: 0, scale: 0.98 }}
-        transition={{ type: 'spring', stiffness: 320, damping: 26 }}
+        transition={springPresets.featureCarousel}
         className={`relative overflow-hidden p-6 sm:p-10 rounded-2xl bg-base-surface border ${currentFeature.border} shadow-2xl bg-gradient-to-br ${currentFeature.color} cursor-grab active:cursor-grabbing select-none`}
       >
         <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-6">

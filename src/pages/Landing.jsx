@@ -24,6 +24,7 @@ import { UnderlineDoodle, WaveSquiggleDoodle } from '../components/landing/HandD
 import { LandingBentoGrid } from '../components/landing/LandingBentoGrid'
 import { TerminalWindow } from '../components/ui/TerminalWindow'
 import { useProblems } from '../context/ProblemsContext'
+import { transitions } from '../styles/motion'
 
 export default function Landing() {
   const navigate = useNavigate()
@@ -136,7 +137,7 @@ export default function Landing() {
         <InView
           variants={{
             hidden: { opacity: 0, y: 20 },
-            visible: { opacity: 1, y: 0, transition: { duration: 0.4 } },
+            visible: { opacity: 1, y: 0, transition: transitions.slow },
           }}
         >
           <div className="text-center max-w-2xl mx-auto mb-10 space-y-3">
@@ -152,6 +153,7 @@ export default function Landing() {
             <p className="text-sm sm:text-base text-content-secondary font-sans">
               An asymmetric toolkit designed to eliminate the dreaded &ldquo;I solved this a month ago but can&rsquo;t remember the trick&rdquo; feeling.
             </p>
+            <p className="text-xs text-content-muted font-sans">Interactive feature preview — examples use illustrative sample data.</p>
           </div>
         </InView>
 
@@ -178,7 +180,7 @@ export default function Landing() {
         <InView
           variants={{
             hidden: { opacity: 0, y: 20 },
-            visible: { opacity: 1, y: 0, transition: { duration: 0.4 } },
+            visible: { opacity: 1, y: 0, transition: transitions.slow },
           }}
         >
           <div className="text-center max-w-2xl mx-auto mb-8 space-y-2">
@@ -210,7 +212,7 @@ export default function Landing() {
         <InView
           variants={{
             hidden: { opacity: 0, y: 20 },
-            visible: { opacity: 1, y: 0, transition: { duration: 0.4 } },
+            visible: { opacity: 1, y: 0, transition: transitions.slow },
           }}
         >
           <div className="text-center max-w-2xl mx-auto mb-8 space-y-2">
@@ -240,7 +242,7 @@ export default function Landing() {
         <InView
           variants={{
             hidden: { opacity: 0, y: 20 },
-            visible: { opacity: 1, y: 0, transition: { duration: 0.4 } },
+            visible: { opacity: 1, y: 0, transition: transitions.slow },
           }}
         >
           <div className="text-center max-w-2xl mx-auto mb-12 space-y-3">
