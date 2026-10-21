@@ -38,11 +38,11 @@ export const TOPICS = [
 ]
 
 export const ACCENTS = [
-  { id: 'indigo', name: 'Electric Indigo', color: '#6366F1' },
-  { id: 'violet', name: 'Neon Violet', color: '#8B5CF6' },
-  { id: 'emerald', name: 'Emerald Green', color: '#10B981' },
-  { id: 'amber', name: 'Warm Amber', color: '#F59E0B' },
-  { id: 'cyan', name: 'Cyber Cyan', color: '#06B6D4' },
+  { id: 'indigo', name: 'Electric Indigo', color: 'var(--rainbow-5)' },
+  { id: 'violet', name: 'Neon Violet', color: 'var(--rainbow-6)' },
+  { id: 'emerald', name: 'Emerald Green', color: 'var(--rainbow-3)' },
+  { id: 'amber', name: 'Warm Amber', color: 'var(--rainbow-2)' },
+  { id: 'cyan', name: 'Cyber Cyan', color: 'var(--rainbow-4)' },
 ]
 
 export const DEFAULT_SETTINGS = {
