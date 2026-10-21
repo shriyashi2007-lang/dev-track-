@@ -87,6 +87,9 @@ export default function Signup() {
           <form onSubmit={handleSubmit} className="space-y-4">
             <Input
               label="Full Name / Display Name"
+              name="name"
+              autoComplete="name"
+              required
               value={name}
               onChange={(e) => setName(e.target.value)}
               placeholder="e.g. Alex Rivera"
@@ -97,6 +100,9 @@ export default function Signup() {
             <Input
               type="email"
               label="Email Address"
+              name="email"
+              autoComplete="email"
+              required
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="alex@university.edu"
@@ -107,6 +113,9 @@ export default function Signup() {
               <Input
                 type={showPassword ? 'text' : 'password'}
                 label="Password"
+                name="password"
+                autoComplete="new-password"
+                required
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 leftIcon={<Lock className="w-4 h-4" />}
@@ -116,6 +125,7 @@ export default function Signup() {
                     onClick={() => setShowPassword(!showPassword)}
                     className="cursor-pointer hover:text-content-primary p-1"
                     aria-label={showPassword ? 'Hide password' : 'Show password'}
+                    aria-pressed={showPassword}
                   >
                     {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                   </button>
@@ -164,6 +174,9 @@ export default function Signup() {
             <Input
               type={showPassword ? 'text' : 'password'}
               label="Confirm Password"
+              name="confirmPassword"
+              autoComplete="new-password"
+              required
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
               error={
