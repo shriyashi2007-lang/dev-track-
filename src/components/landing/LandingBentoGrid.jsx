@@ -1,4 +1,4 @@
-git import React, { useState } from 'react'
+import React, { useState } from 'react'
 import clsx from 'clsx'
 import { motion } from 'motion/react'
 import {
@@ -12,9 +12,10 @@ import {
   Command,
   Lock,
 } from 'lucide-react'
-import { bentoTile } from '../../styles/motion'
+import { bentoTile, isReducedMotion, motionValues } from '../../styles/motion'
 
 export function LandingBentoGrid() {
+  const reducedMotion = isReducedMotion()
   // Mini interactive state 1: Spaced interval demo
   const [intervalStep, setIntervalStep] = useState(2) // 7 days
   const intervals = ['1d', '3d', '7d', '14d', '30d']
@@ -30,13 +31,13 @@ export function LandingBentoGrid() {
   const [hoveredDay, setHoveredDay] = useState(null)
 
   const sampleHeatmap = [
-    { day: 'Mon', count: 3, level: 'bg-emerald-500' },
-    { day: 'Tue', count: 5, level: 'bg-emerald-400' },
-    { day: 'Wed', count: 2, level: 'bg-emerald-600' },
-    { day: 'Thu', count: 4, level: 'bg-emerald-500' },
-    { day: 'Fri', count: 6, level: 'bg-emerald-400' },
-    { day: 'Sat', count: 1, level: 'bg-emerald-700' },
-    { day: 'Sun', count: 4, level: 'bg-emerald-500' },
+    { day: 'Mon', count: 3, level: 'heatmap-demo-3' },
+    { day: 'Tue', count: 5, level: 'heatmap-demo-5' },
+    { day: 'Wed', count: 2, level: 'heatmap-demo-2' },
+    { day: 'Thu', count: 4, level: 'heatmap-demo-4' },
+    { day: 'Fri', count: 6, level: 'heatmap-demo-6' },
+    { day: 'Sat', count: 1, level: 'heatmap-demo-1' },
+    { day: 'Sun', count: 4, level: 'heatmap-demo-4' },
   ]
 
   return (
@@ -45,8 +46,8 @@ export function LandingBentoGrid() {
       <motion.div
         variants={bentoTile}
         initial="initial"
-        whileHover="hover"
-        whileTap="tap"
+        whileHover={reducedMotion ? undefined : 'hover'}
+        whileTap={reducedMotion ? undefined : 'tap'}
         className="md:col-span-2 md:row-span-2 p-6 sm:p-8 rounded-card border border-rainbow-2/30 bg-pastel-rose/70 dark:bg-pastel-rose/25 backdrop-blur-md shadow-card hover:shadow-card-hover flex flex-col justify-between relative overflow-hidden group stripe-rose"
       >
         {/* Ambient colored glow */}
@@ -111,8 +112,8 @@ export function LandingBentoGrid() {
       <motion.div
         variants={bentoTile}
         initial="initial"
-        whileHover="hover"
-        whileTap="tap"
+        whileHover={reducedMotion ? undefined : 'hover'}
+        whileTap={reducedMotion ? undefined : 'tap'}
         className="md:col-span-2 p-6 rounded-card border border-rainbow-5/30 bg-pastel-mint/70 dark:bg-pastel-mint/25 backdrop-blur-md shadow-card hover:shadow-card-hover flex flex-col justify-between relative overflow-hidden group stripe-mint"
       >
         <div className="flex items-start justify-between">
@@ -124,11 +125,11 @@ export function LandingBentoGrid() {
               Streak Matrix — Unbroken momentum
             </h3>
             <p className="text-xs text-content-secondary mt-1">
-              GitHub-style activity grid powered strictly by your browser localStorage timestamps.
+              Local activity grid — this preview uses illustrative sample data.
             </p>
           </div>
-          <span className="text-xl sm:text-2xl font-mono font-bold text-status-solved">
-            14d🔥
+          <span className="text-xs sm:text-sm font-mono font-bold text-status-solved">
+            Demo preview
           </span>
         </div>
 
@@ -136,23 +137,27 @@ export function LandingBentoGrid() {
         <div className="mt-4 pt-3 border-t border-border-subtle/40">
           <div className="flex items-center justify-between gap-1.5">
             {sampleHeatmap.map((item, idx) => (
-              <div
+              <button
+                type="button"
                 key={idx}
                 onMouseEnter={() => setHoveredDay(item)}
                 onMouseLeave={() => setHoveredDay(null)}
+                onFocus={() => setHoveredDay(item)}
+                onBlur={() => setHoveredDay(null)}
+                aria-label={`${item.day}: illustrative sample, ${item.count} solved`}
                 className={clsx(
-                  'flex-1 h-7 rounded flex items-center justify-center text-[10px] font-mono font-bold text-white transition-all duration-150 cursor-pointer hover:scale-110',
+                  'interactive-surface flex-1 h-7 rounded flex items-center justify-center text-[10px] font-mono font-bold text-content-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent',
                   item.level
                 )}
                 title={`${item.day}: ${item.count} solved`}
               >
                 {item.count}
-              </div>
+              </button>
             ))}
           </div>
           <div className="flex items-center justify-between text-[11px] text-content-muted mt-1.5 font-sans">
             <span>{hoveredDay ? `${hoveredDay.day}: ${hoveredDay.count} problems solved` : 'Hover day cell for volume'}</span>
-            <span className="text-status-solved font-mono">+4 today</span>
+            <span className="text-status-solved font-mono">Sample data</span>
           </div>
         </div>
       </motion.div>
@@ -161,8 +166,8 @@ export function LandingBentoGrid() {
       <motion.div
         variants={bentoTile}
         initial="initial"
-        whileHover="hover"
-        whileTap="tap"
+        whileHover={reducedMotion ? undefined : 'hover'}
+        whileTap={reducedMotion ? undefined : 'tap'}
         className="p-5 rounded-card border border-rainbow-6/30 bg-pastel-sky/70 dark:bg-pastel-sky/25 backdrop-blur-md shadow-card hover:shadow-card-hover flex flex-col justify-between relative group stripe-sky"
       >
         <div>
@@ -183,7 +188,7 @@ export function LandingBentoGrid() {
             type="button"
             onClick={() => {
               setQuickCaptured(true)
-              setTimeout(() => setQuickCaptured(false), 1500)
+              setTimeout(() => setQuickCaptured(false), motionValues.quickCaptureFeedbackDelay)
             }}
             className="w-full py-2 px-3 rounded-button bg-base-surface/80 border border-border-subtle hover:border-rainbow-6 text-xs font-mono flex items-center justify-between transition-all"
           >
@@ -201,8 +206,8 @@ export function LandingBentoGrid() {
       <motion.div
         variants={bentoTile}
         initial="initial"
-        whileHover="hover"
-        whileTap="tap"
+        whileHover={reducedMotion ? undefined : 'hover'}
+        whileTap={reducedMotion ? undefined : 'tap'}
         className="p-5 rounded-card border border-rainbow-4/30 bg-pastel-amber/70 dark:bg-pastel-amber/25 backdrop-blur-md shadow-card hover:shadow-card-hover flex flex-col justify-between relative group stripe-amber"
       >
         <div>
@@ -238,8 +243,8 @@ export function LandingBentoGrid() {
       <motion.div
         variants={bentoTile}
         initial="initial"
-        whileHover="hover"
-        whileTap="tap"
+        whileHover={reducedMotion ? undefined : 'hover'}
+        whileTap={reducedMotion ? undefined : 'tap'}
         className="md:col-span-2 p-6 rounded-card border border-rainbow-7/30 bg-pastel-violet/70 dark:bg-pastel-violet/25 backdrop-blur-md shadow-card hover:shadow-card-hover flex flex-col justify-between relative overflow-hidden group stripe-violet"
       >
         <div className="flex items-start justify-between">

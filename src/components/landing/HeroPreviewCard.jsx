@@ -2,7 +2,7 @@ import { useRef } from 'react'
 import { motion, useMotionValue, useSpring, useTransform } from 'motion/react'
 import { Flame, CheckCircle2, RotateCcw, TrendingUp } from 'lucide-react'
 import { Badge } from '../ui/Badge'
-import { isReducedMotion } from '../../styles/motion'
+import { isReducedMotion, motionValues } from '../../styles/motion'
 
 export function HeroPreviewCard() {
   const cardRef = useRef(null)
@@ -12,7 +12,7 @@ export function HeroPreviewCard() {
   const mouseY = useMotionValue(0)
 
   // Spring physics for smooth tilt
-  const springConfig = { damping: 20, stiffness: 180, mass: 0.1 }
+  const springConfig = motionValues.previewTilt
   const tiltX = useSpring(useTransform(mouseY, [-0.5, 0.5], [6, -6]), springConfig)
   const tiltY = useSpring(useTransform(mouseX, [-0.5, 0.5], [-8, 8]), springConfig)
 
@@ -39,7 +39,7 @@ export function HeroPreviewCard() {
     >
       <motion.div
         style={reduced ? {} : { rotateX: tiltX, rotateY: tiltY }}
-        className="relative rounded-2xl bg-base-surface/90 border border-border-strong p-4 sm:p-6 shadow-2xl backdrop-blur-xl transition-shadow duration-300 hover:shadow-card-hover"
+        className="glass-liquid relative rounded-large border-t-4 border-t-transparent [border-image:var(--gradient-hard-wave)_1] p-4 sm:p-6 shadow-ambient transition-shadow duration-200 hover:shadow-card-hover"
       >
         {/* Fake window toolbar */}
         <div className="flex items-center justify-between border-b border-border-subtle pb-3 mb-5">
@@ -48,13 +48,13 @@ export function HeroPreviewCard() {
             <div className="w-3 h-3 rounded-full bg-difficulty-medium-text/80" />
             <div className="w-3 h-3 rounded-full bg-difficulty-easy-text/80" />
             <span className="text-xs text-content-muted ml-2 font-medium">
-              devtrack.app/dashboard
+              devtrack.app/dashboard — sample preview
             </span>
           </div>
 
           <div className="flex items-center gap-2">
-            <span className="sticker-badge bg-emerald-500/15 border border-emerald-500/30 text-emerald-400 text-[11px] font-bold">
-              ● Active Session
+            <span className="sticker-badge bg-pastel-mint border border-pastel-mint-border text-pastel-mint-text text-[11px] font-bold">
+              Sample data
             </span>
           </div>
         </div>
@@ -65,20 +65,20 @@ export function HeroPreviewCard() {
           <div className="md:col-span-4 p-4 rounded-xl bg-base-elevated/70 border border-border-subtle flex flex-col justify-between">
             <div className="flex items-center justify-between text-xs text-content-muted">
               <span>Total Solved</span>
-              <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+              <CheckCircle2 className="w-4 h-4 text-status-solved" />
             </div>
             <div className="mt-2">
               <span className="text-3xl sm:text-4xl font-bold tabular-nums text-content-primary">
                 142
               </span>
-              <span className="text-xs text-emerald-400 ml-2 font-semibold">
+              <span className="text-xs text-status-solved ml-2 font-semibold">
                 +4 today
               </span>
             </div>
             <div className="mt-3 flex items-center gap-1.5 text-[11px] text-content-muted">
-              <span className="w-2 h-2 rounded-full bg-emerald-400" /> 48 Easy
-              <span className="w-2 h-2 rounded-full bg-amber-400 ml-1" /> 74 Med
-              <span className="w-2 h-2 rounded-full bg-purple-400 ml-1" /> 20 Hard
+              <span className="w-2 h-2 rounded-full bg-difficulty-easy" /> 48 Easy
+              <span className="w-2 h-2 rounded-full bg-difficulty-medium ml-1" /> 74 Med
+              <span className="w-2 h-2 rounded-full bg-difficulty-hard ml-1" /> 20 Hard
             </div>
           </div>
 
@@ -100,7 +100,7 @@ export function HeroPreviewCard() {
               {[1, 1, 1, 1, 1, 1, 1].map((_, i) => (
                 <div
                   key={i}
-                  className="flex-1 h-2 rounded-sm bg-accent-coral/80"
+                  className="flex-1 h-2 rounded-sm bg-rainbow-1/80"
                   title="Daily goal hit"
                 />
               ))}

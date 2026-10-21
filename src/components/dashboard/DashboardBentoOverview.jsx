@@ -7,17 +7,16 @@ import {
   CheckCircle2,
   RotateCcw,
   ArrowRight,
-  TrendingUp,
   AlertTriangle,
-  Award,
 } from 'lucide-react'
 import { AnimatedNumber } from '../motion-primitives/AnimatedNumber'
 import { ProgressRing } from '../ui/ProgressRing'
-import { bentoTile } from '../../styles/motion'
+import { bentoTile, isReducedMotion } from '../../styles/motion'
 
-export function DashboardBentoOverview({ stats, streaks, dailyGoal = 3, onAddToday }) {
+export function DashboardBentoOverview({ stats, streaks, dailyGoal = 3 }) {
+  const reducedMotion = isReducedMotion()
   const navigate = useNavigate()
-  const { currentStreak, longestStreak, isStreakAtRisk, last7Days = [] } = streaks || {}
+  const { currentStreak, longestStreak, isStreakAtRisk } = streaks || {}
   const total = stats.solved || 0
   const easy = stats.easy || 0
   const medium = stats.medium || 0
@@ -34,8 +33,8 @@ export function DashboardBentoOverview({ stats, streaks, dailyGoal = 3, onAddTod
       <motion.div
         variants={bentoTile}
         initial="initial"
-        whileHover="hover"
-        whileTap="tap"
+        whileHover={reducedMotion ? undefined : 'hover'}
+        whileTap={reducedMotion ? undefined : 'tap'}
         className="md:col-span-2 md:row-span-2 p-6 rounded-card border border-rainbow-2/30 bg-pastel-rose/60 dark:bg-pastel-rose/20 backdrop-blur-md shadow-card hover:shadow-card-hover flex flex-col justify-between relative overflow-hidden group stripe-primary border-l-4 border-l-primary"
       >
         <div>
@@ -135,8 +134,8 @@ export function DashboardBentoOverview({ stats, streaks, dailyGoal = 3, onAddTod
       <motion.div
         variants={bentoTile}
         initial="initial"
-        whileHover="hover"
-        whileTap="tap"
+        whileHover={reducedMotion ? undefined : 'hover'}
+        whileTap={reducedMotion ? undefined : 'tap'}
         className="md:col-span-2 p-5 rounded-card border border-rainbow-4/30 bg-pastel-amber/60 dark:bg-pastel-amber/20 backdrop-blur-md shadow-card hover:shadow-card-hover flex items-center justify-between gap-4 relative overflow-hidden group stripe-coral border-l-4 border-l-accent-coral"
       >
         <div className="flex-1 min-w-0">
@@ -187,8 +186,8 @@ export function DashboardBentoOverview({ stats, streaks, dailyGoal = 3, onAddTod
       <motion.div
         variants={bentoTile}
         initial="initial"
-        whileHover="hover"
-        whileTap="tap"
+        whileHover={reducedMotion ? undefined : 'hover'}
+        whileTap={reducedMotion ? undefined : 'tap'}
         className="p-5 rounded-card border border-rainbow-5/30 bg-pastel-mint/60 dark:bg-pastel-mint/20 backdrop-blur-md shadow-card hover:shadow-card-hover flex flex-col justify-between relative group stripe-mint border-l-4 border-l-status-solved"
       >
         <div>
@@ -224,8 +223,8 @@ export function DashboardBentoOverview({ stats, streaks, dailyGoal = 3, onAddTod
       <motion.div
         variants={bentoTile}
         initial="initial"
-        whileHover="hover"
-        whileTap="tap"
+        whileHover={reducedMotion ? undefined : 'hover'}
+        whileTap={reducedMotion ? undefined : 'tap'}
         onClick={() => navigate('/revision')}
         className="p-5 rounded-card border border-rainbow-6/30 bg-pastel-sky/60 dark:bg-pastel-sky/20 backdrop-blur-md shadow-card hover:shadow-card-hover flex flex-col justify-between relative group stripe-sky border-l-4 border-l-rainbow-6 cursor-pointer"
       >
