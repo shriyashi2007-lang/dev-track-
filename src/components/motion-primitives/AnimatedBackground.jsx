@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { motion, AnimatePresence } from 'motion/react'
-import { isReducedMotion } from '../../styles/motion'
+import { isReducedMotion, springPresets } from '../../styles/motion'
 
 /**
  * Motion Primitives: AnimatedBackground
@@ -11,7 +11,7 @@ export function AnimatedBackground({
   value,
   onValueChange,
   className = '',
-  transition = { type: 'spring', bounce: 0.15, duration: 0.35 },
+  transition = springPresets.activeBackground,
   enableHover = false,
   children,
 }) {

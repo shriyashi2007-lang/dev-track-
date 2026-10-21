@@ -1,6 +1,6 @@
 import React from 'react'
 import { motion } from 'motion/react'
-import { isReducedMotion } from '../../styles/motion'
+import { isReducedMotion, transitions } from '../../styles/motion'
 
 /**
  * Motion Primitives: AnimatedGroup
@@ -32,7 +32,7 @@ export function AnimatedGroup({
     visible: {
       opacity: 1,
       y: 0,
-      transition: { duration: 0.35, ease: [0.16, 1, 0.3, 1] },
+      transition: transitions.slow,
     },
   }
 

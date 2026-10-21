@@ -1,6 +1,6 @@
 import React, { useRef } from 'react'
 import { motion, useInView } from 'motion/react'
-import { isReducedMotion } from '../../styles/motion'
+import { isReducedMotion, transitions } from '../../styles/motion'
 
 /**
  * Motion Primitives: InView
@@ -10,7 +10,7 @@ export function InView({
   children,
   className = '',
   variants,
-  transition = { duration: 0.45, ease: [0.16, 1, 0.3, 1] },
+  transition = transitions.slow,
   viewOptions = { once: true, margin: '-40px' },
   as: Component = 'div',
 }) {

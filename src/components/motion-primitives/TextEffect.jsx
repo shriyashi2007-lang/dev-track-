@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react'
 import { motion } from 'motion/react'
-import { isReducedMotion } from '../../styles/motion'
+import { isReducedMotion, motionValues, transitions } from '../../styles/motion'
 
 /**
  * Motion Primitives: TextEffect
@@ -23,7 +23,7 @@ export function TextEffect({
     visible: {
       opacity: 1,
       transition: {
-        staggerChildren: per === 'char' ? 0.02 : 0.06,
+        staggerChildren: per === 'char' ? motionValues.textCharStagger : motionValues.textWordStagger,
         delayChildren: delay,
       },
     },
@@ -34,7 +34,7 @@ export function TextEffect({
     visible: {
       opacity: 1,
       y: 0,
-      transition: { duration: 0.35, ease: [0.16, 1, 0.3, 1] },
+      transition: transitions.slow,
     },
   }
 

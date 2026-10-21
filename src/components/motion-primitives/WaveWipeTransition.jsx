@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useLocation } from 'react-router-dom'
 import { motion, AnimatePresence } from 'motion/react'
-import { isReducedMotion } from '../../styles/motion'
+import { isReducedMotion, motionValues, transitions } from '../../styles/motion'
 
 /**
  * Fast Layered Wave-Wipe Route Transition 🌊
@@ -19,7 +19,7 @@ export function WaveWipeTransition({ children }) {
     setIsWiping(true)
     const timer = setTimeout(() => {
       setIsWiping(false)
-    }, 320)
+    }, motionValues.routeWipeDelay)
     return () => clearTimeout(timer)
   }, [location.pathname, reduced])
 
@@ -48,9 +48,8 @@ export function WaveWipeTransition({ children }) {
                 originX: [0, 0, 1, 1],
               }}
               transition={{
-                duration: 0.3,
-                delay: index * 0.018,
-                ease: [0.22, 1, 0.36, 1],
+                ...transitions.wipe,
+                delay: index * motionValues.routeWipeStagger,
               }}
               style={{ backgroundColor: color }}
               className="w-full flex-1"
@@ -66,7 +65,7 @@ export function WaveWipeTransition({ children }) {
           initial={{ opacity: reduced ? 0 : 0.4 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          transition={{ duration: reduced ? 0.15 : 0.2 }}
+          transition={reduced ? transitions.fast : transitions.normal}
         >
           {children}
         </motion.div>

@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
 import { motion, useSpring, useTransform } from 'motion/react'
-import { isReducedMotion } from '../../styles/motion'
+import { isReducedMotion, springPresets } from '../../styles/motion'
 
 /**
  * Motion Primitives: AnimatedNumber
@@ -9,7 +9,7 @@ import { isReducedMotion } from '../../styles/motion'
 export function AnimatedNumber({
   value = 0,
   className = '',
-  springOptions = { mass: 0.8, stiffness: 85, damping: 15 },
+  springOptions = springPresets.animatedNumber,
 }) {
   const reduced = isReducedMotion()
   const numValue = Number(value) || 0
