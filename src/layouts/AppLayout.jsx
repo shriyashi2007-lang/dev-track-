@@ -28,6 +28,7 @@ import { OnboardingTour } from '../components/OnboardingTour'
 import { Confetti } from '../components/ui/Confetti'
 import { Button } from '../components/ui/Button'
 import { Avatar } from '../components/ui/Avatar'
+import { Drawer } from '../components/ui/Drawer'
 import { WaveDivider } from '../components/ui/WaveDivider'
 import { WaveWipeTransition } from '../components/motion-primitives/WaveWipeTransition'
 import { categorizeRevisions } from '../utils/spacedRepetition'
@@ -46,7 +47,7 @@ export function AppLayout() {
     () => !settings.onboardingCompleted
   )
   const [triggerConfetti, setTriggerConfetti] = useState(false)
-  const [_mobileDrawerOpen, setMobileDrawerOpen] = useState(false)
+  const [mobileDrawerOpen, setMobileDrawerOpen] = useState(false)
 
   // Compute revision counts for sidebar badge
   const revisionStats = useMemo(() => {
@@ -382,6 +383,44 @@ export function AppLayout() {
       </nav>
 
       {/* Global Overlays & Modals */}
+      <Drawer
+        isOpen={mobileDrawerOpen}
+        onClose={() => setMobileDrawerOpen(false)}
+        title="DevTrack navigation"
+        description="Choose a workspace section."
+        width="max-w-xs"
+      >
+        <nav className="space-y-2">
+          {navItems.map((item) => {
+            const Icon = item.icon
+            return (
+              <NavLink
+                key={item.to}
+                to={item.to}
+                onClick={() => setMobileDrawerOpen(false)}
+                className={({ isActive }) =>
+                  clsx(
+                    'flex items-center justify-between rounded-button px-3 py-3 text-sm font-display font-medium transition-colors',
+                    isActive
+                      ? 'bg-primary text-white shadow-sm'
+                      : 'text-content-secondary hover:bg-base-elevated hover:text-content-primary'
+                  )
+                }
+              >
+                <span className="flex items-center gap-3">
+                  <Icon className="h-4 w-4" />
+                  {item.label}
+                </span>
+                {item.badge && (
+                  <span className="rounded-full bg-difficulty-hard px-2 py-0.5 text-[10px] font-bold text-white">
+                    {item.badge}
+                  </span>
+                )}
+              </NavLink>
+            )
+          })}
+        </nav>
+      </Drawer>
       <CommandPalette onNewProblem={handleOpenNewProblem} />
       <KeyboardShortcutsModal isOpen={isHelpOpen} onClose={() => setIsHelpOpen(false)} />
       
