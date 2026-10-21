@@ -75,6 +75,9 @@ export default function Login() {
             <Input
               type="email"
               label="Email Address"
+              name="email"
+              autoComplete="email"
+              required
               value={email}
               onChange={(e) => {
                 setEmail(e.target.value)
@@ -89,6 +92,9 @@ export default function Login() {
               <Input
                 type={showPassword ? 'text' : 'password'}
                 label="Password"
+                name="password"
+                autoComplete="current-password"
+                required
                 value={password}
                 onChange={(e) => {
                   setPassword(e.target.value)
@@ -102,6 +108,7 @@ export default function Login() {
                     onClick={() => setShowPassword(!showPassword)}
                     className="cursor-pointer hover:text-content-primary p-1"
                     aria-label={showPassword ? 'Hide password' : 'Show password'}
+                    aria-pressed={showPassword}
                   >
                     {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                   </button>
