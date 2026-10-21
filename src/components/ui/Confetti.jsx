@@ -1,5 +1,7 @@
 import React, { useEffect, useRef } from 'react'
 import { useSettings } from '../../context/SettingsContext'
+import { confettiColors, isReducedMotion, motionValues } from '../../styles/motion'
+import { getCssVar } from '../../styles/chartTheme'
 
 export function Confetti({ trigger = false, onComplete }) {
   const canvasRef = useRef(null)
@@ -9,7 +11,7 @@ export function Confetti({ trigger = false, onComplete }) {
     if (!trigger) return
     const allowConfetti = settings ? settings.confetti : true
     const reduceMotion = settings ? settings.reduceMotion : false
-    if (!allowConfetti || reduceMotion) {
+    if (!allowConfetti || reduceMotion || isReducedMotion()) {
       onComplete?.()
       return
     }
@@ -22,8 +24,8 @@ export function Confetti({ trigger = false, onComplete }) {
     canvas.height = window.innerHeight
 
     const particles = []
-    const particleCount = 70
-    const colors = ['#FA7268', '#EF5F67', '#E34C67', '#D53867', '#C62368', '#10B981']
+    const particleCount = motionValues.confettiCount
+    const colors = confettiColors.map((token) => getCssVar(token.slice(4, -1)))
 
     for (let i = 0; i < particleCount; i++) {
       particles.push({
@@ -44,7 +46,7 @@ export function Confetti({ trigger = false, onComplete }) {
 
     const animate = () => {
       const elapsed = Date.now() - startTime
-      if (elapsed > 3000) {
+      if (elapsed > motionValues.confettiLifetime) {
         ctx.clearRect(0, 0, canvas.width, canvas.height)
         onComplete?.()
         return
@@ -55,9 +57,9 @@ export function Confetti({ trigger = false, onComplete }) {
       particles.forEach((p) => {
         p.x += p.vx
         p.y += p.vy
-        p.vy += 0.35 // gravity
+        p.vy += motionValues.confettiGravity
         p.rotation += p.vr
-        p.opacity = Math.max(0, 1 - elapsed / 3000)
+        p.opacity = Math.max(0, 1 - elapsed / motionValues.confettiLifetime)
 
         ctx.save()
         ctx.translate(p.x, p.y)
