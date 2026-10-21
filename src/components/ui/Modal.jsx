@@ -15,27 +15,49 @@ export function Modal({
   const modalRef = useRef(null)
 
   useEffect(() => {
-    function handleKeyDown(e) {
-      if (!isOpen) return
-      if (e.key === 'Escape') {
-        onClose?.()
-      }
-    }
-    window.addEventListener('keydown', handleKeyDown)
-    return () => window.removeEventListener('keydown', handleKeyDown)
-  }, [isOpen, onClose])
+    if (!isOpen || !modalRef.current) return
 
-  // Focus trap
-  useEffect(() => {
-    if (isOpen && modalRef.current) {
-      const focusableElements = modalRef.current.querySelectorAll(
-        'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
-      )
-      if (focusableElements.length > 0) {
-        focusableElements[0].focus()
+    const previouslyFocused = document.activeElement
+    const modal = modalRef.current
+    const getFocusable = () =>
+      [...modal.querySelectorAll(
+        'button:not([disabled]), [href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])'
+      )]
+
+    const focusable = getFocusable()
+    ;(focusable[0] || modal).focus()
+
+    function handleKeyDown(event) {
+      if (event.key === 'Escape') {
+        onClose?.()
+        return
+      }
+      if (event.key !== 'Tab') return
+
+      const currentFocusable = getFocusable()
+      if (currentFocusable.length === 0) {
+        event.preventDefault()
+        modal.focus()
+        return
+      }
+
+      const first = currentFocusable[0]
+      const last = currentFocusable.at(-1)
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault()
+        last.focus()
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault()
+        first.focus()
       }
     }
-  }, [isOpen])
+
+    window.addEventListener('keydown', handleKeyDown)
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown)
+      previouslyFocused?.focus?.()
+    }
+  }, [isOpen, onClose])
 
   if (!isOpen) return null
 
@@ -57,6 +79,7 @@ export function Modal({
       {/* Modal Dialog Content */}
       <div
         ref={modalRef}
+        tabIndex={-1}
         className={clsx(
           'relative w-full glass-liquid border border-border-strong rounded-modal shadow-ambient hover:shadow-sticker p-6 z-10 animate-scale-in my-8 transition-shadow duration-200',
           maxWidth,
