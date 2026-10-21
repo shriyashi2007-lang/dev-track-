@@ -173,6 +173,15 @@ export function CommandPalette({ onNewProblem }) {
           <input
             ref={inputRef}
             type="text"
+            role="combobox"
+            aria-label="Search commands, pages, and problems"
+            aria-expanded="true"
+            aria-controls="command-palette-results"
+            aria-activedescendant={
+              filteredItems[selectedIndex]
+                ? `command-option-${filteredItems[selectedIndex].id}`
+                : undefined
+            }
             value={query}
             onChange={(e) => {
               setQuery(e.target.value)
@@ -187,9 +196,15 @@ export function CommandPalette({ onNewProblem }) {
         </div>
 
         {/* Results List */}
-        <div ref={listRef} className="max-h-80 overflow-y-auto p-2 space-y-1">
+        <div
+          ref={listRef}
+          id="command-palette-results"
+          role="listbox"
+          aria-label="Command results"
+          className="max-h-80 overflow-y-auto p-2 space-y-1"
+        >
           {filteredItems.length === 0 ? (
-            <div className="p-8 text-center text-xs text-content-secondary">
+            <div role="status" className="p-8 text-center text-xs text-content-secondary">
               No results found for &ldquo;{query}&rdquo;
             </div>
           ) : (
@@ -200,7 +215,10 @@ export function CommandPalette({ onNewProblem }) {
               return (
                 <button
                   key={item.id}
+                  id={`command-option-${item.id}`}
                   type="button"
+                  role="option"
+                  aria-selected={isSelected}
                   onClick={() => {
                     item.action()
                     close()
