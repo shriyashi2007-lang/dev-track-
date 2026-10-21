@@ -164,6 +164,7 @@ export function SettingsPage() {
                   key={th}
                   type="button"
                   onClick={() => updateSettings({ theme: th })}
+                  aria-pressed={settings.theme === th}
                   className={clsx(
                     'py-2 px-3 rounded-card text-xs font-semibold capitalize border transition-all cursor-pointer',
                     settings.theme === th
@@ -190,6 +191,7 @@ export function SettingsPage() {
                     key={accent.id}
                     type="button"
                     onClick={() => updateSettings({ accent: accent.id })}
+                    aria-pressed={isSelected}
                     className={clsx(
                       'flex items-center gap-2 px-3 py-1.5 rounded-card border text-xs font-medium transition-all cursor-pointer',
                       isSelected
