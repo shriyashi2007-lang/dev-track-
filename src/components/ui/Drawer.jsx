@@ -14,27 +14,49 @@ export function Drawer({
   const drawerRef = useRef(null)
 
   useEffect(() => {
-    function handleKeyDown(e) {
-      if (!isOpen) return
-      if (e.key === 'Escape') {
-        onClose?.()
-      }
-    }
-    window.addEventListener('keydown', handleKeyDown)
-    return () => window.removeEventListener('keydown', handleKeyDown)
-  }, [isOpen, onClose])
+    if (!isOpen || !drawerRef.current) return
 
-  // Focus trap
-  useEffect(() => {
-    if (isOpen && drawerRef.current) {
-      const focusable = drawerRef.current.querySelectorAll(
-        'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
-      )
-      if (focusable.length > 0) {
-        focusable[0].focus()
+    const previouslyFocused = document.activeElement
+    const drawer = drawerRef.current
+    const getFocusable = () =>
+      [...drawer.querySelectorAll(
+        'button:not([disabled]), [href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])'
+      )]
+
+    const focusable = getFocusable()
+    ;(focusable[0] || drawer).focus()
+
+    function handleKeyDown(event) {
+      if (event.key === 'Escape') {
+        onClose?.()
+        return
+      }
+      if (event.key !== 'Tab') return
+
+      const currentFocusable = getFocusable()
+      if (currentFocusable.length === 0) {
+        event.preventDefault()
+        drawer.focus()
+        return
+      }
+
+      const first = currentFocusable[0]
+      const last = currentFocusable.at(-1)
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault()
+        last.focus()
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault()
+        first.focus()
       }
     }
-  }, [isOpen])
+
+    window.addEventListener('keydown', handleKeyDown)
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown)
+      previouslyFocused?.focus?.()
+    }
+  }, [isOpen, onClose])
 
   if (!isOpen) return null
 
@@ -44,6 +66,7 @@ export function Drawer({
       role="dialog"
       aria-modal="true"
       aria-labelledby={title ? 'drawer-title' : undefined}
+      aria-describedby={description ? 'drawer-description' : undefined}
     >
       {/* Backdrop */}
       <div
@@ -55,6 +78,7 @@ export function Drawer({
       <div className="fixed inset-y-0 right-0 max-w-full flex pl-10">
         <div
           ref={drawerRef}
+          tabIndex={-1}
           className={clsx(
             'w-screen bg-base-surface border-l border-border-strong shadow-2xl flex flex-col animate-slide-up sm:animate-none',
             width,
@@ -70,7 +94,7 @@ export function Drawer({
                 </h2>
               )}
               {description && (
-                <p className="text-xs text-content-secondary mt-1">{description}</p>
+                <p id="drawer-description" className="text-xs text-content-secondary mt-1">{description}</p>
               )}
             </div>
             <button
