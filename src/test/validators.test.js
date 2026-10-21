@@ -67,4 +67,38 @@ describe('Validators', () => {
     expect(res.validItems.length).toBe(1)
     expect(res.rejectedCount).toBe(1)
   })
+
+  it('returns useful metadata when an import contains no valid entries', () => {
+    const result = validateImportData([null, 'bad', { title: '' }])
+
+    expect(result).toMatchObject({
+      isValid: false,
+      validItems: [],
+      rejectedCount: 3,
+      totalCount: 3,
+      error: 'No valid problem entries found in the file',
+    })
+  })
+
+  it('rejects non-array import payloads before reading entries', () => {
+    expect(validateImportData({ problems: [] })).toEqual({
+      isValid: false,
+      validItems: [],
+      error: 'Import file must be a JSON array of problems',
+    })
+  })
+
+  it('reports invalid revision priorities on marked problems', () => {
+    const result = validateProblem({
+      title: 'Priority check',
+      platform: 'LeetCode',
+      difficulty: 'Easy',
+      topics: ['Arrays'],
+      status: 'Todo',
+      revision: { marked: true, priority: 'Urgent' },
+    })
+
+    expect(result.isValid).toBe(false)
+    expect(result.errors.priority).toBe('Priority must be High, Medium, or Low')
+  })
 })
