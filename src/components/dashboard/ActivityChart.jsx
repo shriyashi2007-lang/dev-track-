@@ -45,6 +45,7 @@ export function ActivityChart({ problems = [] }) {
               key={r.days}
               type="button"
               onClick={() => setRangeDays(r.days)}
+              aria-pressed={rangeDays === r.days}
               className={clsx(
                 'px-2.5 py-1 text-xs font-medium rounded-subtle transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-accent',
                 rangeDays === r.days
