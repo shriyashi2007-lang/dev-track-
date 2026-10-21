@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { filterProblems } from '../utils/filters'
+import { filterProblems, parseFilterParams, serializeFilterParams } from '../utils/filters'
 import { sortProblems } from '../utils/sorting'
 
 describe('Filtering and Sorting', () => {
@@ -57,6 +57,31 @@ describe('Filtering and Sorting', () => {
   it('filters by revision flag', () => {
     const res = filterProblems(problems, { revisionOnly: true })
     expect(res.length).toBe(2)
+  })
+
+  it('round trips non-default filters through URL search params', () => {
+    const filters = {
+      search: 'binary tree',
+      difficulties: ['Medium', 'Hard'],
+      topics: ['Trees', 'Graphs'],
+      platforms: ['LeetCode'],
+      status: 'Solved',
+      revisionOnly: true,
+      sort: 'title-asc',
+    }
+
+    const params = serializeFilterParams(filters)
+    expect(parseFilterParams(params)).toEqual(filters)
+  })
+
+  it('omits default filter values from the URL', () => {
+    const params = serializeFilterParams({ status: 'all', sort: 'newest' })
+    expect(params.toString()).toBe('')
+    expect(parseFilterParams(params)).toMatchObject({
+      status: 'all',
+      sort: 'newest',
+      revisionOnly: false,
+    })
   })
 
   it('sorts correctly by difficulty ascending and descending', () => {
