@@ -29,6 +29,7 @@ export function ProblemsFilterBar({
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-content-muted" />
           <input
             type="text"
+            aria-label="Search problems"
             value={search}
             onChange={(e) => onSearchChange(e.target.value)}
             placeholder="Search problems, topics, notes (Press '/' to focus)..."
@@ -55,6 +56,7 @@ export function ProblemsFilterBar({
               onClick={() => onViewModeChange('table')}
               title="Table view"
               aria-label="Table view"
+              aria-pressed={viewMode === 'table'}
               className={clsx(
                 'p-1.5 rounded-subtle transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-accent',
                 viewMode === 'table'
@@ -69,6 +71,7 @@ export function ProblemsFilterBar({
               onClick={() => onViewModeChange('board')}
               title="Kanban board view"
               aria-label="Kanban board view"
+              aria-pressed={viewMode === 'board'}
               className={clsx(
                 'p-1.5 rounded-subtle transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-accent',
                 viewMode === 'board'
@@ -113,6 +116,7 @@ export function ProblemsFilterBar({
                 key={diff}
                 type="button"
                 onClick={() => onDifficultyToggle(diff)}
+                aria-pressed={isSelected}
                 className={clsx(
                   'px-2 py-0.5 rounded text-[11px] font-medium transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-accent',
                   isSelected
@@ -140,6 +144,7 @@ export function ProblemsFilterBar({
                 key={st}
                 type="button"
                 onClick={() => onStatusChange(st)}
+                aria-pressed={isSelected}
                 className={clsx(
                   'px-2 py-0.5 rounded text-[11px] font-medium transition-colors capitalize cursor-pointer focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-accent',
                   isSelected
@@ -157,6 +162,7 @@ export function ProblemsFilterBar({
         <button
           type="button"
           onClick={onRevisionToggle}
+          aria-pressed={revisionOnly}
           className={clsx(
             'px-2.5 py-1.5 rounded-card border text-[11px] font-medium transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-accent',
             revisionOnly
