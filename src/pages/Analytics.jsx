@@ -56,6 +56,7 @@ export default function Analytics() {
                 key={r.id}
                 type="button"
                 onClick={() => setSelectedRange(r.days)}
+                aria-pressed={selectedRange === r.days}
                 className={clsx(
                   'px-2.5 py-1 text-xs font-medium rounded-subtle transition-colors cursor-pointer',
                   selectedRange === r.days
@@ -110,7 +111,7 @@ export default function Analytics() {
 
           {/* Sliced Difficulty Problems Table if slice clicked */}
           {selectedDifficulty && (
-            <div className="p-5 bg-base-surface border border-border-strong rounded-card space-y-3 animate-fade-in">
+            <div aria-live="polite" className="p-5 bg-base-surface border border-border-strong rounded-card space-y-3 animate-fade-in">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
                   <Badge variant={selectedDifficulty} size="sm">

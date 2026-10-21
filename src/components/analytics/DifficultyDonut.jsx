@@ -87,6 +87,26 @@ export function DifficultyDonut({ stats, selectedDifficulty, onSelectDifficulty 
           </ResponsiveContainer>
         </div>
       )}
+
+      {data.length > 0 && (
+        <div className="mt-3 flex flex-wrap justify-center gap-2" aria-label="Filter by difficulty">
+          {data.map((entry) => (
+            <button
+              key={entry.name}
+              type="button"
+              aria-pressed={selectedDifficulty === entry.name}
+              onClick={() =>
+                onSelectDifficulty(
+                  selectedDifficulty === entry.name ? null : entry.name
+                )
+              }
+              className="rounded-full border border-border-subtle px-2.5 py-1 text-[11px] text-content-secondary hover:text-content-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
+            >
+              {entry.name}: {entry.value}
+            </button>
+          ))}
+        </div>
+      )}
     </Card>
   )
 }
