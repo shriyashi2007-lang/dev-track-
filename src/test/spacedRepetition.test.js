@@ -59,4 +59,43 @@ describe('Spaced Repetition Scheduler', () => {
     expect(cat.overdue[0].id).toBe('2')
     expect(cat.upcoming[0].id).toBe('3')
   })
+
+  it('separates completed revisions and orders due items by priority', () => {
+    const todayStr = getLocalDateString(refDate)
+    const problems = [
+      { id: 'low', revision: { marked: true, nextRevisionDate: todayStr, priority: 'Low' } },
+      { id: 'high', revision: { marked: true, nextRevisionDate: todayStr, priority: 'High' } },
+      {
+        id: 'complete',
+        revision: {
+          marked: true,
+          nextRevisionDate: todayStr,
+          revisionCount: 5,
+          isCompleted: true,
+        },
+      },
+      { id: 'unscheduled', revision: { marked: true } },
+    ]
+
+    const result = categorizeRevisions(problems, refDate)
+    expect(result.dueToday.map((problem) => problem.id)).toEqual([
+      'high',
+      'low',
+      'unscheduled',
+    ])
+    expect(result.completed.map((problem) => problem.id)).toEqual(['complete'])
+    expect(result.counts.totalActive).toBe(3)
+  })
+
+  it('caps easy scheduling at the largest configured interval', () => {
+    const result = calculateNextRevision({
+      confidence: 'Easy',
+      currentCount: 20,
+      intervals,
+      fromDate: refDate,
+    })
+
+    expect(result.daysAdded).toBe(30)
+    expect(result.nextCount).toBe(21)
+  })
 })
