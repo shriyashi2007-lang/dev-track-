@@ -26,4 +26,4 @@ DevTrack is local-first. Browser `localStorage` holds application data, demo ses
 
 ## Supported workflow
 
-Use `npm run test` for the test suite, `npm run lint` for static checks, `npm run build` for a production bundle, and `npm run dev` for local browser inspection.
+Use `npm run test` for the test suite, `npm run test:ci` for a deterministic single-worker CI run, `npm run lint` for static checks, `npm run build` for a production bundle, and `npm run dev` for local browser inspection. Dashboard verification also covers narrow and wide layouts, persisted refreshes, keyboard navigation, reduced motion, and browser console errors.
