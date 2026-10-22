@@ -15,8 +15,16 @@ export function ProblemsProvider({ children }) {
 
   const refreshProblems = useCallback(async () => {
     try {
-      const data = await problemService.getAll()
+      const { problems: data, error } = await problemService.getAllWithMeta()
       setProblems(data)
+      if (error) {
+        addToast({
+          type: 'warning',
+          title: 'Saved data needs attention',
+          message: 'DevTrack could not read the saved problem list. The original browser data was left unchanged.',
+          duration: 7000,
+        })
+      }
     } catch (err) {
       console.error('[ProblemsProvider] Error loading problems:', err)
       addToast({
