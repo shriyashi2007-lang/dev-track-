@@ -23,6 +23,8 @@ describe('StorageService', () => {
     localStorage.setItem(key, '{ invalid json string')
     const res = storageService.get(key, { safe: true })
     expect(res).toEqual({ safe: true })
+    expect(localStorage.getItem(key)).toBe('{ invalid json string')
+    expect(storageService.getResult(key, []).error).toBeInstanceOf(Error)
   })
 
   it('removes keys cleanly', () => {
