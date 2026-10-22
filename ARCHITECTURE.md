@@ -29,6 +29,8 @@ An application-level error boundary protects the provider and router tree. Route
 
 Problem and settings services are the only modules that should directly own their storage keys. Context providers expose those operations to the interface and keep React state synchronized. Import validation runs before persistence, and exports create transient object URLs that are revoked after download.
 
+Dashboard data follows one deterministic pipeline. The problem service reads stored records, the normalizer repairs legacy shapes without rewriting unreadable source data, and pure metric helpers derive totals, weekly activity, streaks, heatmap cells, and recent activity. Dashboard components receive those derived values and remain focused on rendering and interaction.
+
 ## Testing strategy
 
 Vitest and Testing Library cover pure utilities, browser-facing services, hooks, and high-value component behavior. Tests use jsdom and reset browser storage and mocks between cases. Production readiness is checked with the full test suite, ESLint, a Vite production build, and representative browser inspection.
