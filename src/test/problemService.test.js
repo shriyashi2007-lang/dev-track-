@@ -52,4 +52,28 @@ describe('problem service', () => {
       'Problem with ID missing not found'
     )
   })
+
+  it('normalizes legacy records on read without rewriting stored JSON', async () => {
+    const raw = JSON.stringify([{ title: ' Legacy ', difficulty: 'expert', topic: 'Graphs' }])
+    localStorage.setItem('devtrack:v1:problems', raw)
+
+    const records = await problemService.getAll()
+    expect(records[0]).toMatchObject({
+      title: 'Legacy',
+      difficulty: 'Unknown',
+      topics: ['Graphs'],
+    })
+    expect(localStorage.getItem('devtrack:v1:problems')).toBe(raw)
+    expect(records[0].id).toMatch(/^legacy-/)
+  })
+
+  it('reports corrupted storage while preserving the original value', async () => {
+    localStorage.setItem('devtrack:v1:problems', '{broken')
+    const result = await problemService.getAllWithMeta()
+    expect(result.problems).toEqual([])
+    expect(result.error).toBeInstanceOf(Error)
+    expect(localStorage.getItem('devtrack:v1:problems')).toBe('{broken')
+    await expect(problemService.create({ title: 'Would overwrite' })).rejects.toThrow(/left it unchanged/i)
+    expect(localStorage.getItem('devtrack:v1:problems')).toBe('{broken')
+  })
 })
