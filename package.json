@@ -8,6 +8,7 @@
     "build": "vite build",
     "lint": "eslint .",
     "test": "vitest run",
+    "test:ci": "vitest run --pool=vmThreads --maxWorkers=1",
     "test:watch": "vitest",
     "preview": "vite preview"
   },
