@@ -3,17 +3,37 @@ import { STORAGE_KEYS } from '../data/constants'
 import { generateId } from '../utils/ids'
 import { getLocalDateString } from '../utils/dates'
 import { getSampleProblems } from '../data/sampleProblems'
+import { normalizeProblem, normalizeProblems } from '../utils/problemNormalizer'
 
 /**
  * ProblemService: Async promise-based API backed by localStorage.
  * Ready for drop-in REST backend replacement.
  */
 class ProblemService {
+  readRaw() {
+    const result = storageService.getResult(STORAGE_KEYS.PROBLEMS, [])
+    return {
+      records: Array.isArray(result.value) ? result.value : [],
+      error: result.error || (Array.isArray(result.value) ? null : new Error('Saved problem data is not a list.')),
+    }
+  }
+
+  readWritableRaw() {
+    const result = this.readRaw()
+    if (result.error) {
+      throw new Error('Saved problem data could not be read, so DevTrack left it unchanged.')
+    }
+    return result.records
+  }
+
+  async getAllWithMeta() {
+    const { records, error } = this.readRaw()
+    return { problems: normalizeProblems(records), error }
+  }
+
   async getAll() {
-    return new Promise((resolve) => {
-      const data = storageService.get(STORAGE_KEYS.PROBLEMS, [])
-      resolve(Array.isArray(data) ? data : [])
-    })
+    const { problems } = await this.getAllWithMeta()
+    return problems
   }
 
   async getById(id) {
@@ -22,7 +42,7 @@ class ProblemService {
   }
 
   async create(problemData) {
-    const list = await this.getAll()
+    const list = this.readWritableRaw()
     const now = new Date().toISOString()
     const todayStr = getLocalDateString(new Date())
 
@@ -57,17 +77,18 @@ class ProblemService {
 
     const updated = [newProblem, ...list]
     storageService.set(STORAGE_KEYS.PROBLEMS, updated)
-    return newProblem
+    return normalizeProblem(newProblem)
   }
 
   async update(id, updates) {
-    const list = await this.getAll()
-    const index = list.findIndex((p) => p.id === id)
+    const list = this.readWritableRaw()
+    const normalizedList = normalizeProblems(list)
+    const index = normalizedList.findIndex((problem) => problem.id === String(id))
     if (index === -1) {
       throw new Error(`Problem with ID ${id} not found`)
     }
 
-    const current = list[index]
+    const current = normalizedList[index]
     const now = new Date().toISOString()
 
     // Handle solved date automatic sync
@@ -92,23 +113,24 @@ class ProblemService {
 
     list[index] = merged
     storageService.set(STORAGE_KEYS.PROBLEMS, list)
-    return merged
+    return normalizeProblem(merged, index)
   }
 
   async remove(id) {
-    const list = await this.getAll()
-    const target = list.find((p) => p.id === id)
-    if (!target) return null
-
-    const filtered = list.filter((p) => p.id !== id)
+    const list = this.readWritableRaw()
+    const normalizedList = normalizeProblems(list)
+    const index = normalizedList.findIndex((problem) => problem.id === String(id))
+    if (index === -1) return null
+    const target = normalizedList[index]
+    const filtered = list.filter((_, itemIndex) => itemIndex !== index)
     storageService.set(STORAGE_KEYS.PROBLEMS, filtered)
     return target
   }
 
   async restore(problem) {
     if (!problem) return
-    const list = await this.getAll()
-    const exists = list.some((p) => p.id === problem.id)
+    const list = this.readWritableRaw()
+    const exists = normalizeProblems(list).some((item) => item.id === problem.id)
     if (!exists) {
       const updated = [problem, ...list]
       storageService.set(STORAGE_KEYS.PROBLEMS, updated)
@@ -118,21 +140,24 @@ class ProblemService {
 
   async bulkRemove(ids = []) {
     const set = new Set(ids)
-    const list = await this.getAll()
-    const deleted = list.filter((p) => set.has(p.id))
-    const remaining = list.filter((p) => !set.has(p.id))
+    const list = this.readWritableRaw()
+    const normalizedList = normalizeProblems(list)
+    const deleted = list.filter((_, index) => set.has(normalizedList[index].id))
+    const remaining = list.filter((_, index) => !set.has(normalizedList[index].id))
     storageService.set(STORAGE_KEYS.PROBLEMS, remaining)
-    return deleted
+    return normalizeProblems(deleted)
   }
 
   async bulkUpdateStatus(ids = [], status = 'Solved') {
     const set = new Set(ids)
-    const list = await this.getAll()
+    const list = this.readWritableRaw()
+    const normalizedList = normalizeProblems(list)
     const todayStr = getLocalDateString(new Date())
     const now = new Date().toISOString()
 
-    const updated = list.map((p) => {
-      if (!set.has(p.id)) return p
+    const updated = list.map((p, index) => {
+      const normalizedProblem = normalizedList[index]
+      if (!set.has(normalizedProblem.id)) return p
       return {
         ...p,
         status,
@@ -142,17 +167,19 @@ class ProblemService {
     })
 
     storageService.set(STORAGE_KEYS.PROBLEMS, updated)
-    return updated
+    return normalizeProblems(updated)
   }
 
   async bulkMarkRevision(ids = [], marked = true, priority = 'Medium') {
     const set = new Set(ids)
-    const list = await this.getAll()
+    const list = this.readWritableRaw()
+    const normalizedList = normalizeProblems(list)
     const todayStr = getLocalDateString(new Date())
     const now = new Date().toISOString()
 
-    const updated = list.map((p) => {
-      if (!set.has(p.id)) return p
+    const updated = list.map((p, index) => {
+      const normalizedProblem = normalizedList[index]
+      if (!set.has(normalizedProblem.id)) return p
       return {
         ...p,
         revision: {
@@ -166,35 +193,35 @@ class ProblemService {
     })
 
     storageService.set(STORAGE_KEYS.PROBLEMS, updated)
-    return updated
+    return normalizeProblems(updated)
   }
 
   async loadSampleData() {
     const sampleItems = getSampleProblems()
-    const list = await this.getAll()
+    const list = this.readWritableRaw()
     // Remove existing sample items if any, then prepend
     const nonSample = list.filter((p) => !p.isSample)
     const merged = [...sampleItems, ...nonSample]
     storageService.set(STORAGE_KEYS.PROBLEMS, merged)
-    return merged
+    return normalizeProblems(merged)
   }
 
   async clearSampleData() {
-    const list = await this.getAll()
+    const list = this.readWritableRaw()
     const nonSample = list.filter((p) => !p.isSample)
     storageService.set(STORAGE_KEYS.PROBLEMS, nonSample)
-    return nonSample
+    return normalizeProblems(nonSample)
   }
 
   async importProblems(newProblems = [], mode = 'merge') {
-    const current = await this.getAll()
+    const { records: current } = this.readRaw()
     if (mode === 'replace') {
       storageService.set(STORAGE_KEYS.PROBLEMS, newProblems)
-      return newProblems
+      return normalizeProblems(newProblems)
     }
 
     // Merge: prevent duplicate IDs
-    const existingIds = new Set(current.map((p) => p.id))
+    const existingIds = new Set(normalizeProblems(current).map((problem) => problem.id))
     const sanitized = newProblems.map((p) => {
       if (existingIds.has(p.id)) {
         return { ...p, id: generateId() }
@@ -204,7 +231,7 @@ class ProblemService {
 
     const merged = [...sanitized, ...current]
     storageService.set(STORAGE_KEYS.PROBLEMS, merged)
-    return merged
+    return normalizeProblems(merged)
   }
 }
 
