@@ -1,85 +1,63 @@
-import React, { useState, useMemo } from 'react'
-import {
-  BarChart,
-  Bar,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  ResponsiveContainer,
-  Legend,
-} from 'recharts'
+import { useMemo } from 'react'
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts'
+import { BarChart3, Plus } from 'lucide-react'
 import { Card } from '../ui/Card'
-import { BarChart3 } from 'lucide-react'
-import { computeActivitySeries } from '../../utils/stats'
+import { Button } from '../ui/Button'
+import { getWeeklyProgress } from '../../utils/dashboardMetrics'
 import { chartColors, rechartsTheme } from '../../styles/chartTheme'
-import clsx from 'clsx'
+import { isReducedMotion } from '../../styles/motion'
 
-export function ActivityChart({ problems = [] }) {
-  const [rangeDays, setRangeDays] = useState(7) // 7 | 30 | 90
+function WeeklyTooltip({ active, payload }) {
+  if (!active || !payload?.[0]?.payload) return null
+  const day = payload[0].payload
+  return (
+    <div style={rechartsTheme.tooltip.contentStyle}>
+      <p style={rechartsTheme.tooltip.labelStyle}>{day.fullDate}</p>
+      <p style={rechartsTheme.tooltip.itemStyle}>{day.count} problem{day.count === 1 ? '' : 's'} solved</p>
+    </div>
+  )
+}
 
-  const data = useMemo(() => {
-    return computeActivitySeries(problems, rangeDays)
-  }, [problems, rangeDays])
-
-  const ranges = [
-    { label: '7 Days', days: 7 },
-    { label: '30 Days', days: 30 },
-    { label: '90 Days', days: 90 },
-  ]
+export function ActivityChart({ problems = [], onAddProblem }) {
+  const data = useMemo(() => getWeeklyProgress(problems), [problems])
+  const total = data.reduce((sum, day) => sum + day.count, 0)
+  const summary = `${total} problem${total === 1 ? '' : 's'} solved in the last 7 days. ${data.map((day) => `${day.label}: ${day.count}`).join(', ')}.`
 
   return (
     <Card className="p-5">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
+      <div className="flex items-center justify-between gap-3 mb-4">
         <div className="flex items-center gap-2">
-          <BarChart3 className="w-4 h-4 text-primary" />
-          <h3 className="text-xs font-semibold text-content-primary uppercase tracking-wider">
-            Solve Activity
-          </h3>
+          <BarChart3 className="w-4 h-4 text-primary" aria-hidden="true" />
+          <h3 className="text-xs font-semibold text-content-primary uppercase tracking-wider">Last 7 days</h3>
         </div>
-
-        {/* Range switcher */}
-        <div className="flex items-center gap-1 p-0.5 bg-base-elevated rounded-card border border-border-subtle self-start sm:self-auto">
-          {ranges.map((r) => (
-            <button
-              key={r.days}
-              type="button"
-              onClick={() => setRangeDays(r.days)}
-              aria-pressed={rangeDays === r.days}
-              className={clsx(
-                'px-2.5 py-1 text-xs font-medium rounded-subtle transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-accent',
-                rangeDays === r.days
-                  ? 'bg-base-surface text-content-primary font-semibold shadow-sm'
-                  : 'text-content-secondary hover:text-content-primary'
-              )}
-            >
-              {r.label}
-            </button>
-          ))}
-        </div>
+        <span className="text-[11px] text-content-muted tabular-nums">{total} solved</span>
       </div>
 
-      <div className="h-64 w-full">
-        <ResponsiveContainer width="100%" height="100%">
-          <BarChart data={data} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
-            <CartesianGrid {...rechartsTheme.cartesianGrid} vertical={false} />
-            <XAxis dataKey="displayDate" {...rechartsTheme.xAxis} />
-            <YAxis allowDecimals={false} {...rechartsTheme.yAxis} />
-            <Tooltip
-              contentStyle={rechartsTheme.tooltip.contentStyle}
-              itemStyle={rechartsTheme.tooltip.itemStyle}
-              labelStyle={rechartsTheme.tooltip.labelStyle}
-            />
-            <Legend
-              wrapperStyle={rechartsTheme.legend.wrapperStyle}
-              iconType="circle"
-            />
-            <Bar dataKey="Easy" stackId="a" fill={chartColors.easy} radius={[0, 0, 0, 0]} />
-            <Bar dataKey="Medium" stackId="a" fill={chartColors.medium} radius={[0, 0, 0, 0]} />
-            <Bar dataKey="Hard" stackId="a" fill={chartColors.hard} radius={[3, 3, 0, 0]} />
-          </BarChart>
-        </ResponsiveContainer>
-      </div>
+      {total === 0 ? (
+        <div className="h-64 flex flex-col items-center justify-center text-center px-5">
+          <p className="text-sm font-semibold text-content-primary">No solved problems this week</p>
+          <p className="mt-1 text-xs text-content-muted">Log a solved problem to start the chart.</p>
+          {onAddProblem && <Button className="mt-4" size="sm" variant="secondary" onClick={onAddProblem} leftIcon={<Plus className="w-3.5 h-3.5" />}>Add problem</Button>}
+        </div>
+      ) : (
+        <div className="h-64 w-full" role="img" aria-label={summary}>
+          <ResponsiveContainer width="100%" height="100%">
+            <BarChart data={data} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+              <CartesianGrid {...rechartsTheme.cartesianGrid} vertical={false} />
+              <XAxis dataKey="label" {...rechartsTheme.xAxis} />
+              <YAxis allowDecimals={false} {...rechartsTheme.yAxis} />
+              <Tooltip content={<WeeklyTooltip />} />
+              <Bar dataKey="count" name="Solved" fill={chartColors.primary} radius={[5, 5, 0, 0]} isAnimationActive={!isReducedMotion()} />
+            </BarChart>
+          </ResponsiveContainer>
+        </div>
+      )}
+
+      <table className="sr-only">
+        <caption>Solved problems for each of the last seven days</caption>
+        <thead><tr><th>Date</th><th>Problems solved</th></tr></thead>
+        <tbody>{data.map((day) => <tr key={day.date}><td>{day.fullDate}</td><td>{day.count}</td></tr>)}</tbody>
+      </table>
     </Card>
   )
 }
