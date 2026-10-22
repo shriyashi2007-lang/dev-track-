@@ -110,3 +110,9 @@ Before opening a pull request or publishing a build, run the test suite, linter,
 Interactive controls should remain usable without a pointer. Keep visible focus styles, expose selected state with `aria-pressed` or `aria-selected`, label icon-only controls, and preserve focus trapping and trigger restoration in dialogs and drawers. Verify navigation, forms, filters, and data views at mobile and desktop widths after changing shared components.
 
 For architectural context, see [ARCHITECTURE.md](ARCHITECTURE.md). For dependency and tooling details, see [STACK.md](STACK.md).
+
+### Dashboard data rules
+
+DevTrack keeps problem data in the existing `devtrack:v1:problems` localStorage key. Reads pass through a defensive in-memory normalizer, so older or partially malformed records remain usable without an automatic rewrite. Unknown difficulty values use a separate `Unknown` bucket and never increase Easy, Medium, or Hard totals. A problem counts as solved when it has an explicit `Solved` status or a valid solved date; calendar-based views require a valid local date and exclude future dates.
+
+The dashboard derives its total, difficulty counts, streaks, exact seven-day chart, 52-week contribution heatmap, and recent list from shared pure utilities. Date-only strings remain local calendar dates, ISO timestamps convert to the browser's local day, duplicate solves on one day count once toward a streak, and recent ties resolve by solved date, creation time, then stable ID. Sample problems are loaded only through the clearly labeled sample-data action.
