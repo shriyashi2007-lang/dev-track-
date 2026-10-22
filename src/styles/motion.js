@@ -56,7 +56,9 @@ export function isReducedMotion() {
   if (typeof window === 'undefined') return false
   const attr = document.documentElement.getAttribute('data-reduce-motion')
   if (attr === 'true') return true
-  return window.matchMedia('(prefers-reduced-motion: reduce)').matches
+  return typeof window.matchMedia === 'function'
+    ? window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    : false
 }
 
 /**
