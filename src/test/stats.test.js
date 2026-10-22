@@ -50,7 +50,7 @@ describe('Stats Calculation', () => {
       { status: 'Solved', difficulty: 'Easy', solvedDate: '2026-10-17' },
       { status: 'Solved', difficulty: 'Hard', solvedDate: '2026-10-19' },
       { status: 'Solved', difficulty: 'Medium', solvedDate: '2026-10-16' },
-      { status: 'Attempted', difficulty: 'Hard', solvedDate: '2026-10-19' },
+      { status: 'Attempted', difficulty: 'Hard', solvedDate: null },
     ]
 
     const series = computeActivitySeries(problems, 3, refDate)
