@@ -2,16 +2,20 @@
  * Service to interface safely with localStorage, schema versioning, and corrupted data resilience.
  */
 class StorageService {
-  get(key, fallback = null) {
-    if (typeof window === 'undefined') return fallback
+  getResult(key, fallback = null) {
+    if (typeof window === 'undefined') return { value: fallback, error: null }
     try {
       const raw = localStorage.getItem(key)
-      if (raw === null || raw === undefined) return fallback
-      return JSON.parse(raw)
-    } catch (err) {
-      console.warn(`[StorageService] Corrupted data encountered for key "${key}". Reverting to fallback.`, err)
-      return fallback
+      if (raw === null || raw === undefined) return { value: fallback, error: null }
+      return { value: JSON.parse(raw), error: null }
+    } catch (error) {
+      console.warn(`[StorageService] Corrupted data encountered for key "${key}". Reverting to fallback.`, error)
+      return { value: fallback, error }
     }
+  }
+
+  get(key, fallback = null) {
+    return this.getResult(key, fallback).value
   }
 
   set(key, value) {
