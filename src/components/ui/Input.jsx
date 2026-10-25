@@ -11,12 +11,17 @@ export const Input = React.forwardRef(function Input(
     className = '',
     id,
     disabled = false,
+    'aria-describedby': ariaDescribedBy,
+    'aria-invalid': ariaInvalid,
     ...props
   },
   ref
 ) {
   const generatedId = React.useId()
   const inputId = id || generatedId
+  const errorId = `${inputId}-error`
+  const helperId = `${inputId}-helper`
+  const describedBy = [ariaDescribedBy, error ? errorId : helperText ? helperId : null].filter(Boolean).join(' ') || undefined
 
   return (
     <div className="w-full">
@@ -38,6 +43,8 @@ export const Input = React.forwardRef(function Input(
           ref={ref}
           id={inputId}
           disabled={disabled}
+          aria-invalid={ariaInvalid ?? Boolean(error)}
+          aria-describedby={describedBy}
           className={clsx(
             'w-full bg-base-elevated/70 text-content-primary text-sm rounded-input border px-3.5 py-2.5 transition-all duration-150',
             'placeholder:text-content-muted font-sans',
@@ -59,9 +66,9 @@ export const Input = React.forwardRef(function Input(
         )}
       </div>
       {error ? (
-        <p className="mt-1 text-xs text-difficulty-hard">{error}</p>
+        <p id={errorId} role="alert" className="mt-1 text-xs text-difficulty-hard">{error}</p>
       ) : helperText ? (
-        <p className="mt-1 text-xs text-content-muted">{helperText}</p>
+        <p id={helperId} className="mt-1 text-xs text-content-muted">{helperText}</p>
       ) : null}
     </div>
   )
@@ -76,12 +83,17 @@ export const Textarea = React.forwardRef(function Textarea(
     id,
     rows = 3,
     disabled = false,
+    'aria-describedby': ariaDescribedBy,
+    'aria-invalid': ariaInvalid,
     ...props
   },
   ref
 ) {
   const generatedId = React.useId()
   const textareaId = id || generatedId
+  const errorId = `${textareaId}-error`
+  const helperId = `${textareaId}-helper`
+  const describedBy = [ariaDescribedBy, error ? errorId : helperText ? helperId : null].filter(Boolean).join(' ') || undefined
 
   return (
     <div className="w-full">
@@ -98,6 +110,8 @@ export const Textarea = React.forwardRef(function Textarea(
         id={textareaId}
         rows={rows}
         disabled={disabled}
+        aria-invalid={ariaInvalid ?? Boolean(error)}
+        aria-describedby={describedBy}
         className={clsx(
           'w-full bg-base-elevated/60 text-content-primary text-sm rounded-card border px-3 py-2 transition-colors duration-150 resize-y',
           'placeholder:text-content-muted',
@@ -111,9 +125,9 @@ export const Textarea = React.forwardRef(function Textarea(
         {...props}
       />
       {error ? (
-        <p className="mt-1 text-xs text-difficulty-hard">{error}</p>
+        <p id={errorId} role="alert" className="mt-1 text-xs text-difficulty-hard">{error}</p>
       ) : helperText ? (
-        <p className="mt-1 text-xs text-content-muted">{helperText}</p>
+        <p id={helperId} className="mt-1 text-xs text-content-muted">{helperText}</p>
       ) : null}
     </div>
   )
