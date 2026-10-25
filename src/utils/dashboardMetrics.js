@@ -17,7 +17,8 @@ export function hasUsableSolvedDate(problem, referenceDate = new Date()) {
 }
 
 export function isSolvedProblem(problem, referenceDate = new Date()) {
-  return problem?.status === 'Solved' || hasUsableSolvedDate(problem, referenceDate)
+  void referenceDate
+  return problem?.status === 'Solved'
 }
 
 export function getTotalSolved(problems = [], referenceDate = new Date()) {
@@ -35,7 +36,7 @@ export function countByDifficulty(problems = [], referenceDate = new Date()) {
 function activityMap(problems, referenceDate) {
   const endKey = todayKey(referenceDate)
   return normalized(problems).reduce((map, problem) => {
-    if (!problem.solvedDate || problem.solvedDate > endKey) return map
+    if (!isSolvedProblem(problem, referenceDate) || !problem.solvedDate || problem.solvedDate > endKey) return map
     const entry = map.get(problem.solvedDate) || []
     entry.push(problem)
     map.set(problem.solvedDate, entry)
@@ -129,7 +130,7 @@ export function getHeatmapData(problems = [], referenceDate = new Date(), weeks 
 export function getRecentSolved(problems = [], limit = 5, referenceDate = new Date()) {
   const endKey = todayKey(referenceDate)
   return normalized(problems)
-    .filter((problem) => problem.solvedDate && problem.solvedDate <= endKey)
+    .filter((problem) => isSolvedProblem(problem, referenceDate) && problem.solvedDate && problem.solvedDate <= endKey)
     .sort((left, right) => {
       const dateOrder = right.solvedDate.localeCompare(left.solvedDate)
       if (dateOrder !== 0) return dateOrder
