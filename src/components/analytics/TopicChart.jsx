@@ -1,122 +1,91 @@
-import React, { useState } from 'react'
-import {
-  BarChart,
-  Bar,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  ResponsiveContainer,
-  RadarChart,
-  PolarGrid,
-  PolarAngleAxis,
-  PolarRadiusAxis,
-  Radar,
-} from 'recharts'
-import { Card } from '../ui/Card'
-import { Layers } from 'lucide-react'
-import { rechartsTheme } from '../../styles/chartTheme'
-import clsx from 'clsx'
+import { Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
+import { Layers3 } from 'lucide-react'
+import { AnalyticsChartCard } from './AnalyticsChartCard'
+import { chartColors, rechartsTheme } from '../../styles/chartTheme'
+import { isReducedMotion } from '../../styles/motion'
 
-export function TopicChart({ stats }) {
-  const [chartType, setChartType] = useState('bar') // 'bar' | 'radar'
-  const { topicCounts = [] } = stats
+const SERIES = [
+  { key: 'Easy', color: chartColors.easy },
+  { key: 'Medium', color: chartColors.medium },
+  { key: 'Hard', color: chartColors.hard },
+  { key: 'Unknown', color: 'var(--text-muted)' },
+]
 
-  const data = topicCounts.slice(0, 8)
-
+function TopicTooltip({ active, payload }) {
+  if (!active || !payload?.[0]?.payload) return null
+  const topic = payload[0].payload
   return (
-    <Card className="p-5 flex flex-col justify-between">
-      <div className="flex items-center justify-between mb-4">
-        <div className="flex items-center gap-2">
-          <Layers className="w-4 h-4 text-primary" />
-          <h3 className="text-xs font-semibold text-content-primary uppercase tracking-wider">
-            Topic Breakdown
-          </h3>
-        </div>
+    <div style={rechartsTheme.tooltip.contentStyle}>
+      <p style={rechartsTheme.tooltip.labelStyle}>{topic.name}</p>
+      <p style={rechartsTheme.tooltip.itemStyle}>{topic.count} solved · {topic.percentage}% of solved problems</p>
+      {SERIES.map(({ key }) => topic[key] > 0 && <p key={key} style={rechartsTheme.tooltip.itemStyle}>{key}: {topic[key]}</p>)}
+    </div>
+  )
+}
 
-        <div className="flex items-center gap-1 p-0.5 bg-base-elevated rounded-card border border-border-subtle">
-          <button
-            type="button"
-            onClick={() => setChartType('bar')}
-            aria-pressed={chartType === 'bar'}
-            className={clsx(
-              'px-2 py-0.5 text-xs font-medium rounded-subtle transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-accent',
-              chartType === 'bar'
-                ? 'bg-base-surface text-content-primary font-semibold shadow-sm'
-                : 'text-content-secondary hover:text-content-primary'
-            )}
-          >
-            Bar
-          </button>
-          <button
-            type="button"
-            onClick={() => setChartType('radar')}
-            aria-pressed={chartType === 'radar'}
-            className={clsx(
-              'px-2 py-0.5 text-xs font-medium rounded-subtle transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-accent',
-              chartType === 'radar'
-                ? 'bg-base-surface text-content-primary font-semibold shadow-sm'
-                : 'text-content-secondary hover:text-content-primary'
-            )}
-          >
-            Radar
-          </button>
+export function TopicChart({ topicAnalytics }) {
+  const data = topicAnalytics.items
+  const height = Math.max(320, data.length * 34)
+  return (
+    <AnalyticsChartCard
+      title="Practice activity by topic"
+      subtitle="Counts reflect practice coverage, not mastery. A multi-topic problem contributes once to every listed topic."
+      icon={Layers3}
+      isEmpty={topicAnalytics.totalSolved === 0}
+      className="lg:col-span-2"
+    >
+      <div className="grid gap-3 sm:grid-cols-2">
+        <div className="rounded-subtle border border-border-subtle bg-base-elevated/40 p-3">
+          <p className="text-[11px] font-semibold uppercase tracking-wide text-content-muted">Most practiced</p>
+          <p className="mt-1 text-base font-bold text-content-primary">{topicAnalytics.mostPracticed?.name || '—'}</p>
+          <p className="text-xs text-content-secondary">{topicAnalytics.mostPracticed?.count || 0} solved problems</p>
+        </div>
+        <div className="rounded-subtle border border-border-subtle bg-base-elevated/40 p-3">
+          <p className="text-[11px] font-semibold uppercase tracking-wide text-content-muted">Least practiced</p>
+          <p className="mt-1 text-base font-bold text-content-primary">{topicAnalytics.leastPracticed?.name || '—'}</p>
+          <p className="text-xs text-content-secondary">{topicAnalytics.leastPracticed?.count || 0} solved problems · core zeros included</p>
         </div>
       </div>
 
-      {data.length === 0 ? (
-        <div className="h-64 flex items-center justify-center text-xs text-content-muted">
-          No topic data logged yet.
+      <div className="mt-5 w-full" style={{ height }} role="img" aria-label={`Topic practice activity. ${data.map((topic) => `${topic.name}: ${topic.count}`).join(', ')}.`}>
+        <ResponsiveContainer width="100%" height="100%">
+          <BarChart data={data} layout="vertical" margin={{ top: 4, right: 12, left: 12, bottom: 0 }}>
+            <CartesianGrid {...rechartsTheme.cartesianGrid} horizontal={false} />
+            <XAxis type="number" allowDecimals={false} {...rechartsTheme.xAxis} />
+            <YAxis type="category" dataKey="name" width={108} {...rechartsTheme.yAxis} tick={{ fontSize: 10 }} />
+            <Tooltip content={<TopicTooltip />} cursor={{ fill: 'var(--bg-elevated)', opacity: 0.45 }} />
+            {SERIES.map(({ key, color }, index) => (
+              <Bar
+                key={key}
+                dataKey={key}
+                name={key}
+                stackId="difficulty"
+                fill={color}
+                radius={index === SERIES.length - 1 ? [0, 4, 4, 0] : 0}
+                isAnimationActive={!isReducedMotion()}
+              />
+            ))}
+          </BarChart>
+        </ResponsiveContainer>
+      </div>
+
+      <div className="mt-4 flex flex-wrap gap-3 text-[11px] text-content-secondary" aria-label="Topic chart difficulty legend">
+        {SERIES.map(({ key, color }) => <span key={key} className="flex items-center gap-1.5"><span className="h-2.5 w-2.5 rounded-sm" style={{ background: color }} />{key}</span>)}
+      </div>
+
+      <div className="mt-4 overflow-hidden rounded-subtle border border-border-subtle">
+        <div className="divide-y divide-border-subtle">
+          {data.map((topic) => (
+            <div key={topic.name} className="grid grid-cols-[minmax(0,1fr)_auto_auto] items-center gap-3 px-3 py-2 text-xs">
+              <span className="truncate font-medium text-content-primary">{topic.name}</span>
+              <span className="tabular-nums text-content-secondary">{topic.count} solved</span>
+              <span className="w-10 text-right tabular-nums text-content-muted">{topic.percentage}%</span>
+            </div>
+          ))}
         </div>
-      ) : chartType === 'bar' ? (
-        <div className="h-64 w-full">
-          <ResponsiveContainer width="100%" height="100%">
-            <BarChart
-              data={data}
-              layout="vertical"
-              margin={{ top: 5, right: 20, left: 20, bottom: 5 }}
-            >
-              <CartesianGrid {...rechartsTheme.cartesianGrid} horizontal={false} />
-              <XAxis type="number" {...rechartsTheme.xAxis} allowDecimals={false} />
-              <YAxis
-                type="category"
-                dataKey="name"
-                {...rechartsTheme.yAxis}
-                fontSize={10}
-                width={85}
-              />
-              <Tooltip
-                contentStyle={rechartsTheme.tooltip.contentStyle}
-                itemStyle={rechartsTheme.tooltip.itemStyle}
-                labelStyle={rechartsTheme.tooltip.labelStyle}
-              />
-              <Bar dataKey="count" fill="var(--accent-primary)" radius={[0, 4, 4, 0]} />
-            </BarChart>
-          </ResponsiveContainer>
-        </div>
-      ) : (
-        <div className="h-64 w-full">
-          <ResponsiveContainer width="100%" height="100%">
-            <RadarChart cx="50%" cy="50%" outerRadius="75%" data={data}>
-              <PolarGrid stroke="var(--border-subtle)" />
-              <PolarAngleAxis dataKey="name" stroke="var(--text-muted)" fontSize={10} />
-              <PolarRadiusAxis stroke="var(--text-muted)" fontSize={9} />
-              <Radar
-                name="Solved"
-                dataKey="count"
-                stroke="var(--accent-primary)"
-                fill="var(--accent-primary)"
-                fillOpacity={0.4}
-              />
-              <Tooltip
-                contentStyle={rechartsTheme.tooltip.contentStyle}
-                itemStyle={rechartsTheme.tooltip.itemStyle}
-                labelStyle={rechartsTheme.tooltip.labelStyle}
-              />
-            </RadarChart>
-          </ResponsiveContainer>
-        </div>
-      )}
-    </Card>
+      </div>
+
+      <table className="sr-only"><caption>Topic practice activity and difficulty breakdown</caption><thead><tr><th>Topic</th><th>Total</th><th>Share</th><th>Easy</th><th>Medium</th><th>Hard</th><th>Unknown</th></tr></thead><tbody>{data.map((topic) => <tr key={topic.name}><td>{topic.name}</td><td>{topic.count}</td><td>{topic.percentage}%</td><td>{topic.Easy}</td><td>{topic.Medium}</td><td>{topic.Hard}</td><td>{topic.Unknown}</td></tr>)}</tbody></table>
+    </AnalyticsChartCard>
   )
 }
