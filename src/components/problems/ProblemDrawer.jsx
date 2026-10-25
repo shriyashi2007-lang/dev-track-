@@ -6,7 +6,7 @@ import { Input, Textarea } from '../ui/Input'
 import { Select } from '../ui/Select'
 import { PLATFORMS, DIFFICULTIES, STATUSES, PRIORITIES, TOPICS } from '../../data/constants'
 import { validateProblem } from '../../utils/validators'
-import { getLocalDateString } from '../../utils/dates'
+import { addDays, getLocalDateString } from '../../utils/dates'
 import { X, Calendar, Clock, BookOpen, CheckCircle2, Circle, Clock3, RotateCcw } from 'lucide-react'
 
 const statusMeta = {
@@ -37,7 +37,7 @@ export function ProblemDrawer({
   const [notes, setNotes] = useState('')
   const [markRevision, setMarkRevision] = useState(false)
   const [revisionPriority, setRevisionPriority] = useState('Medium')
-  const [nextRevisionDate, setNextRevisionDate] = useState(getLocalDateString(new Date()))
+  const [nextRevisionDate, setNextRevisionDate] = useState(getLocalDateString(addDays(new Date(), 1)))
 
   const [errors, setErrors] = useState({})
   const [isSubmitting, setIsSubmitting] = useState(false)
@@ -65,6 +65,7 @@ export function ProblemDrawer({
   useEffect(() => {
     if (isOpen) {
       const today = getLocalDateString(new Date())
+      const tomorrow = getLocalDateString(addDays(new Date(), 1))
       if (initialProblem) {
         setTitle(initialProblem.title || '')
         setPlatform(initialProblem.platform || 'LeetCode')
@@ -77,14 +78,14 @@ export function ProblemDrawer({
         setNotes(initialProblem.notes || '')
         setMarkRevision(Boolean(initialProblem.revision?.marked))
         setRevisionPriority(initialProblem.revision?.priority || 'Medium')
-        setNextRevisionDate(initialProblem.revision?.nextRevisionDate || today)
+        setNextRevisionDate(initialProblem.revision?.nextRevisionDate || tomorrow)
         baselineRef.current = JSON.stringify({
           title: initialProblem.title || '', platform: initialProblem.platform || 'LeetCode', url: initialProblem.url || '',
           difficulty: initialProblem.difficulty || 'Medium', topics: Array.isArray(initialProblem.topics) ? initialProblem.topics : ['Arrays'],
           status: initialProblem.status || 'Solved', solvedDate: initialProblem.solvedDate || today,
           timeTaken: initialProblem.timeTakenMinutes !== null && initialProblem.timeTakenMinutes !== undefined ? String(initialProblem.timeTakenMinutes) : '',
           notes: initialProblem.notes || '', markRevision: Boolean(initialProblem.revision?.marked),
-          revisionPriority: initialProblem.revision?.priority || 'Medium', nextRevisionDate: initialProblem.revision?.nextRevisionDate || today,
+          revisionPriority: initialProblem.revision?.priority || 'Medium', nextRevisionDate: initialProblem.revision?.nextRevisionDate || tomorrow,
         })
       } else {
         setTitle('')
@@ -98,10 +99,10 @@ export function ProblemDrawer({
         setNotes('')
         setMarkRevision(false)
         setRevisionPriority('Medium')
-        setNextRevisionDate(today)
+        setNextRevisionDate(tomorrow)
         baselineRef.current = JSON.stringify({
           title: '', platform: 'LeetCode', url: '', difficulty: 'Medium', topics: ['Arrays'], status: 'Solved',
-          solvedDate: today, timeTaken: '', notes: '', markRevision: false, revisionPriority: 'Medium', nextRevisionDate: today,
+          solvedDate: today, timeTaken: '', notes: '', markRevision: false, revisionPriority: 'Medium', nextRevisionDate: tomorrow,
         })
       }
       setErrors({})
@@ -471,7 +472,8 @@ export function ProblemDrawer({
                 type="date"
                 label="Next Due Date"
                 value={nextRevisionDate}
-                onChange={(e) => setNextRevisionDate(e.target.value)}
+                disabled
+                helperText={initialProblem ? 'Use the Revision page to reschedule.' : 'The first revision is scheduled for tomorrow.'}
                 leftIcon={<Calendar className="w-4 h-4" />}
               />
             </div>
