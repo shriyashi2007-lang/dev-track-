@@ -11,6 +11,7 @@ import { ProblemDrawer } from '../components/problems/ProblemDrawer'
 import { Sparkles, Database, Plus } from 'lucide-react'
 import { Button } from '../components/ui/Button'
 import { CardSkeleton, Skeleton } from '../components/ui/Skeleton'
+import { ConfirmDialog } from '../components/ui/ConfirmDialog'
 
 export default function Dashboard() {
   const { problems, stats, streaks, isLoading, addProblem, updateProblem, deleteProblem, loadSampleData } = useProblems()
@@ -18,6 +19,7 @@ export default function Dashboard() {
 
   const [editingProblem, setEditingProblem] = useState(null)
   const [isDrawerOpen, setIsDrawerOpen] = useState(false)
+  const [deleteTarget, setDeleteTarget] = useState(null)
 
   // Dynamic greeting by local hour
   const hour = new Date().getHours()
@@ -101,7 +103,7 @@ export default function Dashboard() {
         problems={problems}
         onEdit={handleEdit}
         onToggleRevision={handleToggleRevision}
-        onDelete={deleteProblem}
+        onDelete={(id) => setDeleteTarget(problems.find((problem) => problem.id === id) || null)}
         onAddProblem={handleAdd}
       />
 
@@ -113,6 +115,7 @@ export default function Dashboard() {
           setEditingProblem(null)
         }}
         initialProblem={editingProblem}
+        existingProblems={problems}
         onSave={async (problemData) => {
           if (editingProblem?.id) {
             await updateProblem(editingProblem.id, problemData)
@@ -120,6 +123,18 @@ export default function Dashboard() {
             await addProblem(problemData)
           }
         }}
+      />
+
+      <ConfirmDialog
+        isOpen={Boolean(deleteTarget)}
+        onClose={() => setDeleteTarget(null)}
+        onConfirm={async () => {
+          await deleteProblem(deleteTarget.id)
+          setDeleteTarget(null)
+        }}
+        title={deleteTarget ? `Delete “${deleteTarget.title}”?` : 'Delete problem?'}
+        description="This problem will be removed from your collection. You can restore it from the undo toast for five seconds."
+        confirmText="Delete Problem"
       />
     </div>
   )
