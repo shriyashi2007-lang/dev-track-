@@ -171,6 +171,23 @@
   --color-solved-border: rgba(16, 185, 129, 0.25);
   --color-solved-text: #34D399;
 
+  --color-revision-overdue: var(--color-hard);
+  --color-revision-overdue-bg: var(--color-hard-bg);
+  --color-revision-overdue-border: var(--color-hard-border);
+  --color-revision-overdue-text: var(--color-hard-text);
+  --color-revision-today: var(--color-medium);
+  --color-revision-today-bg: var(--color-medium-bg);
+  --color-revision-today-border: var(--color-medium-border);
+  --color-revision-today-text: var(--color-medium-text);
+  --color-revision-upcoming: var(--color-attempted);
+  --color-revision-upcoming-bg: var(--color-attempted-bg);
+  --color-revision-upcoming-border: var(--color-attempted-border);
+  --color-revision-upcoming-text: var(--color-attempted-text);
+  --color-revision-completed: var(--color-solved);
+  --color-revision-completed-bg: var(--color-solved-bg);
+  --color-revision-completed-border: var(--color-solved-border);
+  --color-revision-completed-text: var(--color-solved-text);
+
   /* Soft Bumped Radii */
   --radius-subtle: 12px;
   --radius-card: 20px;
@@ -292,6 +309,23 @@ html.light,
   --color-solved-bg: rgba(5, 150, 105, 0.1);
   --color-solved-border: rgba(5, 150, 105, 0.25);
   --color-solved-text: #065F46;
+
+  --color-revision-overdue: var(--color-hard);
+  --color-revision-overdue-bg: var(--color-hard-bg);
+  --color-revision-overdue-border: var(--color-hard-border);
+  --color-revision-overdue-text: var(--color-hard-text);
+  --color-revision-today: var(--color-medium);
+  --color-revision-today-bg: var(--color-medium-bg);
+  --color-revision-today-border: var(--color-medium-border);
+  --color-revision-today-text: var(--color-medium-text);
+  --color-revision-upcoming: var(--color-attempted);
+  --color-revision-upcoming-bg: var(--color-attempted-bg);
+  --color-revision-upcoming-border: var(--color-attempted-border);
+  --color-revision-upcoming-text: var(--color-attempted-text);
+  --color-revision-completed: var(--color-solved);
+  --color-revision-completed-bg: var(--color-solved-bg);
+  --color-revision-completed-border: var(--color-solved-border);
+  --color-revision-completed-text: var(--color-solved-text);
 
   /* Layered Drop Shadows - Light */
   --shadow-ambient: 0 8px 30px -4px rgba(0, 18, 32, 0.08);
