@@ -10,7 +10,7 @@ export const PLATFORMS = [
 
 export const DIFFICULTIES = ['Easy', 'Medium', 'Hard']
 
-export const STATUSES = ['Todo', 'Attempted', 'Solved']
+export const STATUSES = ['Todo', 'Attempted', 'Solved', 'Revisit']
 
 export const PRIORITIES = ['High', 'Medium', 'Low']
 
@@ -22,19 +22,27 @@ export const TOPICS = [
   'Binary Search',
   'Sliding Window',
   'Linked List',
+  'Linked Lists',
   'Stack',
+  'Stacks',
   'Queue',
+  'Queues',
   'Trees',
   'Binary Search Tree',
   'Trie',
   'Heap / Priority Queue',
+  'Heaps',
+  'Recursion',
   'Backtracking',
   'Graphs',
   'Dynamic Programming',
   'Greedy',
   'Bit Manipulation',
+  'Sorting',
+  'Hashing',
   'Math',
   'Matrix',
+  'Other',
 ]
 
 export const ACCENTS = [
