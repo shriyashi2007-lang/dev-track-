@@ -48,7 +48,7 @@ export function ProblemCard({ problem, selected, onToggleSelect, onEdit, onDelet
               <Badge variant={problem.status} size="xs"><StatusIcon className="h-3 w-3" aria-hidden="true" />{status.label}</Badge>
             </button>
             <button type="button" onClick={() => onToggleRevision(problem)} aria-label={`${problem.revision?.marked ? 'Remove' : 'Mark'} ${problem.title} ${problem.revision?.marked ? 'from' : 'for'} revision`} className="rounded focus-visible:ring-1 focus-visible:ring-accent">
-              <Badge variant={problem.revision?.marked ? 'accent' : 'neutral'} size="xs"><BookOpen className="h-3 w-3" aria-hidden="true" />{problem.revision?.marked ? 'Revision' : 'Not marked'}</Badge>
+              <Badge variant={problem.revision?.marked ? 'accent' : 'neutral'} size="xs"><BookOpen className="h-3 w-3" aria-hidden="true" />{problem.revision?.marked ? 'In revision queue' : 'Add to revision queue'}</Badge>
             </button>
           </div>
 
