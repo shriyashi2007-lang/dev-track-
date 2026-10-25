@@ -76,4 +76,21 @@ describe('problem service', () => {
     await expect(problemService.create({ title: 'Would overwrite' })).rejects.toThrow(/left it unchanged/i)
     expect(localStorage.getItem('devtrack:v1:problems')).toBe('{broken')
   })
+
+  it('accepts Day 3 aliases and preserves identity fields during edits', async () => {
+    const created = await problemService.create({
+      id: 'alias-problem', title: 'Alias', status: 'Solved', dateSolved: '2026-10-20',
+      topic: 'Trees', markedForRevision: true,
+    })
+    expect(created).toMatchObject({
+      solvedDate: '2026-10-20', topics: ['Trees'], revision: { marked: true },
+    })
+
+    const updated = await problemService.update(created.id, {
+      id: 'replacement', createdAt: 'replacement', status: 'Revisit', dateSolved: '2026-10-21',
+    })
+    expect(updated.id).toBe(created.id)
+    expect(updated.createdAt).toBe(created.createdAt)
+    expect(updated).toMatchObject({ status: 'Revisit', solvedDate: null })
+  })
 })
