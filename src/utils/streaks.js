@@ -9,7 +9,7 @@ export function calculateStreaks(problems = [], referenceDate = new Date()) {
   const datesMap = {}
 
   records.forEach((problem) => {
-    if (problem.solvedDate && problem.solvedDate <= today) {
+    if (problem.status === 'Solved' && problem.solvedDate && problem.solvedDate <= today) {
       datesMap[problem.solvedDate] = (datesMap[problem.solvedDate] || 0) + 1
     }
   })
