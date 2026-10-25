@@ -20,8 +20,6 @@ export function validateProblem(problem) {
   const title = (problem.title || '').trim()
   if (!title) {
     errors.title = 'Title is required'
-  } else if (title.length < 2) {
-    errors.title = 'Title must be at least 2 characters'
   } else if (title.length > 120) {
     errors.title = 'Title must be 120 characters or fewer'
   }
@@ -43,7 +41,7 @@ export function validateProblem(problem) {
 
   // Status
   if (!problem.status || !STATUSES.includes(problem.status)) {
-    errors.status = `Status must be Todo, Attempted, or Solved`
+    errors.status = `Status must be Todo, Attempted, Solved, or Revisit`
   }
 
   // Solved Date
