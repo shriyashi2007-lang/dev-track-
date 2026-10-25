@@ -32,6 +32,7 @@ export default function Problems() {
     bulkDeleteProblems,
     bulkUpdateStatus,
     bulkMarkRevision,
+    setProblemRevision,
     loadSampleData,
     importProblems,
   } = useProblems()
@@ -175,14 +176,7 @@ export default function Problems() {
   }
 
   const handleToggleRevision = (problem) => {
-    const isMarked = !problem.revision?.marked
-    updateProblem(problem.id, {
-      revision: {
-        ...problem.revision,
-        marked: isMarked,
-        priority: problem.revision?.priority || 'Medium',
-      },
-    })
+    setProblemRevision(problem.id, !problem.revision?.marked, problem.revision?.priority || 'Medium')
   }
 
   const handleEdit = (problem) => {
