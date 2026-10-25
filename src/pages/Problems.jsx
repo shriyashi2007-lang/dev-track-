@@ -62,6 +62,7 @@ export default function Problems() {
   const [editingProblem, setEditingProblem] = useState(null)
   const [isImportOpen, setIsImportOpen] = useState(false)
   const [bulkConfirmOpen, setBulkConfirmOpen] = useState(false)
+  const [deleteTarget, setDeleteTarget] = useState(null)
 
   // Sync state back to URLSearchParams
   useEffect(() => {
@@ -111,17 +112,13 @@ export default function Problems() {
     setCurrentPage(1)
   }
 
-  const handleTopicToggle = (t) => {
-    setSelectedTopics((prev) =>
-      prev.includes(t) ? prev.filter((item) => item !== t) : [...prev, t]
-    )
+  const handleTopicsChange = (topics) => {
+    setSelectedTopics(topics)
     setCurrentPage(1)
   }
 
-  const handlePlatformToggle = (p) => {
-    setSelectedPlatforms((prev) =>
-      prev.includes(p) ? prev.filter((item) => item !== p) : [...prev, p]
-    )
+  const handlePlatformsChange = (platforms) => {
+    setSelectedPlatforms(platforms)
     setCurrentPage(1)
   }
 
@@ -169,14 +166,11 @@ export default function Problems() {
     }
   }
 
-  // Inline status cycling: Todo -> Attempted -> Solved -> Todo
+  // Inline status cycling: Todo -> Attempted -> Solved -> Revisit -> Todo
   const handleStatusCycle = (problem) => {
-    const nextStatus =
-      problem.status === 'Todo'
-        ? 'Attempted'
-        : problem.status === 'Attempted'
-        ? 'Solved'
-        : 'Todo'
+    const statuses = ['Todo', 'Attempted', 'Solved', 'Revisit']
+    const currentIndex = statuses.indexOf(problem.status)
+    const nextStatus = statuses[(currentIndex + 1) % statuses.length]
     updateProblem(problem.id, { status: nextStatus })
   }
 
@@ -201,6 +195,13 @@ export default function Problems() {
     setIsDrawerOpen(true)
   }
 
+  const handleRequestDelete = (problemOrId) => {
+    const problem = typeof problemOrId === 'object'
+      ? problemOrId
+      : problems.find((item) => item.id === problemOrId)
+    if (problem) setDeleteTarget(problem)
+  }
+
   return (
     <div className="space-y-6">
       {/* Filter and View Controls Bar */}
@@ -210,13 +211,18 @@ export default function Problems() {
         difficulties={difficulties}
         onDifficultyToggle={handleDifficultyToggle}
         selectedTopics={selectedTopics}
-        onTopicToggle={handleTopicToggle}
+        onTopicsChange={handleTopicsChange}
         selectedPlatforms={selectedPlatforms}
-        onPlatformToggle={handlePlatformToggle}
+        onPlatformsChange={handlePlatformsChange}
         status={status}
         onStatusChange={handleStatusChange}
         revisionOnly={revisionOnly}
         onRevisionToggle={handleRevisionToggleFilter}
+        sort={sort}
+        onSortChange={(value) => {
+          setSort(value)
+          setCurrentPage(1)
+        }}
         onClearFilters={handleClearFilters}
         hasActiveFilters={hasActiveFilters}
         viewMode={viewMode}
@@ -225,6 +231,7 @@ export default function Problems() {
         onOpenAdd={handleAddNew}
         onExport={() => exportAllData(problems, settings)}
         totalFilteredCount={filteredProblems.length}
+        totalCount={problems.length}
       />
 
       {/* Floating Bulk Actions Bar when rows are selected */}
@@ -305,7 +312,7 @@ export default function Problems() {
             onToggleSelect={handleToggleSelect}
             onSelectAll={handleSelectAll}
             onEdit={handleEdit}
-            onDelete={deleteProblem}
+            onDelete={handleRequestDelete}
             onStatusCycle={handleStatusCycle}
             onToggleRevision={handleToggleRevision}
             sort={sort}
@@ -359,7 +366,7 @@ export default function Problems() {
           problems={filteredProblems}
           onUpdateStatus={(id, newStatus) => updateProblem(id, { status: newStatus })}
           onEdit={handleEdit}
-          onDelete={deleteProblem}
+          onDelete={handleRequestDelete}
         />
       )}
 
@@ -371,6 +378,7 @@ export default function Problems() {
           setEditingProblem(null)
         }}
         initialProblem={editingProblem}
+        existingProblems={problems}
         onSave={async (problemData) => {
           if (editingProblem?.id) {
             await updateProblem(editingProblem.id, problemData)
@@ -399,6 +407,18 @@ export default function Problems() {
         title={`Delete ${selectedIds.length} problems?`}
         description="These problems will be removed from your collection. You can restore them with the undo button on the toast."
         confirmText="Delete Selected"
+      />
+
+      <ConfirmDialog
+        isOpen={Boolean(deleteTarget)}
+        onClose={() => setDeleteTarget(null)}
+        onConfirm={async () => {
+          await deleteProblem(deleteTarget.id)
+          setDeleteTarget(null)
+        }}
+        title={deleteTarget ? `Delete “${deleteTarget.title}”?` : 'Delete problem?'}
+        description="This problem will be removed from your collection. You can restore it from the undo toast for five seconds."
+        confirmText="Delete Problem"
       />
     </div>
   )
