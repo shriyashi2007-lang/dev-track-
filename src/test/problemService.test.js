@@ -53,7 +53,7 @@ describe('problem service', () => {
     )
   })
 
-  it('normalizes legacy records on read without rewriting stored JSON', async () => {
+  it('migrates valid legacy records additively on read', async () => {
     const raw = JSON.stringify([{ title: ' Legacy ', difficulty: 'expert', topic: 'Graphs' }])
     localStorage.setItem('devtrack:v1:problems', raw)
 
@@ -63,7 +63,12 @@ describe('problem service', () => {
       difficulty: 'Unknown',
       topics: ['Graphs'],
     })
-    expect(localStorage.getItem('devtrack:v1:problems')).toBe(raw)
+    expect(localStorage.getItem('devtrack:v1:problems')).not.toBe(raw)
+    expect(JSON.parse(localStorage.getItem('devtrack:v1:problems'))[0]).toMatchObject({
+      title: 'Legacy',
+      topics: ['Graphs'],
+      revision: { marked: false },
+    })
     expect(records[0].id).toMatch(/^legacy-/)
   })
 
