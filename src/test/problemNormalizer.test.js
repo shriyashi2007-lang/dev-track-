@@ -6,7 +6,6 @@ import {
   normalizeProblems,
   normalizeSolvedDate,
 } from '../utils/problemNormalizer'
-import { getLocalDateString, toDate } from '../utils/dates'
 
 describe('problem normalizer', () => {
   it('provides deterministic defaults for sparse and malformed records', () => {
@@ -46,10 +45,19 @@ describe('problem normalizer', () => {
       difficulty: 'Unknown',
       topics: ['Arrays'],
       status: 'Attempted',
-      solvedDate: getLocalDateString(toDate(iso)),
+      solvedDate: null,
     })
     expect(normalizeDifficulty(' HARD ')).toBe('Hard')
     expect(normalizeSolvedDate('not-a-date')).toBeNull()
+  })
+
+  it('supports Day 3 aliases and clears dates for non-solved records', () => {
+    expect(normalizeProblem({ status: 'Solved', dateSolved: '2026-10-20', topic: 'Trees', markedForRevision: true })).toMatchObject({
+      status: 'Solved', solvedDate: '2026-10-20', topics: ['Trees'], revision: { marked: true },
+    })
+    expect(normalizeProblem({ status: 'Revisit', solvedDate: '2026-10-20' })).toMatchObject({
+      status: 'Revisit', solvedDate: null,
+    })
   })
 
   it('allows only http and https external URLs', () => {
