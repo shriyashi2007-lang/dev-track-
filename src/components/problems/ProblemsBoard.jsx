@@ -1,12 +1,13 @@
 import { useState } from 'react'
 import clsx from 'clsx'
-import { MoreHorizontal, Edit2, Trash2, BookOpen, MoveRight } from 'lucide-react'
+import { MoreHorizontal, Edit2, Trash2, BookOpen, MoveRight, ExternalLink } from 'lucide-react'
 import { Badge } from '../ui/Badge'
 
 const COLUMNS = [
   { id: 'Todo', title: 'To Do', border: 'border-status-todo-border', headerBg: 'bg-status-todo-bg text-status-todo-text' },
   { id: 'Attempted', title: 'In Progress / Attempted', border: 'border-status-attempted-border', headerBg: 'bg-status-attempted-bg text-status-attempted-text' },
   { id: 'Solved', title: 'Solved & Mastered', border: 'border-status-solved-border', headerBg: 'bg-status-solved-bg text-status-solved-text' },
+  { id: 'Revisit', title: 'Revisit', border: 'border-accent/30', headerBg: 'bg-accent-light text-accent' },
 ]
 
 export function ProblemsBoard({
@@ -40,7 +41,7 @@ export function ProblemsBoard({
   }
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-5 items-start">
+    <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-5 items-start">
       {COLUMNS.map((col) => {
         const colProblems = problems.filter((p) => p.status === col.id)
         const isTarget = dragOverCol === col.id
@@ -84,12 +85,15 @@ export function ProblemsBoard({
                     className="bg-base-surface border border-border-subtle hover:border-border-strong rounded-card p-3.5 shadow-sm cursor-grab active:cursor-grabbing hover:-translate-y-0.5 transition-all relative group"
                   >
                     <div className="flex items-start justify-between gap-2 mb-2">
-                      <h4
-                        onClick={() => onEdit(problem)}
-                        className="font-semibold text-xs text-content-primary hover:text-accent transition-colors cursor-pointer line-clamp-2"
-                      >
-                        {problem.title}
-                      </h4>
+                      {problem.url ? (
+                        <a href={problem.url} target="_blank" rel="noopener noreferrer" className="inline-flex min-w-0 items-start gap-1 font-semibold text-xs text-content-primary hover:text-accent hover:underline focus-visible:ring-1 focus-visible:ring-accent">
+                          <span className="line-clamp-2">{problem.title}</span><ExternalLink className="mt-0.5 h-3 w-3 shrink-0" aria-hidden="true" />
+                        </a>
+                      ) : (
+                        <button type="button" onClick={() => onEdit(problem)} className="line-clamp-2 text-left font-semibold text-xs text-content-primary hover:text-accent focus-visible:ring-1 focus-visible:ring-accent">
+                          {problem.title}
+                        </button>
+                      )}
 
                       {/* Accessible Keyboard Move-To & Action Menu */}
                       <div className="relative shrink-0">
@@ -136,7 +140,7 @@ export function ProblemsBoard({
                             <button
                               type="button"
                               onClick={() => {
-                                onDelete(problem.id)
+                                onDelete(problem)
                                 setOpenMenuId(null)
                               }}
                               className="w-full text-left px-2 py-1 text-difficulty-hard hover:bg-difficulty-hard-bg rounded flex items-center gap-1.5 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-accent"
