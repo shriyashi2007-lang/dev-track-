@@ -32,7 +32,7 @@ describe('ProblemCard', () => {
     expect(titleLink).toHaveAttribute('target', '_blank')
     expect(titleLink).toHaveAttribute('rel', expect.stringContaining('noopener'))
     expect(screen.getByText('Revisit')).toBeInTheDocument()
-    expect(screen.getByText('Revision')).toBeInTheDocument()
+    expect(screen.getByText('In revision queue')).toBeInTheDocument()
 
     fireEvent.click(screen.getByRole('checkbox', { name: 'Select Two Sum' }))
     fireEvent.click(screen.getByRole('button', { name: 'Edit Two Sum' }))
