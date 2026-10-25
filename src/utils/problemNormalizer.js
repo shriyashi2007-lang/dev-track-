@@ -12,6 +12,7 @@ const STATUSES = new Map([
   ['attempted', 'Attempted'],
   ['in progress', 'Attempted'],
   ['solved', 'Solved'],
+  ['revisit', 'Revisit'],
 ])
 
 export function normalizeDifficulty(value) {
@@ -55,7 +56,7 @@ export function isSafeExternalUrl(value) {
 }
 
 function stableLegacyId(source, index) {
-  const fingerprint = [source.title, source.platform, source.url, source.createdAt, source.solvedDate]
+  const fingerprint = [source.title, source.platform, source.url, source.createdAt, source.solvedDate ?? source.dateSolved]
     .map((value) => String(value || ''))
     .join('|') || `empty-${index}`
   let hash = 2166136261
@@ -69,6 +70,8 @@ function stableLegacyId(source, index) {
 export function normalizeProblem(record, index = 0) {
   const source = record && typeof record === 'object' && !Array.isArray(record) ? record : {}
   const revision = source.revision && typeof source.revision === 'object' ? source.revision : {}
+  const status = normalizeStatus(source.status)
+  const candidateSolvedDate = normalizeSolvedDate(source.solvedDate ?? source.dateSolved)
   const stableId = typeof source.id === 'string' || typeof source.id === 'number'
     ? String(source.id)
     : stableLegacyId(source, index)
@@ -82,21 +85,24 @@ export function normalizeProblem(record, index = 0) {
     platform: typeof source.platform === 'string' && source.platform.trim()
       ? source.platform.trim()
       : 'Other',
-    url: typeof source.url === 'string' ? source.url.trim() : '',
+    url: isSafeExternalUrl(source.url) ? source.url.trim() : '',
     difficulty: normalizeDifficulty(source.difficulty),
     topics: normalizeTopics(source),
-    status: normalizeStatus(source.status),
-    solvedDate: normalizeSolvedDate(source.solvedDate),
+    status,
+    // Solved dates are local YYYY-MM-DD values and only apply while status is Solved.
+    solvedDate: status === 'Solved' ? candidateSolvedDate : null,
     timeTakenMinutes: Number.isFinite(Number(source.timeTakenMinutes)) && Number(source.timeTakenMinutes) > 0
       ? Number(source.timeTakenMinutes)
       : null,
     notes: typeof source.notes === 'string' ? source.notes : '',
     revision: {
       ...revision,
-      marked: Boolean(revision.marked),
+      marked: Boolean(revision.marked ?? source.markedForRevision),
       priority: typeof revision.priority === 'string' ? revision.priority : 'Medium',
       history: Array.isArray(revision.history) ? revision.history : [],
     },
+    createdAt: typeof source.createdAt === 'string' ? source.createdAt : null,
+    updatedAt: typeof source.updatedAt === 'string' ? source.updatedAt : null,
     isSample: Boolean(source.isSample),
   }
 }
