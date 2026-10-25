@@ -1,6 +1,7 @@
 import { getLocalDateString, subDays } from './dates'
 import { normalizeProblems } from './problemNormalizer'
-import { getWeeklyProgress, isSolvedProblem } from './dashboardMetrics'
+import { isSolvedProblem } from './dashboardMetrics'
+import { getDailySolvedSeries, normalizeAnalyticsRecords } from './analytics'
 
 export function computeStats(problems = [], dailyGoal = 3, referenceDate = new Date()) {
   const records = normalizeProblems(problems)
@@ -89,25 +90,12 @@ export function computeStats(problems = [], dailyGoal = 3, referenceDate = new D
 }
 
 export function computeActivitySeries(problems = [], days = 7, referenceDate = new Date()) {
-  if (days === 7) {
-    return getWeeklyProgress(problems, referenceDate).map((day) => ({
+  const records = normalizeAnalyticsRecords(problems)
+  return getDailySolvedSeries(problems, days, referenceDate).map((day) => {
+    const daily = records.filter((problem) => problem.solvedDate === day.date)
+    return {
       ...day,
       displayDate: day.date.slice(5).replace('-', '/'),
-      total: day.count,
-      Easy: day.problems.filter((problem) => problem.difficulty === 'Easy').length,
-      Medium: day.problems.filter((problem) => problem.difficulty === 'Medium').length,
-      Hard: day.problems.filter((problem) => problem.difficulty === 'Hard').length,
-    }))
-  }
-
-  const records = normalizeProblems(problems)
-  return Array.from({ length: days }, (_, index) => {
-    const date = subDays(referenceDate, days - 1 - index)
-    const key = getLocalDateString(date)
-    const daily = records.filter((problem) => problem.solvedDate === key && key <= getLocalDateString(referenceDate))
-    return {
-      date: key,
-      displayDate: `${date.getMonth() + 1}/${date.getDate()}`,
       Easy: daily.filter((problem) => problem.difficulty === 'Easy').length,
       Medium: daily.filter((problem) => problem.difficulty === 'Medium').length,
       Hard: daily.filter((problem) => problem.difficulty === 'Hard').length,
