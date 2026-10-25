@@ -3,7 +3,7 @@ import { STORAGE_KEYS } from '../data/constants'
 import { generateId } from '../utils/ids'
 import { getLocalDateString } from '../utils/dates'
 import { getSampleProblems } from '../data/sampleProblems'
-import { normalizeProblem, normalizeProblems } from '../utils/problemNormalizer'
+import { normalizeProblem, normalizeProblems, normalizeStatus } from '../utils/problemNormalizer'
 
 /**
  * ProblemService: Async promise-based API backed by localStorage.
@@ -38,7 +38,7 @@ class ProblemService {
 
   async getById(id) {
     const list = await this.getAll()
-    return list.find((p) => p.id === id) || null
+    return list.find((p) => p.id === String(id)) || null
   }
 
   async create(problemData) {
@@ -46,10 +46,18 @@ class ProblemService {
     const now = new Date().toISOString()
     const todayStr = getLocalDateString(new Date())
 
-    const isSolved = problemData.status === 'Solved'
+    const status = normalizeStatus(problemData.status || 'Todo')
+    const isSolved = status === 'Solved'
+    // Date rule: solvedDate is always a local calendar YYYY-MM-DD string. Non-solved records store null.
     const solvedDate = isSolved
-      ? (problemData.solvedDate || todayStr)
+      ? (problemData.solvedDate || problemData.dateSolved || todayStr)
       : null
+    const topics = Array.isArray(problemData.topics)
+      ? problemData.topics
+      : problemData.topic
+        ? [problemData.topic]
+        : ['Arrays']
+    const revisionMarked = Boolean(problemData.revision?.marked ?? problemData.markedForRevision)
 
     const newProblem = {
       id: problemData.id || generateId(),
@@ -57,15 +65,15 @@ class ProblemService {
       platform: problemData.platform || 'LeetCode',
       url: (problemData.url || '').trim(),
       difficulty: problemData.difficulty || 'Medium',
-      topics: Array.isArray(problemData.topics) && problemData.topics.length > 0 ? problemData.topics : ['Arrays'],
-      status: problemData.status || 'Todo',
+      topics: topics.length > 0 ? topics : ['Arrays'],
+      status,
       solvedDate,
       timeTakenMinutes: problemData.timeTakenMinutes ? Number(problemData.timeTakenMinutes) : null,
       notes: (problemData.notes || '').trim(),
       revision: {
-        marked: Boolean(problemData.revision?.marked),
+        marked: revisionMarked,
         priority: problemData.revision?.priority || 'Medium',
-        nextRevisionDate: problemData.revision?.nextRevisionDate || (problemData.revision?.marked ? todayStr : null),
+        nextRevisionDate: problemData.revision?.nextRevisionDate || (revisionMarked ? todayStr : null),
         revisionCount: problemData.revision?.revisionCount || 0,
         lastRevisedDate: problemData.revision?.lastRevisedDate || null,
         history: Array.isArray(problemData.revision?.history) ? problemData.revision.history : [],
@@ -75,9 +83,10 @@ class ProblemService {
       isSample: Boolean(problemData.isSample),
     }
 
-    const updated = [newProblem, ...list]
+    const normalizedNewProblem = normalizeProblem(newProblem)
+    const updated = [normalizedNewProblem, ...list]
     storageService.set(STORAGE_KEYS.PROBLEMS, updated)
-    return normalizeProblem(newProblem)
+    return normalizedNewProblem
   }
 
   async update(id, updates) {
@@ -92,28 +101,55 @@ class ProblemService {
     const now = new Date().toISOString()
 
     // Handle solved date automatic sync
-    let solvedDate = updates.solvedDate !== undefined ? updates.solvedDate : current.solvedDate
-    if (updates.status === 'Solved' && !solvedDate) {
+    const nextStatus = updates.status !== undefined ? normalizeStatus(updates.status) : current.status
+    let solvedDate = updates.solvedDate !== undefined
+      ? updates.solvedDate
+      : updates.dateSolved !== undefined
+        ? updates.dateSolved
+        : current.solvedDate
+    if (nextStatus === 'Solved' && !solvedDate) {
       solvedDate = getLocalDateString(new Date())
-    } else if (updates.status && updates.status !== 'Solved') {
+    } else if (nextStatus !== 'Solved') {
       solvedDate = null
     }
 
-    const merged = {
-      ...current,
-      ...updates,
-      title: updates.title !== undefined ? updates.title.trim() : current.title,
-      solvedDate,
-      revision: {
-        ...current.revision,
-        ...(updates.revision || {}),
-      },
-      updatedAt: now,
+    const safeUpdates = { ...updates }
+    delete safeUpdates.id
+    delete safeUpdates.createdAt
+    delete safeUpdates.dateSolved
+    delete safeUpdates.topic
+    delete safeUpdates.markedForRevision
+
+    const nextTopics = updates.topics !== undefined
+      ? updates.topics
+      : updates.topic !== undefined
+        ? [updates.topic]
+        : current.topics
+    const nextRevision = {
+      ...current.revision,
+      ...(updates.revision || {}),
     }
+    if (updates.markedForRevision !== undefined) {
+      nextRevision.marked = Boolean(updates.markedForRevision)
+    }
+
+    const merged = normalizeProblem({
+      ...current,
+      ...safeUpdates,
+      id: current.id,
+      createdAt: current.createdAt,
+      title: updates.title !== undefined ? updates.title.trim() : current.title,
+      url: updates.url !== undefined ? updates.url.trim() : current.url,
+      topics: nextTopics,
+      status: nextStatus,
+      solvedDate,
+      revision: nextRevision,
+      updatedAt: now,
+    }, index)
 
     list[index] = merged
     storageService.set(STORAGE_KEYS.PROBLEMS, list)
-    return normalizeProblem(merged, index)
+    return merged
   }
 
   async remove(id) {
