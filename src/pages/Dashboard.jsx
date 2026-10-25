@@ -14,7 +14,7 @@ import { CardSkeleton, Skeleton } from '../components/ui/Skeleton'
 import { ConfirmDialog } from '../components/ui/ConfirmDialog'
 
 export default function Dashboard() {
-  const { problems, stats, streaks, isLoading, addProblem, updateProblem, deleteProblem, loadSampleData } = useProblems()
+  const { problems, stats, streaks, isLoading, addProblem, updateProblem, deleteProblem, loadSampleData, setProblemRevision } = useProblems()
   const { settings } = useSettings()
 
   const [editingProblem, setEditingProblem] = useState(null)
@@ -52,13 +52,7 @@ export default function Dashboard() {
   }
 
   const handleToggleRevision = (problem) => {
-    updateProblem(problem.id, {
-      revision: {
-        ...problem.revision,
-        marked: !problem.revision?.marked,
-        priority: problem.revision?.priority || 'Medium',
-      },
-    })
+    setProblemRevision(problem.id, !problem.revision?.marked, problem.revision?.priority || 'Medium')
   }
 
   return (
