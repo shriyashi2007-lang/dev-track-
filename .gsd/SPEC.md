@@ -1,38 +1,25 @@
-# DevTrack Style Layer Update
+# Day 3 — DSA Problems Management System
 
 Status: FINALIZED
 
 ## Objective
-Bring the existing DevTrack frontend into consistent alignment with the user supplied Style Layer Update, preserving routes, data behavior, local persistence, sample data labeling, wave dividers, bubbles, swipe interactions, and route transitions.
 
-## Requirements
-- Centralize colors, typography, gradients, shadows, radii, and motion in `src/styles/tokens.css`, `tailwind.config.js`, and `src/styles/motion.js`.
-- Use self-hosted Inter for body/UI and Space Grotesk for display/nav/stat text, with 112.5% root sizing, 1.125rem body size, and tabular statistics.
-- Provide hard-stop gradients, a stable rainbow palette and accessible light/dark pastel palettes, semantic stripes, glass surfaces with blur fallback, and layered shadows/radii.
-- Restyle UI primitives and all landing and app routes consistently, including bento layouts, stable topic colors, Lucide icons, accessible animated arrows, and reduced-motion/touch behavior.
-- Keep a clearly labeled sample-data CLI terminal with viewport-triggered typing, replay, clipboard copy, and instant reduced-motion rendering.
-- Retain existing landing interactions and make the layout usable at 360px, tablet, and desktop without horizontal overflow.
-- Update README Design System documentation. Do not commit or push.
+Complete the existing local-first problems workflow without changing storage keys or destructively rewriting saved data. Preserve the established DevTrack visual system and shared state architecture.
 
-## Verification
-Run lint, tests, and production build. Inspect rendered landing and application routes in dark and light themes at mobile and desktop widths where the available browser tooling permits. Report any limits with direct evidence.
+## Required behavior
 
----
+- Extend the existing problem service and normalizer for full CRUD, legacy aliases, corrupted data safety, local calendar solved dates, and `Revisit` status.
+- Count a problem as completed only when its normalized status is `Solved`; dated non-solved records must not affect dashboard metrics.
+- Keep the Problems page and Dashboard on the shared `ProblemsContext`, with immediate local updates and storage-event refreshes across tabs.
+- Provide combined search, difficulty, topic, platform, and status filters; supported sorting; stable ordering; result counts; reset; and distinct empty states.
+- Provide responsive desktop table and mobile cards, linked safe URLs, status/revision indicators, and confirmed deletion.
+- Make add/edit validation accessible, retain input on errors, focus the first invalid field, warn about likely duplicates, and confirm dirty dismissal.
+- Preserve reduced-motion support and use existing tokens, icons, primitives, and toasts.
+- Add focused tests and execute tests, lint, build, and representative browser checks.
 
-# Quality Hardening Addendum
+## Compatibility decisions
 
-Status: FINALIZED
-
-## Objective
-Strengthen DevTrack with meaningful automated coverage, keyboard and screen-reader support, and a working mobile navigation drawer while preserving the current visual system and local-first data model.
-
-## Requirements
-- Add focused tests for utilities, services, and hooks, including boundary and cleanup behavior.
-- Make tabs, selectable controls, dialogs, cards, tables, and charts expose accurate accessible state.
-- Keep focus inside open dialogs and restore it to the control that opened them.
-- Make the application header menu open a complete mobile navigation drawer.
-- Document the application architecture, technology stack, test workflow, and final validation evidence.
-- Deliver each independently reviewable improvement as one non-empty commit.
-
-## Verification
-Run every test file, lint the full repository, create a production build, and inspect the updated navigation and representative routes in the browser at desktop and mobile widths.
+- Continue using `devtrack:v1:problems`.
+- Continue using canonical `topics[]`, `solvedDate`, and nested `revision` fields. Accept `topic`, `dateSolved`, and `markedForRevision` as read/write aliases.
+- Continue storing the internal status value `Todo`, display it as “To Do,” and add `Revisit`.
+- Do not commit or push changes.
