@@ -4,6 +4,7 @@ import { computeStats } from '../utils/stats'
 import { calculateStreaks } from '../utils/streaks'
 import { useSettings } from './SettingsContext'
 import { useToast } from './ToastContext'
+import { STORAGE_KEYS } from '../data/constants'
 
 const ProblemsContext = createContext(null)
 
@@ -39,6 +40,14 @@ export function ProblemsProvider({ children }) {
 
   useEffect(() => {
     refreshProblems()
+  }, [refreshProblems])
+
+  useEffect(() => {
+    const handleStorage = (event) => {
+      if (event.key === STORAGE_KEYS.PROBLEMS) refreshProblems()
+    }
+    window.addEventListener('storage', handleStorage)
+    return () => window.removeEventListener('storage', handleStorage)
   }, [refreshProblems])
 
   const addProblem = useCallback(
