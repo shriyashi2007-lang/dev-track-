@@ -1,6 +1,7 @@
-# Day 3 Roadmap
+# Day 4 Roadmap
 
-1. Harden normalization, service updates, shared state, date rules, and solved-only dashboard metrics.
-2. Complete filtering and sorting controls, add mobile cards, and require confirmation for every deletion.
-3. Improve form validation, dirty-close handling, duplicate warnings, and error accessibility.
-4. Add regression tests, run the full quality suite, and verify the UI at mobile and desktop widths.
+1. Add pure local-date scheduling, normalization, classification, filtering, sorting, and statistics helpers.
+2. Extend the existing problem service and shared context with safe migration, independent history, queue actions, and duplicate-completion protection.
+3. Rebuild the existing revision route with dashboard cards, accessible filters, responsive queue/history views, rescheduling, confirmation, and schedule help.
+4. Wire Problems, Dashboard, and revision session actions to the shared queue service.
+5. Add focused regression tests and execute the complete test, lint, build, persistence, and responsive verification suite.
