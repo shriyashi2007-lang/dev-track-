@@ -10,19 +10,31 @@ const ProblemsContext = createContext(null)
 
 export function ProblemsProvider({ children }) {
   const [problems, setProblems] = useState([])
+  const [revisionHistory, setRevisionHistory] = useState([])
+  const [revisionRepairCount, setRevisionRepairCount] = useState(0)
   const [isLoading, setIsLoading] = useState(true)
   const { settings } = useSettings()
   const { addToast } = useToast()
 
   const refreshProblems = useCallback(async () => {
     try {
-      const { problems: data, error } = await problemService.getAllWithMeta()
+      const { problems: data, error, revisionHistory: history, revisionError, repairedCount } = await problemService.getAllWithMeta()
       setProblems(data)
+      setRevisionHistory(history)
+      setRevisionRepairCount(repairedCount)
       if (error) {
         addToast({
           type: 'warning',
           title: 'Saved data needs attention',
           message: 'DevTrack could not read the saved problem list. The original browser data was left unchanged.',
+          duration: 7000,
+        })
+      }
+      if (revisionError) {
+        addToast({
+          type: 'warning',
+          title: 'Revision history needs attention',
+          message: 'DevTrack left the unreadable history data unchanged and loaded the queue safely.',
           duration: 7000,
         })
       }
@@ -44,7 +56,7 @@ export function ProblemsProvider({ children }) {
 
   useEffect(() => {
     const handleStorage = (event) => {
-      if (event.key === STORAGE_KEYS.PROBLEMS) refreshProblems()
+      if (event.key === STORAGE_KEYS.PROBLEMS || event.key === STORAGE_KEYS.REVISION_HISTORY) refreshProblems()
     }
     window.addEventListener('storage', handleStorage)
     return () => window.removeEventListener('storage', handleStorage)
@@ -211,6 +223,74 @@ export function ProblemsProvider({ children }) {
     [addToast]
   )
 
+  const setProblemRevision = useCallback(
+    async (id, marked, priority = 'Medium') => {
+      try {
+        const updated = await problemService.setRevisionMarked(id, marked, priority)
+        setProblems((prev) => prev.map((problem) => problem.id === id ? updated : problem))
+        addToast({
+          type: marked ? 'success' : 'info',
+          title: marked ? 'Added to revision queue' : 'Removed from revision queue',
+          message: marked ? `"${updated.title}" is scheduled for tomorrow.` : `"${updated.title}" was removed; its history was preserved.`,
+        })
+        return updated
+      } catch (err) {
+        addToast({ type: 'error', title: 'Revision update failed', message: err.message })
+        throw err
+      }
+    },
+    [addToast]
+  )
+
+  const completeProblemRevision = useCallback(
+    async (id, expectedCycle = null) => {
+      try {
+        const result = await problemService.completeRevision(id, new Date(), expectedCycle)
+        if (result.duplicate) {
+          addToast({ type: 'warning', title: 'Already completed', message: 'This due cycle was already recorded.' })
+          return result
+        }
+        setProblems((prev) => prev.map((problem) => problem.id === id ? result.problem : problem))
+        setRevisionHistory((prev) => [...prev, result.historyRecord])
+        addToast({ type: 'success', title: 'Revision completed', message: `Next revision: ${result.problem.revision.nextRevisionDate}.` })
+        return result
+      } catch (err) {
+        addToast({ type: 'error', title: 'Could not complete revision', message: err.message })
+        throw err
+      }
+    },
+    [addToast]
+  )
+
+  const rescheduleProblemRevision = useCallback(
+    async (id, nextRevisionDate) => {
+      try {
+        const updated = await problemService.rescheduleRevision(id, nextRevisionDate)
+        setProblems((prev) => prev.map((problem) => problem.id === id ? updated : problem))
+        addToast({ type: 'success', title: 'Revision rescheduled', message: `New date: ${nextRevisionDate}.` })
+        return updated
+      } catch (err) {
+        addToast({ type: 'error', title: 'Could not reschedule', message: err.message })
+        throw err
+      }
+    },
+    [addToast]
+  )
+
+  const changeRevisionPriority = useCallback(
+    async (id, priority) => {
+      try {
+        const updated = await problemService.setRevisionPriority(id, priority)
+        setProblems((prev) => prev.map((problem) => problem.id === id ? updated : problem))
+        return updated
+      } catch (err) {
+        addToast({ type: 'error', title: 'Could not change priority', message: err.message })
+        throw err
+      }
+    },
+    [addToast]
+  )
+
   const loadSampleData = useCallback(async () => {
     try {
       const data = await problemService.loadSampleData()
@@ -285,6 +365,8 @@ export function ProblemsProvider({ children }) {
     <ProblemsContext.Provider
       value={{
         problems,
+        revisionHistory,
+        revisionRepairCount,
         isLoading,
         stats,
         streaks,
@@ -295,6 +377,10 @@ export function ProblemsProvider({ children }) {
         bulkDeleteProblems,
         bulkUpdateStatus,
         bulkMarkRevision,
+        setProblemRevision,
+        completeProblemRevision,
+        rescheduleProblemRevision,
+        changeRevisionPriority,
         loadSampleData,
         clearSampleData,
         importProblems,
