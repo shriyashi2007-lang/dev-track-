@@ -14,17 +14,10 @@ export function filterProblems(problems = [], criteria = {}) {
   const cleanSearch = (search || '').trim().toLowerCase()
 
   return problems.filter((problem) => {
-    // Search text across title, notes, and topics
+    // Search is intentionally scoped to the problem title.
     if (cleanSearch) {
       const matchTitle = (problem.title || '').toLowerCase().includes(cleanSearch)
-      const matchNotes = (problem.notes || '').toLowerCase().includes(cleanSearch)
-      const matchTopics = Array.isArray(problem.topics) &&
-        problem.topics.some((t) => t.toLowerCase().includes(cleanSearch))
-      const matchPlatform = (problem.platform || '').toLowerCase().includes(cleanSearch)
-
-      if (!matchTitle && !matchNotes && !matchTopics && !matchPlatform) {
-        return false
-      }
+      if (!matchTitle) return false
     }
 
     // Difficulty filter
