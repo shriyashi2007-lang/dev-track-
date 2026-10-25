@@ -1,4 +1,5 @@
 import { getLocalDateString, toDate } from './dates'
+import { normalizeRevisionState } from './spacedRepetition'
 
 const DIFFICULTIES = new Map([
   ['easy', 'Easy'],
@@ -95,12 +96,10 @@ export function normalizeProblem(record, index = 0) {
       ? Number(source.timeTakenMinutes)
       : null,
     notes: typeof source.notes === 'string' ? source.notes : '',
-    revision: {
+    revision: normalizeRevisionState({
       ...revision,
       marked: Boolean(revision.marked ?? source.markedForRevision),
-      priority: typeof revision.priority === 'string' ? revision.priority : 'Medium',
-      history: Array.isArray(revision.history) ? revision.history : [],
-    },
+    }, new Date(), { fallbackTimestamp: source.updatedAt || source.createdAt }),
     createdAt: typeof source.createdAt === 'string' ? source.createdAt : null,
     updatedAt: typeof source.updatedAt === 'string' ? source.updatedAt : null,
     isSample: Boolean(source.isSample),
