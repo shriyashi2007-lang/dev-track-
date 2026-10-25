@@ -22,8 +22,8 @@ describe('dashboard metrics', () => {
   ]
 
   it('uses one solved rule without inflating unknown difficulty', () => {
-    expect(getTotalSolved(problems, reference)).toBe(3)
-    expect(countByDifficulty(problems, reference)).toEqual({ Easy: 1, Medium: 1, Hard: 0, Unknown: 1 })
+    expect(getTotalSolved(problems, reference)).toBe(2)
+    expect(countByDifficulty(problems, reference)).toEqual({ Easy: 1, Medium: 0, Hard: 0, Unknown: 1 })
   })
 
   it('returns exactly seven local calendar days and excludes future or invalid dates', () => {
@@ -31,17 +31,17 @@ describe('dashboard metrics', () => {
     expect(series).toHaveLength(7)
     expect(series[0].date).toBe('2026-10-16')
     expect(series.at(-1)).toMatchObject({ date: '2026-10-22', count: 1 })
-    expect(series.reduce((sum, day) => sum + day.count, 0)).toBe(2)
+    expect(series.reduce((sum, day) => sum + day.count, 0)).toBe(1)
   })
 
   it('counts unique consecutive days for current and longest streaks', () => {
     const streakRecords = [
-      { solvedDate: '2026-03-07' },
-      { solvedDate: '2026-03-08' },
-      { solvedDate: '2026-03-09' },
-      { solvedDate: '2026-03-09' },
-      { solvedDate: '2026-10-21' },
-      { solvedDate: '2026-10-22' },
+      { status: 'Solved', solvedDate: '2026-03-07' },
+      { status: 'Solved', solvedDate: '2026-03-08' },
+      { status: 'Solved', solvedDate: '2026-03-09' },
+      { status: 'Solved', solvedDate: '2026-03-09' },
+      { status: 'Solved', solvedDate: '2026-10-21' },
+      { status: 'Solved', solvedDate: '2026-10-22' },
     ]
     expect(getCurrentStreak(streakRecords, reference)).toBe(2)
     expect(getLongestStreak(streakRecords, reference)).toBe(3)
@@ -58,8 +58,8 @@ describe('dashboard metrics', () => {
   it('sorts recent solves deterministically and ignores undated, invalid, and future records', () => {
     const tied = [
       ...problems,
-      { id: 'z', title: 'Later created', solvedDate: '2026-10-22', createdAt: '2026-10-22T09:00:00Z' },
+      { id: 'z', title: 'Later created', status: 'Solved', solvedDate: '2026-10-22', createdAt: '2026-10-22T09:00:00Z' },
     ]
-    expect(getRecentSolved(tied, 5, reference).map((problem) => problem.id)).toEqual(['z', 'a', 'b'])
+    expect(getRecentSolved(tied, 5, reference).map((problem) => problem.id)).toEqual(['z', 'a'])
   })
 })
