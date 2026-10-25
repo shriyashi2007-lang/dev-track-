@@ -39,10 +39,9 @@ describe('Filtering and Sorting', () => {
     },
   ]
 
-  it('filters by search term across title and topic', () => {
-    const res = filterProblems(problems, { search: 'tree' })
-    expect(res.length).toBe(2)
-    expect(res.map((p) => p.id)).toEqual(['2', '3'])
+  it('filters titles case-insensitively with trimmed search text', () => {
+    const res = filterProblems(problems, { search: '  binary TREE  ' })
+    expect(res.map((p) => p.id)).toEqual(['2'])
   })
 
   it('filters by difficulty and status', () => {
@@ -52,6 +51,13 @@ describe('Filtering and Sorting', () => {
     })
     expect(res.length).toBe(1)
     expect(res[0].id).toBe('2')
+  })
+
+  it('combines search, topic, platform, difficulty, and status with AND logic', () => {
+    const result = filterProblems(problems, {
+      search: 'binary', topics: ['Trees'], platforms: ['LeetCode'], difficulties: ['Medium'], status: 'Solved',
+    })
+    expect(result.map((problem) => problem.id)).toEqual(['2'])
   })
 
   it('filters by revision flag', () => {
@@ -111,5 +117,14 @@ describe('Filtering and Sorting', () => {
   it('places missing times after real values in ascending order', () => {
     const withMissingTime = [...problems, { id: '4', title: 'Untimed' }]
     expect(sortProblems(withMissingTime, 'time-asc').at(-1).id).toBe('4')
+  })
+
+  it('uses original order as a stable fallback when sort values tie', () => {
+    const tied = [
+      { id: 'first', title: 'Same', solvedDate: '2026-10-20' },
+      { id: 'second', title: 'Same', solvedDate: '2026-10-20' },
+    ]
+    expect(sortProblems(tied, 'title-asc').map((problem) => problem.id)).toEqual(['first', 'second'])
+    expect(sortProblems(tied, 'newest').map((problem) => problem.id)).toEqual(['first', 'second'])
   })
 })
