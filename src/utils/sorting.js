@@ -1,38 +1,52 @@
 const difficultyOrder = { Easy: 1, Medium: 2, Hard: 3 }
 
 export function sortProblems(problems = [], sortBy = 'newest') {
-  const cloned = [...problems]
+  const cloned = problems.map((problem, index) => ({ problem, index }))
 
-  return cloned.sort((a, b) => {
+  return cloned.sort((left, right) => {
+    const a = left.problem
+    const b = right.problem
+    let comparison = 0
     switch (sortBy) {
-      case 'newest':
-        return (b.solvedDate || b.createdAt || '').localeCompare(
-          a.solvedDate || a.createdAt || ''
-        )
-      case 'oldest':
-        return (a.solvedDate || a.createdAt || '').localeCompare(
-          b.solvedDate || b.createdAt || ''
-        )
+      case 'newest': {
+        const aDate = a.solvedDate || a.createdAt || ''
+        const bDate = b.solvedDate || b.createdAt || ''
+        comparison = aDate && bDate ? bDate.localeCompare(aDate) : aDate ? -1 : bDate ? 1 : 0
+        break
+      }
+      case 'oldest': {
+        const aDate = a.solvedDate || a.createdAt || ''
+        const bDate = b.solvedDate || b.createdAt || ''
+        comparison = aDate && bDate ? aDate.localeCompare(bDate) : aDate ? -1 : bDate ? 1 : 0
+        break
+      }
       case 'title-asc':
-        return (a.title || '').localeCompare(b.title || '')
+        comparison = (a.title || '').localeCompare(b.title || '')
+        break
       case 'title-desc':
-        return (b.title || '').localeCompare(a.title || '')
+        comparison = (b.title || '').localeCompare(a.title || '')
+        break
       case 'difficulty-asc':
-        return (
+        comparison = (
           (difficultyOrder[a.difficulty] || 0) -
           (difficultyOrder[b.difficulty] || 0)
         )
+        break
       case 'difficulty-desc':
-        return (
+        comparison = (
           (difficultyOrder[b.difficulty] || 0) -
           (difficultyOrder[a.difficulty] || 0)
         )
+        break
       case 'time-asc':
-        return (a.timeTakenMinutes || 9999) - (b.timeTakenMinutes || 9999)
+        comparison = (a.timeTakenMinutes || 9999) - (b.timeTakenMinutes || 9999)
+        break
       case 'time-desc':
-        return (b.timeTakenMinutes || 0) - (a.timeTakenMinutes || 0)
+        comparison = (b.timeTakenMinutes || 0) - (a.timeTakenMinutes || 0)
+        break
       default:
-        return 0
+        comparison = 0
     }
-  })
+    return comparison || left.index - right.index
+  }).map(({ problem }) => problem)
 }
