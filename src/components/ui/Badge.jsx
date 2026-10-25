@@ -13,6 +13,7 @@ const variants = {
   Todo: 'bg-status-todo-bg text-status-todo-text border-status-todo-border',
   Attempted: 'bg-status-attempted-bg text-status-attempted-text border-status-attempted-border',
   Solved: 'bg-status-solved-bg text-status-solved-text border-status-solved-border border-l-2 border-l-status-solved',
+  Revisit: 'bg-accent-light text-accent border-accent/30 border-l-2 border-l-accent',
 
   // Priority
   High: 'bg-difficulty-hard-bg text-difficulty-hard-text border-difficulty-hard-border border-l-2 border-l-difficulty-hard',
