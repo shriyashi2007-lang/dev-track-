@@ -1,69 +1,35 @@
+import { CalendarDays, CheckCircle2, Gauge, Target } from 'lucide-react'
 import { Card } from '../ui/Card'
-import { Calendar, TrendingUp, Clock, Target } from 'lucide-react'
 import { AnimatedGroup } from '../motion-primitives/AnimatedGroup'
 
-export function AnalyticsInsights({ stats, streaks }) {
-  const { strongestTopic, averageTimeMinutes, weekSolvedCount } = stats
-  const { activeDaysCount, longestStreak } = streaks
+const cards = [
+  { key: 'solved', label: 'Solved in range', icon: CheckCircle2, accent: 'text-status-solved-text' },
+  { key: 'active', label: 'Active days', icon: CalendarDays, accent: 'text-primary' },
+  { key: 'consistency', label: 'Consistency score', icon: Gauge, accent: 'text-accent-coral' },
+  { key: 'topic', label: 'Most-practiced topic', icon: Target, accent: 'text-accent' },
+]
 
+export function AnalyticsInsights({ analytics }) {
+  const values = {
+    solved: { value: analytics.solvedInRange, suffix: analytics.solvedInRange === 1 ? 'problem' : 'problems', detail: `Across ${analytics.rangeDays} local days` },
+    active: { value: analytics.consistency.activeDays, suffix: analytics.consistency.activeDays === 1 ? 'day' : 'days', detail: `${analytics.rangeDays - analytics.consistency.activeDays} inactive days in range` },
+    consistency: { value: `${analytics.consistency.score}%`, suffix: '', detail: `${analytics.consistency.activeDays} of ${analytics.consistency.totalDays} days` },
+    topic: { value: analytics.topic.mostPracticed?.name || '—', suffix: '', detail: analytics.topic.mostPracticed ? `${analytics.topic.mostPracticed.count} solved problem${analytics.topic.mostPracticed.count === 1 ? '' : 's'}` : 'No topic activity in range' },
+  }
   return (
-    <AnimatedGroup className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-      {/* Consistency Metric */}
-      <Card className="p-4 bg-base-surface">
-        <div className="flex items-center gap-2 text-content-secondary mb-1">
-          <Calendar className="w-4 h-4 text-primary" />
-          <span className="text-xs font-semibold uppercase">Total Active Days</span>
-        </div>
-        <p className="text-2xl font-bold tabular-nums text-content-primary">
-          {activeDaysCount} <span className="text-xs text-content-muted font-normal">days</span>
-        </p>
-        <p className="text-[11px] text-content-muted mt-0.5">
-          Best streak: {longestStreak} consecutive days
-        </p>
-      </Card>
-
-      {/* Velocity Metric */}
-      <Card className="p-4 bg-base-surface">
-        <div className="flex items-center gap-2 text-content-secondary mb-1">
-          <TrendingUp className="w-4 h-4 text-status-solved-text" />
-          <span className="text-xs font-semibold uppercase">7-Day Velocity</span>
-        </div>
-        <p className="text-2xl font-bold tabular-nums text-content-primary">
-          {weekSolvedCount} <span className="text-xs text-content-muted font-normal">solved</span>
-        </p>
-        <p className="text-[11px] text-content-muted mt-0.5">
-          Problems completed in last 7 days
-        </p>
-      </Card>
-
-      {/* Average Solve Time */}
-      <Card className="p-4 bg-base-surface">
-        <div className="flex items-center gap-2 text-content-secondary mb-1">
-          <Clock className="w-4 h-4 text-difficulty-medium-text" />
-          <span className="text-xs font-semibold uppercase">Average Solve Time</span>
-        </div>
-        <p className="text-2xl font-bold tabular-nums text-content-primary">
-          {averageTimeMinutes || '—'}{' '}
-          <span className="text-xs text-content-muted font-normal">minutes</span>
-        </p>
-        <p className="text-[11px] text-content-muted mt-0.5">
-          Per timed solved problem
-        </p>
-      </Card>
-
-      {/* Dominant Topic */}
-      <Card className="p-4 bg-base-surface">
-        <div className="flex items-center gap-2 text-content-secondary mb-1">
-          <Target className="w-4 h-4 text-accent" />
-          <span className="text-xs font-semibold uppercase">Top Focus Area</span>
-        </div>
-        <p className="text-xl font-bold text-content-primary truncate">
-          {strongestTopic ? strongestTopic.name : '—'}
-        </p>
-        <p className="text-[11px] text-content-muted mt-0.5">
-          {strongestTopic ? `${strongestTopic.count} problems mastered` : 'No data yet'}
-        </p>
-      </Card>
+    <AnimatedGroup className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      {cards.map(({ key, label, icon: Icon, accent }) => (
+        <Card key={key} className="bg-base-surface p-4" aria-label={`${label}: ${values[key].value}${values[key].suffix ? ` ${values[key].suffix}` : ''}`}>
+          <div className="mb-2 flex items-center gap-2 text-content-secondary">
+            <Icon className={`h-4 w-4 ${accent}`} aria-hidden="true" />
+            <span className="text-[11px] font-semibold uppercase tracking-wide">{label}</span>
+          </div>
+          <p className="truncate text-2xl font-bold tabular-nums text-content-primary">
+            {values[key].value}{values[key].suffix && <span className="ml-1 text-xs font-normal text-content-muted">{values[key].suffix}</span>}
+          </p>
+          <p className="mt-1 text-[11px] text-content-muted">{values[key].detail}</p>
+        </Card>
+      ))}
     </AnimatedGroup>
   )
 }
