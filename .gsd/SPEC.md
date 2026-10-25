@@ -1,25 +1,28 @@
-# Day 3 — DSA Problems Management System
+# Day 4 — Smart Revision Tracker
 
 Status: FINALIZED
 
 ## Objective
 
-Complete the existing local-first problems workflow without changing storage keys or destructively rewriting saved data. Preserve the established DevTrack visual system and shared state architecture.
+Upgrade the existing revision route into a persistent, deterministic spaced-repetition workflow without disrupting the Day 1–3 dashboard or problem-management features.
 
 ## Required behavior
 
-- Extend the existing problem service and normalizer for full CRUD, legacy aliases, corrupted data safety, local calendar solved dates, and `Revisit` status.
-- Count a problem as completed only when its normalized status is `Solved`; dated non-solved records must not affect dashboard metrics.
-- Keep the Problems page and Dashboard on the shared `ProblemsContext`, with immediate local updates and storage-event refreshes across tabs.
-- Provide combined search, difficulty, topic, platform, and status filters; supported sorting; stable ordering; result counts; reset; and distinct empty states.
-- Provide responsive desktop table and mobile cards, linked safe URLs, status/revision indicators, and confirmed deletion.
-- Make add/edit validation accessible, retain input on errors, focus the first invalid field, warn about likely duplicates, and confirm dirty dismissal.
-- Preserve reduced-motion support and use existing tokens, icons, primitives, and toasts.
-- Add focused tests and execute tests, lint, build, and representative browser checks.
+- Keep active queue metadata linked to the canonical problem record by ID and store append-only completed-session history independently.
+- Migrate marked legacy records idempotently, preserve valid existing metadata, repair invalid schedules to tomorrow, and never overwrite corrupted storage.
+- Use the fixed local-calendar interval ladder 1, 3, 7, 14, and 30 days. Complete from the actual local completion date and repeat 30-day maintenance after the final stage.
+- Prevent duplicate completion of the same problem, stage, and due date; validate manual rescheduling without altering stage or completion counts.
+- Compute five summary cards from saved queue and history data.
+- Provide responsive queue table/cards, combined search and filters, overdue-first stable sorting, revise/reschedule/remove actions, confirmations, and distinct empty states.
+- Show durable global and per-problem history, retaining snapshot titles after problem deletion.
+- Keep Problems and Dashboard revision toggles synchronized through shared context and service actions.
+- Preserve theme tokens, keyboard access, focus handling, reduced-motion behavior, and screen-reader announcements.
+- Add focused scheduler, migration, persistence, guard, sorting, stats, and integration tests; run tests, lint, build, and UI verification where available.
 
 ## Compatibility decisions
 
-- Continue using `devtrack:v1:problems`.
-- Continue using canonical `topics[]`, `solvedDate`, and nested `revision` fields. Accept `topic`, `dateSolved`, and `markedForRevision` as read/write aliases.
-- Continue storing the internal status value `Todo`, display it as “To Do,” and add `Revisit`.
+- Continue using `devtrack:v1:problems` for problem records and active revision metadata.
+- Add `devtrack:v1:revision_history` for append-only completed sessions.
+- Preserve legacy nested `revision.history` arrays while migrating their entries into the independent history store exactly once.
+- Keep history after queue removal or problem deletion; store `snapshotTitle` on each history record.
 - Do not commit or push changes.
