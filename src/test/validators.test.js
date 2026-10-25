@@ -12,9 +12,9 @@ describe('Validators', () => {
     expect(isValidUrl('invalid-url')).toBe(false)
   })
 
-  it('rejects problems with short or missing titles', () => {
+  it('rejects blank titles while allowing a trimmed single-character title', () => {
     const res = validateProblem({
-      title: 'A',
+      title: '   ',
       platform: 'LeetCode',
       difficulty: 'Easy',
       topics: ['Arrays'],
@@ -22,6 +22,9 @@ describe('Validators', () => {
     })
     expect(res.isValid).toBe(false)
     expect(res.errors.title).toBeDefined()
+    expect(validateProblem({
+      title: ' A ', platform: 'LeetCode', difficulty: 'Easy', topics: ['Arrays'], status: 'Todo',
+    }).isValid).toBe(true)
   })
 
   it('rejects Solved problems without solvedDate or with future dates', () => {
