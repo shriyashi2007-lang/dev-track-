@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo, useRef } from 'react'
 import clsx from 'clsx'
 import { Drawer } from '../ui/Drawer'
 import { Button } from '../ui/Button'
@@ -7,12 +7,20 @@ import { Select } from '../ui/Select'
 import { PLATFORMS, DIFFICULTIES, STATUSES, PRIORITIES, TOPICS } from '../../data/constants'
 import { validateProblem } from '../../utils/validators'
 import { getLocalDateString } from '../../utils/dates'
-import { X, Calendar, Clock, BookOpen } from 'lucide-react'
+import { X, Calendar, Clock, BookOpen, CheckCircle2, Circle, Clock3, RotateCcw } from 'lucide-react'
+
+const statusMeta = {
+  Todo: { label: 'To Do', icon: Circle },
+  Attempted: { label: 'Attempted', icon: Clock3 },
+  Solved: { label: 'Solved', icon: CheckCircle2 },
+  Revisit: { label: 'Revisit', icon: RotateCcw },
+}
 
 export function ProblemDrawer({
   isOpen,
   onClose,
   initialProblem = null,
+  existingProblems = [],
   onSave,
 }) {
   const isEditing = Boolean(initialProblem?.id)
@@ -33,10 +41,30 @@ export function ProblemDrawer({
 
   const [errors, setErrors] = useState({})
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const titleRef = useRef(null)
+  const urlRef = useRef(null)
+  const solvedDateRef = useRef(null)
+  const baselineRef = useRef('')
+
+  const getSnapshot = () => JSON.stringify({
+    title,
+    platform,
+    url,
+    difficulty,
+    topics,
+    status,
+    solvedDate,
+    timeTaken,
+    notes,
+    markRevision,
+    revisionPriority,
+    nextRevisionDate,
+  })
 
   // Populate or reset form whenever drawer opens or initialProblem changes
   useEffect(() => {
     if (isOpen) {
+      const today = getLocalDateString(new Date())
       if (initialProblem) {
         setTitle(initialProblem.title || '')
         setPlatform(initialProblem.platform || 'LeetCode')
@@ -44,12 +72,20 @@ export function ProblemDrawer({
         setDifficulty(initialProblem.difficulty || 'Medium')
         setTopics(Array.isArray(initialProblem.topics) ? initialProblem.topics : ['Arrays'])
         setStatus(initialProblem.status || 'Solved')
-        setSolvedDate(initialProblem.solvedDate || getLocalDateString(new Date()))
+        setSolvedDate(initialProblem.solvedDate || today)
         setTimeTaken(initialProblem.timeTakenMinutes !== null && initialProblem.timeTakenMinutes !== undefined ? String(initialProblem.timeTakenMinutes) : '')
         setNotes(initialProblem.notes || '')
         setMarkRevision(Boolean(initialProblem.revision?.marked))
         setRevisionPriority(initialProblem.revision?.priority || 'Medium')
-        setNextRevisionDate(initialProblem.revision?.nextRevisionDate || getLocalDateString(new Date()))
+        setNextRevisionDate(initialProblem.revision?.nextRevisionDate || today)
+        baselineRef.current = JSON.stringify({
+          title: initialProblem.title || '', platform: initialProblem.platform || 'LeetCode', url: initialProblem.url || '',
+          difficulty: initialProblem.difficulty || 'Medium', topics: Array.isArray(initialProblem.topics) ? initialProblem.topics : ['Arrays'],
+          status: initialProblem.status || 'Solved', solvedDate: initialProblem.solvedDate || today,
+          timeTaken: initialProblem.timeTakenMinutes !== null && initialProblem.timeTakenMinutes !== undefined ? String(initialProblem.timeTakenMinutes) : '',
+          notes: initialProblem.notes || '', markRevision: Boolean(initialProblem.revision?.marked),
+          revisionPriority: initialProblem.revision?.priority || 'Medium', nextRevisionDate: initialProblem.revision?.nextRevisionDate || today,
+        })
       } else {
         setTitle('')
         setPlatform('LeetCode')
@@ -57,17 +93,37 @@ export function ProblemDrawer({
         setDifficulty('Medium')
         setTopics(['Arrays'])
         setStatus('Solved')
-        setSolvedDate(getLocalDateString(new Date()))
+        setSolvedDate(today)
         setTimeTaken('')
         setNotes('')
         setMarkRevision(false)
         setRevisionPriority('Medium')
-        setNextRevisionDate(getLocalDateString(new Date()))
+        setNextRevisionDate(today)
+        baselineRef.current = JSON.stringify({
+          title: '', platform: 'LeetCode', url: '', difficulty: 'Medium', topics: ['Arrays'], status: 'Solved',
+          solvedDate: today, timeTaken: '', notes: '', markRevision: false, revisionPriority: 'Medium', nextRevisionDate: today,
+        })
       }
       setErrors({})
       setIsSubmitting(false)
     }
   }, [isOpen, initialProblem])
+
+  const duplicate = useMemo(() => {
+    const cleanTitle = title.trim().toLowerCase()
+    const cleanUrl = url.trim().toLowerCase()
+    if (!cleanTitle && !cleanUrl) return null
+    return existingProblems.find((problem) => problem.id !== initialProblem?.id && (
+      (cleanUrl && problem.url?.trim().toLowerCase() === cleanUrl) ||
+      (cleanTitle && problem.title?.trim().toLowerCase() === cleanTitle)
+    )) || null
+  }, [existingProblems, initialProblem?.id, title, url])
+
+  const handleRequestClose = () => {
+    const isDirty = Boolean(baselineRef.current) && getSnapshot() !== baselineRef.current
+    if (isDirty && !window.confirm('Discard your unsaved problem changes?')) return
+    onClose()
+  }
 
   // Handle status toggle adjustments
   const handleStatusChange = (newStatus) => {
@@ -120,11 +176,18 @@ export function ProblemDrawer({
     if (!validation.isValid) {
       setErrors(validation.errors)
       setIsSubmitting(false)
+      const firstInvalidRef = [
+        ['title', titleRef],
+        ['url', urlRef],
+        ['solvedDate', solvedDateRef],
+      ].find(([field]) => validation.errors[field])?.[1]
+      requestAnimationFrame(() => firstInvalidRef?.current?.focus())
       return
     }
 
     try {
       await onSave(payload)
+      baselineRef.current = getSnapshot()
       onClose()
     } catch (err) {
       setErrors({ form: err.message })
@@ -136,7 +199,7 @@ export function ProblemDrawer({
   return (
     <Drawer
       isOpen={isOpen}
-      onClose={onClose}
+      onClose={handleRequestClose}
       title={isEditing ? 'Edit Problem' : 'Log New Problem'}
       description={
         isEditing
@@ -147,13 +210,20 @@ export function ProblemDrawer({
     >
       <form onSubmit={handleSubmit} className="space-y-5 pb-6">
         {errors.form && (
-          <div className="p-3 text-xs bg-difficulty-hard-bg border border-difficulty-hard-border text-difficulty-hard-text rounded-card">
+          <div role="alert" aria-live="assertive" className="p-3 text-xs bg-difficulty-hard-bg border border-difficulty-hard-border text-difficulty-hard-text rounded-card">
             {errors.form}
+          </div>
+        )}
+
+        {duplicate && (
+          <div role="status" className="rounded-card border border-difficulty-medium-border bg-difficulty-medium-bg p-3 text-xs text-difficulty-medium-text">
+            A similar problem already exists: “{duplicate.title}”. You can still save this entry.
           </div>
         )}
 
         {/* Title */}
         <Input
+          ref={titleRef}
           label="Problem Title *"
           placeholder="e.g. Two Sum, Median of Two Sorted Arrays"
           value={title}
@@ -180,6 +250,7 @@ export function ProblemDrawer({
           </Select>
 
           <Input
+            ref={urlRef}
             label="Problem URL (optional)"
             placeholder="https://leetcode.com/problems/..."
             value={url}
@@ -235,22 +306,25 @@ export function ProblemDrawer({
           <label className="block text-xs font-medium text-content-secondary mb-1.5">
             Status *
           </label>
-          <div className="grid grid-cols-3 gap-2">
+          <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
             {STATUSES.map((st) => {
               const isSelected = status === st
+              const meta = statusMeta[st] || statusMeta.Todo
+              const StatusIcon = meta.icon
               return (
                 <button
                   key={st}
                   type="button"
                   onClick={() => handleStatusChange(st)}
                   className={clsx(
-                    'py-2 px-3 rounded-card text-xs font-semibold border transition-all flex items-center justify-center cursor-pointer focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-accent',
+                    'py-2 px-3 rounded-card text-xs font-semibold border transition-all flex items-center justify-center gap-1.5 cursor-pointer focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-accent',
                     isSelected
                       ? 'bg-primary-light text-primary border-primary shadow-sm'
                       : 'bg-base-elevated text-content-muted border-border-subtle hover:border-border-strong'
                   )}
                 >
-                  {st}
+                  <StatusIcon className="h-3.5 w-3.5" aria-hidden="true" />
+                  {meta.label}
                 </button>
               )
             })}
@@ -261,9 +335,11 @@ export function ProblemDrawer({
         {status === 'Solved' && (
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 p-3 bg-base-elevated/40 rounded-card border border-border-subtle animate-fade-in">
             <Input
+              ref={solvedDateRef}
               type="date"
               label="Date Solved *"
               value={solvedDate}
+              max={getLocalDateString(new Date())}
               onChange={(e) => {
                 setSolvedDate(e.target.value)
                 if (errors.solvedDate) setErrors({ ...errors, solvedDate: null })
@@ -370,6 +446,7 @@ export function ProblemDrawer({
                 type="checkbox"
                 checked={markRevision}
                 onChange={(e) => setMarkRevision(e.target.checked)}
+                aria-label="Mark for revision"
                 className="sr-only peer"
               />
               <div className="w-9 h-5 bg-base-elevated peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-accent border border-border-strong"></div>
@@ -403,7 +480,7 @@ export function ProblemDrawer({
 
         {/* Footer Actions */}
         <div className="flex items-center justify-end gap-3 pt-4 border-t border-border-subtle">
-          <Button variant="secondary" onClick={onClose} disabled={isSubmitting}>
+          <Button variant="secondary" onClick={handleRequestClose} disabled={isSubmitting}>
             Cancel
           </Button>
           <Button type="submit" variant="primary" isLoading={isSubmitting}>
