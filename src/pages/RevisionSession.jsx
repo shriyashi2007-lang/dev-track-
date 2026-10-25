@@ -8,23 +8,20 @@ import {
   Trophy,
 } from 'lucide-react'
 import { useProblems } from '../context/ProblemsContext'
-import { useSettings } from '../context/SettingsContext'
-import { categorizeRevisions, calculateNextRevision } from '../utils/spacedRepetition'
-import { getLocalDateString } from '../utils/dates'
+import { categorizeRevisions } from '../utils/spacedRepetition'
 import { Badge } from '../components/ui/Badge'
 import { Button } from '../components/ui/Button'
 import { Confetti } from '../components/ui/Confetti'
 
 export default function RevisionSession() {
   const navigate = useNavigate()
-  const { problems, updateProblem } = useProblems()
-  const { settings } = useSettings()
+  const { problems, completeProblemRevision } = useProblems()
 
-  const [currentIndex, setCurrentIndex] = useState(0)
   const [revealed, setRevealed] = useState(false)
   const [completedList, setCompletedList] = useState([])
   const [sessionFinished, setSessionFinished] = useState(false)
   const [triggerConfetti, setTriggerConfetti] = useState(false)
+  const [isCompleting, setIsCompleting] = useState(false)
 
   // Grab problems due today or overdue
   const dueProblems = useMemo(() => {
@@ -32,48 +29,29 @@ export default function RevisionSession() {
     return [...overdue, ...dueToday]
   }, [problems])
 
-  const currentProblem = dueProblems[currentIndex]
+  const currentProblem = dueProblems[0]
   const totalDue = dueProblems.length
 
-  const handleConfidence = async (confidence) => {
-    if (!currentProblem) return
+  const handleComplete = async () => {
+    if (!currentProblem || isCompleting) return
+    setIsCompleting(true)
+    try {
+      const result = await completeProblemRevision(currentProblem.id, { stage: currentProblem.revision.stage, dueDate: currentProblem.revision.nextRevisionDate })
+      if (result.duplicate) return
 
-    const currentCount = currentProblem.revision?.revisionCount || 0
-    const todayStr = getLocalDateString(new Date())
+      setCompletedList((prev) => [
+        ...prev,
+        { title: currentProblem.title, difficulty: currentProblem.difficulty },
+      ])
 
-    const schedule = calculateNextRevision({
-      confidence,
-      currentCount,
-      intervals: settings.revisionIntervals || [1, 3, 7, 14, 30],
-      fromDate: new Date(),
-    })
-
-    const newHistory = [
-      ...(currentProblem.revision?.history || []),
-      { date: todayStr, confidence },
-    ]
-
-    await updateProblem(currentProblem.id, {
-      revision: {
-        ...currentProblem.revision,
-        nextRevisionDate: schedule.nextRevisionDate,
-        revisionCount: schedule.nextCount,
-        lastRevisedDate: todayStr,
-        history: newHistory,
-      },
-    })
-
-    setCompletedList((prev) => [
-      ...prev,
-      { title: currentProblem.title, confidence, difficulty: currentProblem.difficulty },
-    ])
-
-    if (currentIndex + 1 >= totalDue) {
-      setSessionFinished(true)
-      setTriggerConfetti(true)
-    } else {
-      setCurrentIndex((prev) => prev + 1)
-      setRevealed(false)
+      if (totalDue === 1) {
+        setSessionFinished(true)
+        setTriggerConfetti(true)
+      } else {
+        setRevealed(false)
+      }
+    } finally {
+      setIsCompleting(false)
     }
   }
 
@@ -128,17 +106,7 @@ export default function RevisionSession() {
                   </Badge>
                   <span className="font-medium text-content-primary">{item.title}</span>
                 </div>
-                <span
-                  className={`font-semibold tabular-nums text-[11px] ${
-                    item.confidence === 'Easy'
-                      ? 'text-difficulty-easy-text'
-                      : item.confidence === 'Hard'
-                      ? 'text-difficulty-hard-text'
-                      : 'text-difficulty-medium-text'
-                  }`}
-                >
-                  {item.confidence}
-                </span>
+                <span className="font-semibold text-[11px] text-revision-completed-text">Completed</span>
               </div>
             ))}
           </div>
@@ -157,7 +125,8 @@ export default function RevisionSession() {
   }
 
   // Active Flashcard Session Flow
-  const progressPercent = Math.round(((currentIndex + 1) / totalDue) * 100)
+  const sessionTotal = completedList.length + totalDue
+  const progressPercent = Math.round(((completedList.length + 1) / sessionTotal) * 100)
 
   return (
     <div className="min-h-screen bg-base text-content-primary flex flex-col justify-between p-4 sm:p-8">
@@ -174,7 +143,7 @@ export default function RevisionSession() {
           </button>
           <div>
             <span className="text-xs tabular-nums font-bold text-primary">
-              Problem {currentIndex + 1} of {totalDue}
+              Problem {completedList.length + 1} of {sessionTotal}
             </span>
             <span className="text-xs text-content-muted block sm:inline sm:ml-2">
               (Spaced Repetition Review)
@@ -270,43 +239,12 @@ export default function RevisionSession() {
         </div>
       </div>
 
-      {/* Bottom Confidence Selector */}
+      {/* Bottom Completion Action */}
       <div className="max-w-2xl mx-auto w-full pb-4">
         <p className="text-xs text-center text-content-secondary font-medium mb-3">
-          Rate your recall confidence to schedule next interval:
+          The next interval is counted from today, the actual completion date.
         </p>
-
-        <div className="grid grid-cols-3 gap-3">
-          <Button
-            variant="outline"
-            size="md"
-            onClick={() => handleConfidence('Hard')}
-            className="border-difficulty-hard-border text-difficulty-hard-text hover:bg-difficulty-hard-bg flex flex-col py-3"
-          >
-            <span className="font-bold">Hard</span>
-            <span className="text-[10px] text-content-muted">Reset to 1 Day</span>
-          </Button>
-
-          <Button
-            variant="outline"
-            size="md"
-            onClick={() => handleConfidence('Okay')}
-            className="border-difficulty-medium-border text-difficulty-medium-text hover:bg-difficulty-medium-bg flex flex-col py-3"
-          >
-            <span className="font-bold">Okay</span>
-            <span className="text-[10px] text-content-muted">Next Interval</span>
-          </Button>
-
-          <Button
-            variant="outline"
-            size="md"
-            onClick={() => handleConfidence('Easy')}
-            className="border-difficulty-easy-border text-difficulty-easy-text hover:bg-difficulty-easy-bg flex flex-col py-3"
-          >
-            <span className="font-bold">Easy</span>
-            <span className="text-[10px] text-content-muted">Skip Forward</span>
-          </Button>
-        </div>
+        <Button variant="primary" size="md" onClick={handleComplete} isLoading={isCompleting} disabled={isCompleting} className="w-full">Complete revision</Button>
       </div>
     </div>
   )
