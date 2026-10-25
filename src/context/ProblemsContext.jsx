@@ -13,16 +13,20 @@ export function ProblemsProvider({ children }) {
   const [revisionHistory, setRevisionHistory] = useState([])
   const [revisionRepairCount, setRevisionRepairCount] = useState(0)
   const [isLoading, setIsLoading] = useState(true)
+  const [loadError, setLoadError] = useState(null)
   const { settings } = useSettings()
   const { addToast } = useToast()
 
   const refreshProblems = useCallback(async () => {
+    setIsLoading(true)
+    setLoadError(null)
     try {
       const { problems: data, error, revisionHistory: history, revisionError, repairedCount } = await problemService.getAllWithMeta()
       setProblems(data)
       setRevisionHistory(history)
       setRevisionRepairCount(repairedCount)
       if (error) {
+        setLoadError(error)
         addToast({
           type: 'warning',
           title: 'Saved data needs attention',
@@ -40,6 +44,7 @@ export function ProblemsProvider({ children }) {
       }
     } catch (err) {
       console.error('[ProblemsProvider] Error loading problems:', err)
+      setLoadError(err)
       addToast({
         type: 'error',
         title: 'Error loading data',
@@ -368,6 +373,7 @@ export function ProblemsProvider({ children }) {
         revisionHistory,
         revisionRepairCount,
         isLoading,
+        loadError,
         stats,
         streaks,
         hasSampleData,
