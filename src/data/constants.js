@@ -68,6 +68,7 @@ export const DEFAULT_SETTINGS = {
 
 export const STORAGE_KEYS = {
   PROBLEMS: 'devtrack:v1:problems',
+  REVISION_HISTORY: 'devtrack:v1:revision_history',
   SETTINGS: 'devtrack:v1:settings',
   RECENT_SEARCHES: 'devtrack:v1:recent_searches',
   DEMO_AUTH: 'devtrack:v1:demo_auth',
