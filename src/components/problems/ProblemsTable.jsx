@@ -1,6 +1,10 @@
 import React, { useState } from 'react'
+import { AnimatePresence } from 'motion/react'
 import clsx from 'clsx'
 import {
+  CheckCircle2,
+  Circle,
+  Clock3,
   ExternalLink,
   ChevronDown,
   ChevronUp,
@@ -8,8 +12,10 @@ import {
   Trash2,
   BookOpen,
   ArrowUpDown,
+  RotateCcw,
 } from 'lucide-react'
 import { Badge } from '../ui/Badge'
+import { ProblemCard } from './ProblemCard'
 import { formatDate } from '../../utils/dates'
 import { getTopicBadgeStyle } from '../../styles/chartTheme'
 
@@ -17,6 +23,13 @@ const difficultyStripes = {
   Easy: 'border-l-4 border-l-difficulty-easy stripe-easy',
   Medium: 'border-l-4 border-l-difficulty-medium stripe-medium',
   Hard: 'border-l-4 border-l-difficulty-hard stripe-hard',
+}
+
+const statusMeta = {
+  Todo: { label: 'To Do', icon: Circle },
+  Attempted: { label: 'Attempted', icon: Clock3 },
+  Solved: { label: 'Solved', icon: CheckCircle2 },
+  Revisit: { label: 'Revisit', icon: RotateCcw },
 }
 
 export function ProblemsTable({
@@ -47,7 +60,8 @@ export function ProblemsTable({
   // Highlight matching search text
   const renderHighlightedText = (text, query) => {
     if (!query || !text) return text
-    const parts = text.split(new RegExp(`(${query})`, 'gi'))
+    const escapedQuery = query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+    const parts = text.split(new RegExp(`(${escapedQuery})`, 'gi'))
     return parts.map((part, i) =>
       part.toLowerCase() === query.toLowerCase() ? (
         <mark key={i} className="bg-accent-light text-accent rounded px-0.5 font-medium">
@@ -60,7 +74,24 @@ export function ProblemsTable({
   }
 
   return (
-    <div className="bg-base-surface border border-border-subtle rounded-card overflow-hidden shadow-card">
+    <>
+      <div className="space-y-3 md:hidden">
+        <AnimatePresence initial={false}>
+          {problems.map((problem) => (
+            <ProblemCard
+              key={problem.id}
+              problem={problem}
+              selected={selectedIds.includes(problem.id)}
+              onToggleSelect={onToggleSelect}
+              onEdit={onEdit}
+              onDelete={onDelete}
+              onStatusCycle={onStatusCycle}
+              onToggleRevision={onToggleRevision}
+            />
+          ))}
+        </AnimatePresence>
+      </div>
+    <div className="hidden bg-base-surface border border-border-subtle rounded-card overflow-hidden shadow-card md:block">
       <div className="overflow-x-auto">
         <table className="w-full text-left border-collapse">
           <thead>
@@ -110,7 +141,7 @@ export function ProblemsTable({
               <th className="py-3 px-4 hidden lg:table-cell w-32">
                 <button
                   type="button"
-                  onClick={() => handleHeaderSort('newest')}
+                  onClick={() => onSortChange(sort === 'newest' ? 'oldest' : 'newest')}
                   className="flex items-center gap-1 hover:text-content-primary transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-accent"
                 >
                   <span>Date</span>
@@ -130,6 +161,8 @@ export function ProblemsTable({
             {problems.map((problem) => {
               const isSelected = selectedIds.includes(problem.id)
               const isExpanded = expandedRowId === problem.id
+              const status = statusMeta[problem.status] || statusMeta.Todo
+              const StatusIcon = status.icon
 
               return (
                 <React.Fragment key={problem.id}>
@@ -171,24 +204,20 @@ export function ProblemsTable({
 
                         <div className="min-w-0">
                           <div className="flex items-center gap-2">
-                            <button
-                              type="button"
-                              className="max-w-full truncate text-left font-display font-medium text-content-primary hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
-                              onClick={() => onEdit(problem)}
-                              aria-label={`Edit ${problem.title}`}
-                            >
-                              {renderHighlightedText(problem.title, searchQuery)}
-                            </button>
-                            {problem.url && (
+                            {problem.url ? (
                               <a
                                 href={problem.url}
                                 target="_blank"
-                                rel="noreferrer"
-                                title="Open in platform"
-                                className="text-content-muted hover:text-accent transition-colors"
+                                rel="noopener noreferrer"
+                                className="inline-flex max-w-full items-center gap-1.5 truncate font-display font-medium text-content-primary hover:text-accent hover:underline focus-visible:ring-2 focus-visible:ring-accent"
                               >
-                                <ExternalLink className="w-3 h-3" />
+                                <span className="truncate">{renderHighlightedText(problem.title, searchQuery)}</span>
+                                <ExternalLink className="w-3 h-3 shrink-0" aria-hidden="true" />
                               </a>
+                            ) : (
+                              <button type="button" className="max-w-full truncate text-left font-display font-medium text-content-primary hover:underline focus-visible:ring-2 focus-visible:ring-accent" onClick={() => onEdit(problem)} aria-label={`Edit ${problem.title}`}>
+                                {renderHighlightedText(problem.title, searchQuery)}
+                              </button>
                             )}
                             {problem.isSample && (
                               <Badge size="xs" variant="sample">
@@ -240,11 +269,13 @@ export function ProblemsTable({
                       <button
                         type="button"
                         onClick={() => onStatusCycle(problem)}
-                        title="Click to cycle status: Todo → Attempted → Solved"
+                        aria-label={`Change status for ${problem.title}; current status ${status.label}`}
+                        title="Click to cycle status"
                         className="cursor-pointer focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-accent rounded"
                       >
                         <Badge variant={problem.status} size="sm" dot>
-                          {problem.status}
+                          <StatusIcon className="h-3 w-3" aria-hidden="true" />
+                          {status.label}
                         </Badge>
                       </button>
                     </td>
@@ -266,6 +297,7 @@ export function ProblemsTable({
                         <button
                           type="button"
                           onClick={() => onToggleRevision(problem)}
+                          aria-label={`${problem.revision?.marked ? 'Remove' : 'Mark'} ${problem.title} ${problem.revision?.marked ? 'from' : 'for'} revision`}
                           title={problem.revision?.marked ? 'Marked for revision' : 'Mark for revision'}
                           className={clsx(
                             'p-1.5 rounded transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-accent',
@@ -281,6 +313,7 @@ export function ProblemsTable({
                         <button
                           type="button"
                           onClick={() => onEdit(problem)}
+                          aria-label={`Edit ${problem.title}`}
                           title="Edit problem"
                           className="p-1.5 text-content-muted hover:text-content-primary hover:bg-base-elevated rounded transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-accent"
                         >
@@ -290,7 +323,8 @@ export function ProblemsTable({
                         {/* Delete */}
                         <button
                           type="button"
-                          onClick={() => onDelete(problem.id)}
+                          onClick={() => onDelete(problem)}
+                          aria-label={`Delete ${problem.title}`}
                           title="Delete problem"
                           className="p-1.5 text-content-muted hover:text-difficulty-hard hover:bg-difficulty-hard-bg rounded transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-accent"
                         >
@@ -323,5 +357,6 @@ export function ProblemsTable({
         </table>
       </div>
     </div>
+    </>
   )
 }
