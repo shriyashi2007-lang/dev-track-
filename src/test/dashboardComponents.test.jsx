@@ -40,9 +40,10 @@ describe('dashboard components', () => {
 
   it('labels heatmap cells and supports arrow-key focus movement', () => {
     const today = getLocalDateString()
-    render(<ContributionHeatmap problems={[{ id: 'today', title: 'Today', solvedDate: today, difficulty: 'Easy' }]} />)
+    const { container } = render(<ContributionHeatmap problems={[{ id: 'today', title: 'Today', status: 'Solved', solvedDate: today, difficulty: 'Easy' }]} />)
     const fullDate = formatDate(today, 'MMMM d, yyyy')
-    const todayCell = screen.getByRole('gridcell', { name: `1 problem solved on ${fullDate}` })
+    const todayCell = container.querySelector(`[aria-label="1 problem solved on ${fullDate}"]`)
+    expect(todayCell).toHaveAttribute('role', 'gridcell')
     fireEvent.focus(todayCell)
     fireEvent.keyDown(todayCell, { key: 'ArrowUp' })
     expect(document.activeElement).not.toBe(todayCell)
