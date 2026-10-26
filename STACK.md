@@ -14,7 +14,7 @@
 
 ## Persistence and integrations
 
-DevTrack is local-first. Browser `localStorage` holds application data, demo session state, and preferences. Browser Blob and object-URL APIs create JSON exports. There is no API server, database, telemetry SDK, or third-party authentication provider.
+DevTrack is local-first. Browser `localStorage` holds application data, demo session state, and preferences. Native `Blob`, object-URL, `File.text()`, `TextEncoder`, and JSON APIs provide versioned backup and formula-safe CSV portability without another dependency. Multi-key storage writes are verified and use in-memory raw snapshots for best-effort rollback; localStorage itself is not transactional. There is no API server, database, telemetry SDK, or third-party authentication provider.
 
 ## Quality tooling
 

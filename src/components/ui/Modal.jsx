@@ -11,6 +11,7 @@ export function Modal({
   maxWidth = 'max-w-lg',
   className = '',
   showClose = true,
+  role = 'dialog',
 }) {
   const modalRef = useRef(null)
 
@@ -64,7 +65,7 @@ export function Modal({
   return (
     <div
       className="fixed inset-0 z-50 flex items-center justify-center p-4 overflow-y-auto"
-      role="dialog"
+      role={role}
       aria-modal="true"
       aria-labelledby={title ? 'modal-title' : undefined}
       aria-describedby={description ? 'modal-description' : undefined}

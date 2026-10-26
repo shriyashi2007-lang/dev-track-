@@ -3,6 +3,7 @@ import { Modal } from '../ui/Modal'
 import { Button } from '../ui/Button'
 import { FileJson, AlertCircle, CheckCircle2 } from 'lucide-react'
 import { validateImportData } from '../../utils/validators'
+import { validateBackupFileMetadata } from '../../utils/dataPortability'
 
 export function ImportModal({ isOpen, onClose, onImport }) {
   const [fileData, setFileData] = useState(null)
@@ -10,16 +11,21 @@ export function ImportModal({ isOpen, onClose, onImport }) {
   const [importMode, setImportMode] = useState('merge') // 'merge' | 'replace'
   const [error, setError] = useState(null)
   const [isLoading, setIsLoading] = useState(false)
+  const [skipInvalid, setSkipInvalid] = useState(false)
 
-  const handleFileChange = (e) => {
+  const handleFileChange = async (e) => {
     const file = e.target.files?.[0]
     if (!file) return
 
     setError(null)
-    const reader = new FileReader()
-    reader.onload = (event) => {
-      try {
-        const parsed = JSON.parse(event.target?.result)
+    setSkipInvalid(false)
+    const metadata = validateBackupFileMetadata(file)
+    if (!metadata.isValid) {
+      setError(metadata.errors.join(' '))
+      return
+    }
+    try {
+        const parsed = JSON.parse(await file.text())
         const items = Array.isArray(parsed) ? parsed : parsed.problems
         if (!items) {
           throw new Error('Invalid file format. File must contain an array of problems.')
@@ -33,13 +39,11 @@ export function ImportModal({ isOpen, onClose, onImport }) {
         }
         setValidationResult(validated)
         setFileData(validated.validItems)
-      } catch {
-        setError('Failed to parse JSON file. Ensure it is valid JSON.')
-        setValidationResult(null)
-        setFileData(null)
-      }
+    } catch {
+      setError('Failed to parse JSON file. Ensure it is valid JSON.')
+      setValidationResult(null)
+      setFileData(null)
     }
-    reader.readAsText(file)
   }
 
   const handleConfirm = async () => {
@@ -59,6 +63,7 @@ export function ImportModal({ isOpen, onClose, onImport }) {
     setFileData(null)
     setValidationResult(null)
     setError(null)
+    setSkipInvalid(false)
     onClose()
   }
 
@@ -109,9 +114,10 @@ export function ImportModal({ isOpen, onClose, onImport }) {
               <span>Validated {validationResult.validItems.length} problems ready to import</span>
             </div>
             {validationResult.rejectedCount > 0 && (
-              <p className="text-[11px] text-difficulty-medium-text">
-                Notice: {validationResult.rejectedCount} items skipped due to invalid schema.
-              </p>
+              <label className="flex items-start gap-2 text-[11px] text-difficulty-medium-text">
+                <input type="checkbox" checked={skipInvalid} onChange={(event) => setSkipInvalid(event.target.checked)} className="mt-0.5" />
+                <span>Skip {validationResult.rejectedCount} invalid item{validationResult.rejectedCount === 1 ? '' : 's'} and import only the validated records. This is opt-in.</span>
+              </label>
             )}
 
             {/* Merge vs Replace selection */}
@@ -160,7 +166,7 @@ export function ImportModal({ isOpen, onClose, onImport }) {
           variant="primary"
           size="sm"
           onClick={handleConfirm}
-          disabled={!fileData || isLoading}
+          disabled={!fileData || isLoading || (validationResult?.rejectedCount > 0 && !skipInvalid)}
           isLoading={isLoading}
         >
           Confirm Import

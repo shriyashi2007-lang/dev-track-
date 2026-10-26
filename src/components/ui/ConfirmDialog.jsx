@@ -15,6 +15,8 @@ export function ConfirmDialog({
   confirmVariant = 'danger',
   requireMatch = null, // e.g. "RESET"
   isLoading = false,
+  extraContent = null,
+  role = 'alertdialog',
 }) {
   const [matchInput, setMatchInput] = useState('')
 
@@ -33,7 +35,7 @@ export function ConfirmDialog({
   }
 
   return (
-    <Modal isOpen={isOpen} onClose={handleClose} maxWidth="max-w-md">
+    <Modal isOpen={isOpen} onClose={handleClose} maxWidth="max-w-md" role={role}>
       <div className="flex items-start gap-4 mb-4">
         <div className="w-10 h-10 rounded-full bg-difficulty-hard-bg border border-difficulty-hard-border flex items-center justify-center text-difficulty-hard shrink-0">
           <AlertTriangle className="w-5 h-5" />
@@ -57,6 +59,8 @@ export function ConfirmDialog({
           />
         </div>
       )}
+
+      {extraContent}
 
       <div className="flex items-center justify-end gap-3 mt-6 pt-3 border-t border-border-subtle">
         <Button variant="secondary" size="sm" onClick={handleClose} disabled={isLoading}>

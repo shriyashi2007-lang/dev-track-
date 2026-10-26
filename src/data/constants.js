@@ -73,3 +73,16 @@ export const STORAGE_KEYS = {
   RECENT_SEARCHES: 'devtrack:v1:recent_searches',
   DEMO_AUTH: 'devtrack:v1:demo_auth',
 }
+
+// Single source of truth for every localStorage key owned by DevTrack.
+// Authentication is cleared with app data but is intentionally never portable.
+export const DEVTRACK_STORAGE_REGISTRY = Object.freeze([
+  Object.freeze({ key: STORAGE_KEYS.PROBLEMS, category: 'problems', portable: true, clear: true }),
+  Object.freeze({ key: STORAGE_KEYS.REVISION_HISTORY, category: 'revisionHistory', portable: true, clear: true }),
+  Object.freeze({ key: STORAGE_KEYS.SETTINGS, category: 'settings', portable: true, clear: true }),
+  Object.freeze({ key: STORAGE_KEYS.RECENT_SEARCHES, category: 'recentSearches', portable: true, clear: true }),
+  Object.freeze({ key: STORAGE_KEYS.DEMO_AUTH, category: 'demoAuth', portable: false, clear: true, sensitive: true }),
+])
+
+export const DEVTRACK_OWNED_KEYS = Object.freeze(DEVTRACK_STORAGE_REGISTRY.map((entry) => entry.key))
+export const DEVTRACK_PORTABLE_KEYS = Object.freeze(DEVTRACK_STORAGE_REGISTRY.filter((entry) => entry.portable).map((entry) => entry.key))

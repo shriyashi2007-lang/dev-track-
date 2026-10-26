@@ -1,7 +1,7 @@
-# Day 5 Roadmap
+# Day 6 Roadmap
 
-1. Add and test pure local-calendar analytics calculations and normalized topic/difficulty handling.
-2. Route existing activity calculations through the shared utility and expose page-level load errors in context.
-3. Build reusable range controls, chart cards, progress charts, distribution views, consistency, and rule-based insight components.
-4. Rebuild the existing Analytics page around shared problem state and complete loading, empty, partial-empty, and retry states.
-5. Run the full test, lint, build, and light/dark responsive browser verification suite without committing or pushing.
+1. Inventory and centralize exact owned-key policies and document backup schema version 1.
+2. Add pure JSON validation, CSV generation, merge/replace planning, and explicit whitelisting.
+3. Add verified storage application, rollback, exact-key clearing, and native download orchestration.
+4. Upgrade Settings with accessible export, previewed restore, storage information, live System theme, goal validation, and guarded deletion.
+5. Add focused regression tests and run the complete test, lint, build, persistence, and responsive verification suite without committing or pushing.

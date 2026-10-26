@@ -1,3 +1,5 @@
+import { DEVTRACK_OWNED_KEYS } from '../data/constants'
+
 /**
  * Service to interface safely with localStorage, schema versioning, and corrupted data resilience.
  */
@@ -42,13 +44,10 @@ class StorageService {
     if (typeof window === 'undefined') return { totalBytes: 0, formatted: '0 KB' }
     try {
       let total = 0
-      for (let i = 0; i < localStorage.length; i++) {
-        const k = localStorage.key(i)
-        if (k && k.startsWith('devtrack:')) {
-          const v = localStorage.getItem(k)
-          total += (k.length + (v ? v.length : 0)) * 2 // UTF-16 approx 2 bytes per char
-        }
-      }
+      DEVTRACK_OWNED_KEYS.forEach((key) => {
+        const value = localStorage.getItem(key)
+        if (value !== null) total += (key.length + value.length) * 2
+      })
       const kb = (total / 1024).toFixed(1)
       return { totalBytes: total, formatted: `${kb} KB` }
     } catch {
@@ -59,14 +58,7 @@ class StorageService {
   clearAppStorage() {
     if (typeof window === 'undefined') return
     try {
-      const keysToRemove = []
-      for (let i = 0; i < localStorage.length; i++) {
-        const k = localStorage.key(i)
-        if (k && k.startsWith('devtrack:')) {
-          keysToRemove.push(k)
-        }
-      }
-      keysToRemove.forEach((k) => localStorage.removeItem(k))
+      DEVTRACK_OWNED_KEYS.forEach((key) => localStorage.removeItem(key))
     } catch (err) {
       console.error('[StorageService] Error clearing app storage:', err)
     }

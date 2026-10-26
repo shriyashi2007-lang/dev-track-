@@ -1,25 +1,26 @@
-# Day 5 — Advanced Analytics & Coding Insights
+# Day 6 — Data Export, Import, Backup & Settings
 
 Status: FINALIZED
 
 ## Objective
 
-Upgrade the existing `/analytics` route into a responsive, accessible, data-driven view of saved DSA practice without introducing a second store or hardcoded production statistics.
+Add safe, documented data portability and strengthen the existing Settings route without creating parallel state, storage, or a backend.
 
 ## Required behavior
 
-- Read canonical problems from `ProblemsContext`; retain the existing `devtrack:v1:problems` storage and cross-tab refresh path.
-- Use `solvedDate` as the canonical local-calendar completion date and count only normalized `Solved` records.
-- Provide one pure analytics module for 7/30/90-day daily, cumulative, weekly/monthly, difficulty, topic, consistency, and rule-based insight calculations.
-- Include zero-value periods, use Monday-start weeks, carry pre-range solves into the cumulative baseline, and safely skip malformed or undated records.
-- Keep unknown difficulty records in solved totals while excluding them from the Easy/Medium/Hard percentage denominator.
-- Include six core topics even at zero, normalize aliases/case/whitespace, use alphabetical tie-breaking, and describe results as practice coverage rather than mastery.
-- Reuse Recharts, CSS-variable chart tokens, cards, skeletons, empty states, Lucide icons, and motion primitives with reduced-motion support.
-- Expose load failures through the shared context so Analytics can show a retry state.
-- Add focused pure-utility and page tests, then run the complete test, lint, build, and responsive browser checks.
+- Maintain one exact registry of DevTrack-owned keys with portable, clear, and sensitive policies.
+- Export a versioned JSON envelope and formula-safe RFC 4180 CSV using native browser APIs.
+- Treat imports as untrusted: validate all records and references, whitelist fields, preview changes, and mutate nothing before explicit confirmation.
+- Support deterministic, idempotent Merge and complete Replace modes with verified multi-key writes and snapshot rollback.
+- Refresh shared problem, history, settings, Dashboard, Revision, and Analytics state after restore without a page reload.
+- Preserve early theme initialization and add live System-theme changes; keep the daily goal in the canonical settings object.
+- Clear only exact owned keys after typed confirmation, preserve unrelated storage, and verify completion.
+- Add focused portability, rollback, CSV, validation, and regression tests; run tests, lint, build, and responsive browser checks.
 
 ## Compatibility decisions
 
-- No new dependency, storage key, route, or duplicate problem state.
-- Preserve Dashboard totals and existing CRUD/revision behavior.
-- Leave all Day 5 changes uncommitted and unpushed.
+- Keep canonical problems in `devtrack:v1:problems`, revision history in `devtrack:v1:revision_history`, and preferences/daily goal in `devtrack:v1:settings`.
+- Derive portable queue entries from nested problem revision state; do not add a queue key.
+- Exclude `devtrack:v1:demo_auth` from backup but include it in Clear All.
+- Do not claim localStorage multi-key writes are atomic; snapshot, verify, and roll back instead.
+- Leave all Day 6 changes uncommitted and unpushed.

@@ -2,15 +2,14 @@ import { useState } from 'react'
 import { useSettings } from '../context/SettingsContext'
 import { useProblems } from '../context/ProblemsContext'
 import { useToast } from '../context/ToastContext'
-import { ACCENTS } from '../data/constants'
-import { storageService } from '../services/storageService'
-import { exportAllData } from '../services/exportService'
+import { ACCENTS, DEVTRACK_OWNED_KEYS } from '../data/constants'
+import { clearOwnedStorage, downloadCurrentBackup, downloadProblemsCsv, getOwnedStorageInfo } from '../services/backupService'
 import { Card } from '../components/ui/Card'
 import { Button } from '../components/ui/Button'
 import { Input } from '../components/ui/Input'
 import { Avatar } from '../components/ui/Avatar'
 import { ConfirmDialog } from '../components/ui/ConfirmDialog'
-import { ImportModal } from '../components/problems/ImportModal'
+import { BackupImportDialog } from '../components/settings/BackupImportDialog'
 import { OnboardingTour } from '../components/OnboardingTour'
 import {
   User,
@@ -23,17 +22,20 @@ import {
   Sparkles,
   HardDrive,
   Check,
+  FileSpreadsheet,
+  ShieldAlert,
 } from 'lucide-react'
 import clsx from 'clsx'
 
 export function SettingsPage() {
-  const { settings, updateSettings, resetSettings } = useSettings()
-  const { problems, loadSampleData, clearSampleData, importProblems, refreshProblems, hasSampleData } = useProblems()
+  const { settings, updateSettings, refreshSettings } = useSettings()
+  const { problems, revisionHistory, loadSampleData, clearSampleData, refreshProblems, hasSampleData } = useProblems()
   const { addToast } = useToast()
 
   const [displayName, setDisplayName] = useState(settings.displayName || '')
   const [nameSaved, setNameSaved] = useState(false)
   const [dailyGoal, setDailyGoal] = useState(settings.dailyGoal || 3)
+  const [dailyGoalError, setDailyGoalError] = useState('')
   const [intervalsInput, setIntervalsInput] = useState(
     (settings.revisionIntervals || [1, 3, 7, 14, 30]).join(', ')
   )
@@ -44,8 +46,11 @@ export function SettingsPage() {
   const [isResetModalOpen, setIsResetModalOpen] = useState(false)
   const [isImportModalOpen, setIsImportModalOpen] = useState(false)
   const [isOnboardingTourOpen, setIsOnboardingTourOpen] = useState(false)
+  const [isClearing, setIsClearing] = useState(false)
 
-  const storageUsage = storageService.getStorageUsage()
+  const storageUsage = getOwnedStorageInfo()
+  const portabilitySources = { problems, revisionHistory, settings }
+  const revisionQueueCount = problems.filter((problem) => problem.revision?.marked).length
 
   // Save profile name
   const handleSaveProfile = (e) => {
@@ -64,6 +69,12 @@ export function SettingsPage() {
 
   // Save Preferences
   const handleSavePreferences = () => {
+    const parsedGoal = Number(dailyGoal)
+    if (!Number.isInteger(parsedGoal) || parsedGoal < 1 || parsedGoal > 100) {
+      setDailyGoalError('Enter a whole number from 1 to 100.')
+      return
+    }
+    setDailyGoalError('')
     const parsedIntervals = intervalsInput
       .split(',')
       .map((s) => Number(s.trim()))
@@ -72,7 +83,7 @@ export function SettingsPage() {
     const cleanIntervals = parsedIntervals.length > 0 ? parsedIntervals : [1, 3, 7, 14, 30]
 
     updateSettings({
-      dailyGoal: Number(dailyGoal) || 3,
+      dailyGoal: parsedGoal,
       revisionIntervals: cleanIntervals,
       pageSize: Number(pageSize) || 25,
       reduceMotion,
@@ -87,16 +98,52 @@ export function SettingsPage() {
   }
 
   // Handle Full Hard Reset (requires typing RESET)
-  const handleHardReset = () => {
-    storageService.clearAppStorage()
-    resetSettings()
-    refreshProblems()
+  const handleHardReset = async () => {
+    if (isClearing) return
+    setIsClearing(true)
+    const result = clearOwnedStorage()
+    if (!result.ok) {
+      addToast({ type: 'error', title: 'Clear failed', message: `${result.error} ${result.rollbackSucceeded ? 'Previous data was restored.' : 'Rollback could not be fully verified.'}` })
+      setIsClearing(false)
+      return
+    }
+    await refreshProblems()
+    const defaults = refreshSettings()
+    setDisplayName(defaults.displayName)
+    setDailyGoal(defaults.dailyGoal)
+    setIntervalsInput(defaults.revisionIntervals.join(', '))
+    setPageSize(defaults.pageSize)
+    setReduceMotion(defaults.reduceMotion)
+    setConfetti(defaults.confetti)
     setIsResetModalOpen(false)
-    addToast({
-      type: 'info',
-      title: 'Data reset complete',
-      message: 'All problem data and configurations have been purged.',
-    })
+    setIsClearing(false)
+    addToast({ type: 'info', title: 'DevTrack data cleared', message: `Removed and verified ${result.removedKeys.length} DevTrack storage keys. Unrelated browser data was untouched.` })
+  }
+
+  const handleBackupDownload = () => {
+    const result = downloadCurrentBackup(portabilitySources)
+    if (result.downloaded) addToast({ type: 'success', title: 'Backup downloaded', message: result.filename })
+    else addToast({ type: 'error', title: 'Download blocked', message: 'The browser could not create the backup download.' })
+    return result
+  }
+
+  const handleCsvDownload = () => {
+    const result = downloadProblemsCsv(problems)
+    if (result.downloaded) addToast({ type: 'success', title: 'CSV downloaded', message: result.filename })
+    else addToast({ type: 'error', title: 'Download blocked', message: 'The browser could not create the CSV download.' })
+    return result
+  }
+
+  const handleRestoreApplied = async (plan) => {
+    await refreshProblems()
+    const restoredSettings = refreshSettings()
+    setDisplayName(restoredSettings.displayName)
+    setDailyGoal(restoredSettings.dailyGoal)
+    setIntervalsInput(restoredSettings.revisionIntervals.join(', '))
+    setPageSize(restoredSettings.pageSize)
+    setReduceMotion(restoredSettings.reduceMotion)
+    setConfetti(restoredSettings.confetti)
+    addToast({ type: 'success', title: 'Backup restored and verified', message: `${plan.next.problems.length} problems and ${plan.next.revisionHistory.length} history records are now active.` })
   }
 
   return (
@@ -226,10 +273,11 @@ export function SettingsPage() {
             <Input
               type="number"
               min="1"
-              max="20"
+              max="100"
               label="Daily Problem Target"
               value={dailyGoal}
-              onChange={(e) => setDailyGoal(e.target.value)}
+              onChange={(e) => { setDailyGoal(e.target.value); setDailyGoalError('') }}
+              error={dailyGoalError}
               helperText="Target shown on daily progress ring."
             />
 
@@ -317,14 +365,23 @@ export function SettingsPage() {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-4">
           <Button
             variant="outline"
             size="sm"
             leftIcon={<Download className="w-3.5 h-3.5" />}
-            onClick={() => exportAllData(problems, settings)}
+            onClick={handleBackupDownload}
           >
             Export Backup JSON
+          </Button>
+
+          <Button
+            variant="outline"
+            size="sm"
+            leftIcon={<FileSpreadsheet className="w-3.5 h-3.5" />}
+            onClick={handleCsvDownload}
+          >
+            Export Problems CSV
           </Button>
 
           <Button
@@ -335,6 +392,19 @@ export function SettingsPage() {
           >
             Import Backup JSON
           </Button>
+        </div>
+
+        <div className="mb-4 rounded-card border border-border-subtle bg-base-elevated/45 p-3">
+          <div className="grid grid-cols-3 gap-3 text-center">
+            <div><p className="text-lg font-bold tabular-nums text-content-primary">{problems.length}</p><p className="text-[10px] uppercase text-content-muted">Problems</p></div>
+            <div><p className="text-lg font-bold tabular-nums text-content-primary">{revisionQueueCount}</p><p className="text-[10px] uppercase text-content-muted">Queue</p></div>
+            <div><p className="text-lg font-bold tabular-nums text-content-primary">{revisionHistory.length}</p><p className="text-[10px] uppercase text-content-muted">History</p></div>
+          </div>
+          <p className="mt-3 text-[11px] leading-relaxed text-content-muted">Data lives only in this browser. Clearing site data or changing browsers/devices loses it, so regular backups are important.</p>
+          <details className="mt-2 text-[11px] text-content-secondary">
+            <summary className="cursor-pointer font-semibold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent">Owned keys ({DEVTRACK_OWNED_KEYS.length})</summary>
+            <ul className="mt-2 space-y-1 font-mono text-[10px] text-content-muted">{storageUsage.keys.map((entry) => <li key={entry.key}>{entry.key} · {entry.present ? `${entry.bytes} bytes` : 'not stored'}{entry.portable ? '' : ' · excluded from backups'}</li>)}</ul>
+          </details>
         </div>
 
         {/* Sample data controls */}
@@ -401,16 +471,24 @@ export function SettingsPage() {
         onClose={() => setIsResetModalOpen(false)}
         onConfirm={handleHardReset}
         title="Permanently Purge All Data?"
-        description="This will wipe all tracked problems, streaks, and settings from localStorage. This action cannot be reversed."
-        confirmText="Permanently Erase"
-        requireMatch="RESET"
+        description={`Deletes ${problems.length} problems, ${revisionQueueCount} active queue entries, ${revisionHistory.length} history records, settings, recent searches, and the demo session. Anything outside DevTrack is untouched.`}
+        confirmText="Delete all DevTrack data"
+        requireMatch="DELETE"
+        isLoading={isClearing}
+        extraContent={
+          <div className="rounded-card border border-difficulty-medium-border bg-difficulty-medium-bg/25 p-3">
+            <div className="flex items-start gap-2"><ShieldAlert className="mt-0.5 h-4 w-4 text-difficulty-medium-text" /><p className="text-[11px] leading-relaxed text-content-secondary">Theme and all preferences are included in the deletion. Download a backup before continuing if you may need this data again.</p></div>
+            <Button className="mt-3" variant="outline" size="sm" onClick={handleBackupDownload} leftIcon={<Download className="h-3.5 w-3.5" />}>Download backup first</Button>
+          </div>
+        }
       />
 
-      {/* Import Modal */}
-      <ImportModal
+      <BackupImportDialog
         isOpen={isImportModalOpen}
         onClose={() => setIsImportModalOpen(false)}
-        onImport={importProblems}
+        current={portabilitySources}
+        onApplied={handleRestoreApplied}
+        onDownloadCurrent={handleBackupDownload}
       />
 
       {/* Onboarding Tour */}

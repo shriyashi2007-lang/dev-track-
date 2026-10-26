@@ -348,6 +348,7 @@ export function ProblemsProvider({ children }) {
           title: 'Import failed',
           message: err.message,
         })
+        throw err
       }
     },
     [addToast]

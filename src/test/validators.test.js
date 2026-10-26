@@ -71,6 +71,17 @@ describe('Validators', () => {
     expect(res.rejectedCount).toBe(1)
   })
 
+  it('whitelists legacy problem imports and drops unknown fields', () => {
+    const result = validateImportData([{
+      id: 'safe', title: 'Safe import', platform: 'LeetCode', difficulty: 'Easy',
+      topics: ['Arrays'], status: 'Todo', unknown: 'drop me',
+      revision: { marked: false, priority: 'Medium', unknown: 'drop me too' },
+    }])
+    expect(result.isValid).toBe(true)
+    expect(result.validItems[0]).not.toHaveProperty('unknown')
+    expect(result.validItems[0].revision).not.toHaveProperty('unknown')
+  })
+
   it('returns useful metadata when an import contains no valid entries', () => {
     const result = validateImportData([null, 'bad', { title: '' }])
 

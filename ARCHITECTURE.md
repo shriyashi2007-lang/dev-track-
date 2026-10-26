@@ -27,7 +27,9 @@ An application-level error boundary protects the provider and router tree. Route
 
 ## Data boundaries
 
-Problem and settings services are the only modules that should directly own their storage keys. Context providers expose those operations to the interface and keep React state synchronized. Import validation runs before persistence, and exports create transient object URLs that are revoked after download.
+Problem and settings services own normal application writes. `DEVTRACK_STORAGE_REGISTRY` is the exact inventory for portability and deletion. The data-portability utility treats imported JSON as untrusted, validates a versioned envelope, whitelists fields, and prepares merge or replace results without touching storage. The backup service snapshots raw portable values, writes and verifies the prepared result, and attempts a verified rollback after any multi-key failure. Context providers refresh Problems, Revision, Dashboard, Analytics, and Settings state after a successful restore.
+
+Full backups include problems, a derived revision-queue view, independent revision history, preferences, the daily goal, and recent searches. Demo authentication is owned and clearable but intentionally excluded from exports. CSV generation is pure and applies RFC 4180 escaping plus spreadsheet-formula neutralization before the download layer creates a temporary object URL.
 
 Dashboard data follows one deterministic pipeline. The problem service reads stored records, the normalizer repairs legacy shapes without rewriting unreadable source data, and pure metric helpers derive totals, weekly activity, streaks, heatmap cells, and recent activity. Dashboard components receive those derived values and remain focused on rendering and interaction.
 

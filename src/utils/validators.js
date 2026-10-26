@@ -98,7 +98,35 @@ export function validateImportData(data) {
     if (item && typeof item === 'object') {
       const { isValid } = validateProblem(item)
       if (isValid) {
-        validItems.push(item)
+        const revision = item.revision && typeof item.revision === 'object' && !Array.isArray(item.revision)
+          ? {
+              marked: Boolean(item.revision.marked),
+              priority: PRIORITIES.includes(item.revision.priority) ? item.revision.priority : 'Medium',
+              stage: Number.isInteger(Number(item.revision.stage)) ? Number(item.revision.stage) : 0,
+              nextRevisionDate: typeof item.revision.nextRevisionDate === 'string' ? item.revision.nextRevisionDate : null,
+              revisionCount: Number.isInteger(Number(item.revision.revisionCount)) ? Number(item.revision.revisionCount) : 0,
+              addedAt: typeof item.revision.addedAt === 'string' ? item.revision.addedAt : null,
+              updatedAt: typeof item.revision.updatedAt === 'string' ? item.revision.updatedAt : null,
+              lastRevisedDate: typeof item.revision.lastRevisedDate === 'string' ? item.revision.lastRevisedDate : null,
+              scheduleRepaired: Boolean(item.revision.scheduleRepaired),
+            }
+          : undefined
+        validItems.push({
+          ...(typeof item.id === 'string' || typeof item.id === 'number' ? { id: String(item.id) } : {}),
+          title: item.title.trim(),
+          platform: item.platform,
+          url: typeof item.url === 'string' ? item.url.trim() : '',
+          difficulty: item.difficulty,
+          topics: item.topics.filter((topic) => typeof topic === 'string').map((topic) => topic.trim()),
+          status: item.status,
+          solvedDate: item.status === 'Solved' ? item.solvedDate : null,
+          timeTakenMinutes: Number.isFinite(Number(item.timeTakenMinutes)) && Number(item.timeTakenMinutes) > 0 ? Number(item.timeTakenMinutes) : null,
+          notes: typeof item.notes === 'string' ? item.notes : '',
+          ...(revision ? { revision } : {}),
+          createdAt: typeof item.createdAt === 'string' ? item.createdAt : null,
+          updatedAt: typeof item.updatedAt === 'string' ? item.updatedAt : null,
+          isSample: Boolean(item.isSample),
+        })
       } else {
         rejectedCount++
       }
