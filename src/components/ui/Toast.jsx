@@ -31,8 +31,8 @@ export function Toast({ toast, onDismiss }) {
 
   return (
     <div
-      role="status"
-      aria-live="polite"
+      role={type === 'error' ? 'alert' : 'status'}
+      aria-live={type === 'error' ? 'assertive' : 'polite'}
       className={clsx(
         'group flex items-center gap-3 p-4 glass-liquid rounded-card shadow-ambient hover:shadow-sticker transition-all duration-200 animate-slide-up max-w-md w-full border border-border-subtle relative overflow-hidden',
         typeStripeClasses[type] || typeStripeClasses.info
