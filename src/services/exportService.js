@@ -15,18 +15,6 @@ export function downloadJson(data, filename) {
   URL.revokeObjectURL(url)
 }
 
-export function exportAllData(problems, settings) {
-  const exportPayload = {
-    app: 'DevTrack',
-    version: '1.0.0',
-    exportedAt: new Date().toISOString(),
-    problems: problems || [],
-    settings: settings || {},
-  }
-  const dateStr = getLocalDateString(new Date())
-  downloadJson(exportPayload, `devtrack-backup-${dateStr}.json`)
-}
-
 export function exportAnalyticsSummary(stats, streaks) {
   const payload = {
     app: 'DevTrack Analytics Export',
