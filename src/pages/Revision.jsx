@@ -98,7 +98,7 @@ export default function Revision() {
     <div className="space-y-6">
       <div className="flex flex-col gap-4 rounded-card border border-primary/25 bg-gradient-to-r from-primary/10 via-base-surface to-base-surface p-5 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <div className="mb-1 flex items-center gap-2"><RotateCcw className="h-5 w-5 text-primary" /><h1 className="text-lg font-bold text-content-primary">Smart Revision Tracker</h1></div>
+          <div className="mb-1 flex items-center gap-2"><RotateCcw className="h-5 w-5 text-primary" /><h2 className="text-lg font-bold text-content-primary">Smart Revision Tracker</h2></div>
           <p className="max-w-2xl text-xs leading-relaxed text-content-secondary">A deterministic local-calendar schedule keeps each problem moving through focused recall sessions.</p>
         </div>
         <Link to="/revision/session"><Button variant="primary" size="md" leftIcon={<Play className="h-4 w-4 fill-current" />}>Start session ({stats.today + stats.overdue} due)</Button></Link>

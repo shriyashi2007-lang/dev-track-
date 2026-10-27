@@ -62,7 +62,7 @@ export default function RevisionSession() {
         <div className="w-16 h-16 rounded-full bg-difficulty-easy-bg border border-difficulty-easy-border flex items-center justify-center text-difficulty-easy-text mb-4">
           <CheckCircle2 className="w-8 h-8" />
         </div>
-        <h2 className="text-xl font-bold mb-2">No Revisions Due Today</h2>
+        <h1 className="text-xl font-bold mb-2">No Revisions Due Today</h1>
         <p className="text-sm text-content-secondary max-w-md mb-6 leading-relaxed">
           Your spaced repetition queue is fully up to date. Excellent consistency!
         </p>
@@ -86,9 +86,9 @@ export default function RevisionSession() {
           <span className="text-xs tabular-nums uppercase font-bold text-primary tracking-wider block mb-1">
             Session Completed!
           </span>
-          <h2 className="text-2xl font-bold text-content-primary mb-2">
+          <h1 className="text-2xl font-bold text-content-primary mb-2">
             Fantastic Algorithmic Recall
-          </h2>
+          </h1>
           <p className="text-sm text-content-secondary mb-6">
             You revised {completedList.length} problems with spaced repetition intervals.
           </p>
