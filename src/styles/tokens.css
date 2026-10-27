@@ -2,13 +2,8 @@
  * DevTrack Design System Tokens
  * =====================================================================
  * PALETTE SOURCE:
- * Primary Source: Figma file (Solus Wellness Template - node 2003-633)
- * Link: https://www.figma.com/design/lDolpl1EX5FlbBqPupwYWK/Solus-%E2%80%93-Mental-Health---Wellness-Website-Template--Community-?node-id=2003-633&t=AvEcfTONpr0vuHn3-1
- * 
- * NOTE ON FIGMA SCRAPING:
- * Figma requires authenticated user access and renders via client-side WebGL canvas.
- * Fallback palette is derived from the owner-provided Haikei Layered Waves SVG
- * (#001220, #FA7268, #EF5F67, #E34C67, #D53867, #C62368).
+ * Owner-provided neon wave reference: near-black space, electric cyan,
+ * cobalt blue, ultraviolet, hot pink, and a warm orange flare.
  * 
  * STYLE UPDATE:
  * - Font: Inter (UI/Body) + Space Grotesk (Headings/Display/Big Numbers/Nav)
@@ -44,73 +39,73 @@
   --radius-input: 12px;
   --stripe-width: 5px;
   --stripe-width-hover: 8px;
-  --terminal-bg: #0D1520;
-  --terminal-header: #142131;
-  --terminal-footer: #101C29;
+  --terminal-bg: #050816;
+  --terminal-header: #0B1024;
+  --terminal-footer: #080D1D;
   --terminal-text: #E7EDF5;
   --terminal-control-close: #FF5F56;
   --terminal-control-minimize: #FFBD2E;
   --terminal-control-expand: #27C93F;
 
   /* Theme Surfaces - Dark Mode (Default) */
-  --bg-base: #001220;
-  --bg-surface: #0A1D30;
-  --bg-elevated: #102740;
-  --bg-overlay: rgba(0, 18, 32, 0.88);
-  --bg-surface-glass: rgba(10, 29, 48, 0.72);
-  --border-subtle: rgba(255, 255, 255, 0.08);
-  --border-strong: rgba(255, 255, 255, 0.16);
-  --border-glass: rgba(255, 255, 255, 0.18);
+  --bg-base: #02030A;
+  --bg-surface: #070B18;
+  --bg-elevated: #0D1429;
+  --bg-overlay: rgba(2, 3, 10, 0.9);
+  --bg-surface-glass: rgba(7, 11, 24, 0.76);
+  --border-subtle: rgba(75, 176, 255, 0.12);
+  --border-strong: rgba(163, 89, 255, 0.26);
+  --border-glass: rgba(94, 216, 255, 0.22);
 
   /* Typography Colors */
-  --text-primary: #F1F5F9;
-  --text-secondary: #CBD5E1;
-  --text-muted: #94A3B8;
+  --text-primary: #F7F8FF;
+  --text-secondary: #CDD5F3;
+  --text-muted: #8691B3;
   --text-inverse: #FFFFFF;
 
-  /* Brand Layered Waves Colors */
-  --wave-coral-1: #FA7268;
-  --wave-coral-2: #EF5F67;
-  --wave-rose-3: #E34C67;
-  --wave-raspberry-4: #D53867;
-  --wave-deep-raspberry-5: #C62368;
+  /* Brand Spectrum — legacy token names retained for component compatibility */
+  --wave-coral-1: #00D9FF;
+  --wave-coral-2: #2589FF;
+  --wave-rose-3: #9F4DFF;
+  --wave-raspberry-4: #FF2F9F;
+  --wave-deep-raspberry-5: #FF9F2F;
 
   /* Primary Interactive Brand Tokens */
-  --accent-primary: #C62368;
-  --accent-hover: #D53867;
-  --accent-active: #B51C5C;
-  --accent-muted: #E34C67;
-  --accent-light: rgba(227, 76, 103, 0.15);
-  --accent-glow: rgba(250, 114, 104, 0.35);
+  --accent-primary: #7546DD;
+  --accent-hover: #8452EA;
+  --accent-active: #6336C8;
+  --accent-muted: #C05CFF;
+  --accent-light: rgba(139, 92, 255, 0.16);
+  --accent-glow: rgba(159, 77, 255, 0.42);
 
-  /* Secondary & Coral Accents */
-  --accent-secondary: #FA7268;
-  --accent-coral: #FA7268;
-  --accent-coral-hover: #EF5F67;
-  --accent-coral-light: rgba(250, 114, 104, 0.14);
-  --ring-focus: #FA7268;
+  /* Secondary & Hot-Pink Accents */
+  --accent-secondary: #00D9FF;
+  --accent-coral: #C21875;
+  --accent-coral-hover: #D11276;
+  --accent-coral-light: rgba(255, 47, 159, 0.14);
+  --ring-focus: #00D9FF;
 
   /* Harsh (Hard-Stop) Gradients */
-  --gradient-hard-wave: linear-gradient(90deg, #FA7268 0 20%, #EF5F67 20% 40%, #E34C67 40% 60%, #D53867 60% 80%, #C62368 80% 100%);
-  --gradient-hard-split: linear-gradient(90deg, #FA7268 0 50%, #C62368 50% 100%);
-  --gradient-hard-stripe: repeating-linear-gradient(45deg, #FA7268, #FA7268 12px, #C62368 12px, #C62368 24px);
-  --gradient-hard-rainbow: linear-gradient(90deg, #FA7268 0 14.28%, #F59E0B 14.28% 28.57%, #10B981 28.57% 42.85%, #06B6D4 42.85% 57.14%, #3B82F6 57.14% 71.42%, #8B5CF6 71.42% 85.71%, #C62368 85.71% 100%);
+  --gradient-hard-wave: linear-gradient(90deg, #00D9FF 0 20%, #2589FF 20% 40%, #9F4DFF 40% 60%, #FF2F9F 60% 80%, #FF9F2F 80% 100%);
+  --gradient-hard-split: linear-gradient(90deg, #00D9FF 0 50%, #FF2F9F 50% 100%);
+  --gradient-hard-stripe: repeating-linear-gradient(45deg, #2589FF, #2589FF 12px, #FF2F9F 12px, #FF2F9F 24px);
+  --gradient-hard-rainbow: linear-gradient(90deg, #00D9FF 0 14.28%, #2589FF 14.28% 28.57%, #654DFF 28.57% 42.85%, #9F4DFF 42.85% 57.14%, #FF2F9F 57.14% 71.42%, #FF5964 71.42% 85.71%, #FF9F2F 85.71% 100%);
   --gradient-hard-emerald: linear-gradient(90deg, #10B981 0 50%, #059669 50% 100%);
 
   /* Rainbow Color Scale (Harmonized with DevTrack Core) */
-  --rainbow-1: #FA7268; /* Coral */
-  --rainbow-2: #F59E0B; /* Amber */
+  --rainbow-1: #FF2F9F; /* Hot Pink */
+  --rainbow-2: #FF9F2F; /* Neon Orange */
   --rainbow-3: #10B981; /* Mint / Emerald */
-  --rainbow-4: #06B6D4; /* Sky / Cyan */
-  --rainbow-5: #3B82F6; /* Blue */
-  --rainbow-6: #8B5CF6; /* Violet */
-  --rainbow-7: #E34C67; /* Rose */
-  --rainbow-8: #C62368; /* Deep Raspberry */
+  --rainbow-4: #00D9FF; /* Electric Cyan */
+  --rainbow-5: #2589FF; /* Electric Blue */
+  --rainbow-6: #9F4DFF; /* Ultraviolet */
+  --rainbow-7: #FF2F9F; /* Hot Pink */
+  --rainbow-8: #FF5964; /* Neon Rose */
 
   /* Pastel Scale (Dark Mode: Deep Muted Luminous Tints) */
-  --pastel-coral-bg: rgba(250, 114, 104, 0.14);
-  --pastel-coral-border: rgba(250, 114, 104, 0.35);
-  --pastel-coral-text: #FDA4AF;
+  --pastel-coral-bg: rgba(255, 47, 159, 0.14);
+  --pastel-coral-border: rgba(255, 47, 159, 0.35);
+  --pastel-coral-text: #FF9FD0;
 
   --pastel-amber-bg: rgba(245, 158, 11, 0.14);
   --pastel-amber-border: rgba(245, 158, 11, 0.35);
@@ -132,13 +127,13 @@
   --pastel-violet-border: rgba(139, 92, 246, 0.35);
   --pastel-violet-text: #C4B5FD;
 
-  --pastel-rose-bg: rgba(227, 76, 103, 0.14);
-  --pastel-rose-border: rgba(227, 76, 103, 0.35);
-  --pastel-rose-text: #FDA4AF;
+  --pastel-rose-bg: rgba(255, 47, 159, 0.14);
+  --pastel-rose-border: rgba(255, 47, 159, 0.35);
+  --pastel-rose-text: #FF9FD0;
 
-  --pastel-raspberry-bg: rgba(198, 35, 104, 0.14);
-  --pastel-raspberry-border: rgba(198, 35, 104, 0.35);
-  --pastel-raspberry-text: #F472B6;
+  --pastel-raspberry-bg: rgba(159, 77, 255, 0.14);
+  --pastel-raspberry-border: rgba(159, 77, 255, 0.35);
+  --pastel-raspberry-text: #D6B2FF;
 
   /* Semantic Status Colors */
   --color-easy: #10B981;
@@ -200,8 +195,8 @@
   --shadow-card: 0 8px 24px -2px rgba(0, 0, 0, 0.4);
   --shadow-card-hover: 0 14px 36px -4px rgba(0, 0, 0, 0.55);
   --shadow-glow: 0 0 28px -4px var(--accent-glow);
-  --shadow-glow-coral: 0 0 28px -4px rgba(250, 114, 104, 0.45);
-  --shadow-glow-primary: 0 0 28px -4px rgba(198, 35, 104, 0.45);
+  --shadow-glow-coral: 0 0 28px -4px rgba(255, 47, 159, 0.5);
+  --shadow-glow-primary: 0 0 28px -4px rgba(159, 77, 255, 0.5);
   --shadow-glow-mint: 0 0 28px -4px rgba(16, 185, 129, 0.35);
   --shadow-sticker: 4px 4px 0px rgba(0, 0, 0, 0.65);
   --gradient-button-edge: var(--gradient-hard-wave);
@@ -209,48 +204,48 @@
   --gradient-divider: var(--gradient-hard-rainbow);
   --glass-blur: 16px;
   --glass-sheen: rgba(255, 255, 255, 0.12);
-  --heatmap-demo-1: rgba(16, 185, 129, 0.38);
-  --heatmap-demo-2: rgba(16, 185, 129, 0.5);
-  --heatmap-demo-3: rgba(16, 185, 129, 0.62);
-  --heatmap-demo-4: rgba(16, 185, 129, 0.74);
-  --heatmap-demo-5: rgba(16, 185, 129, 0.86);
-  --heatmap-demo-6: rgba(16, 185, 129, 0.98);
+  --heatmap-demo-1: rgba(0, 217, 255, 0.34);
+  --heatmap-demo-2: rgba(37, 137, 255, 0.46);
+  --heatmap-demo-3: rgba(101, 77, 255, 0.58);
+  --heatmap-demo-4: rgba(159, 77, 255, 0.7);
+  --heatmap-demo-5: rgba(220, 55, 210, 0.82);
+  --heatmap-demo-6: rgba(255, 47, 159, 0.94);
 }
 
 /* Light Theme Variables */
 html.light,
 [data-theme="light"] {
-  --bg-base: #FFF7F5;
+  --bg-base: #F6F7FF;
   --bg-surface: #FFFFFF;
-  --bg-elevated: #FDEEEB;
-  --bg-overlay: rgba(255, 247, 245, 0.92);
+  --bg-elevated: #ECEFFF;
+  --bg-overlay: rgba(246, 247, 255, 0.92);
   --bg-surface-glass: rgba(255, 255, 255, 0.82);
-  --border-subtle: rgba(0, 18, 32, 0.08);
-  --border-strong: rgba(0, 18, 32, 0.16);
-  --border-glass: rgba(0, 18, 32, 0.12);
+  --border-subtle: rgba(61, 74, 135, 0.12);
+  --border-strong: rgba(109, 63, 230, 0.22);
+  --border-glass: rgba(37, 137, 255, 0.18);
 
-  --text-primary: #001220;
-  --text-secondary: #334155;
-  --text-muted: #64748B;
+  --text-primary: #0B1023;
+  --text-secondary: #303752;
+  --text-muted: #65708C;
   --text-inverse: #FFFFFF;
 
-  --accent-primary: #C62368;
-  --accent-hover: #A81B57;
-  --accent-active: #8C1347;
-  --accent-muted: #D53867;
-  --accent-light: rgba(198, 35, 104, 0.1);
-  --accent-glow: rgba(239, 95, 103, 0.25);
+  --accent-primary: #6D3FE6;
+  --accent-hover: #5B30CC;
+  --accent-active: #4824AD;
+  --accent-muted: #873FDB;
+  --accent-light: rgba(109, 63, 230, 0.1);
+  --accent-glow: rgba(109, 63, 230, 0.24);
 
-  --accent-secondary: #E34C67;
-  --accent-coral: #E34C67;
-  --accent-coral-hover: #D53867;
-  --accent-coral-light: rgba(227, 76, 103, 0.1);
-  --ring-focus: #C62368;
+  --accent-secondary: #007F9E;
+  --accent-coral: #C21875;
+  --accent-coral-hover: #A51263;
+  --accent-coral-light: rgba(194, 24, 117, 0.1);
+  --ring-focus: #6D3FE6;
 
   /* Pastel Scale (Light Mode: Soft Tints with Dark Contrasting Text) */
-  --pastel-coral-bg: #FFE8E5;
-  --pastel-coral-border: #FCA5A5;
-  --pastel-coral-text: #991B1B;
+  --pastel-coral-bg: #FCE7F4;
+  --pastel-coral-border: #F59ACB;
+  --pastel-coral-text: #8A0E52;
 
   --pastel-amber-bg: #FEF3C7;
   --pastel-amber-border: #FCD34D;
@@ -272,13 +267,13 @@ html.light,
   --pastel-violet-border: #C4B5FD;
   --pastel-violet-text: #5B21B6;
 
-  --pastel-rose-bg: #FFE4E6;
-  --pastel-rose-border: #FDA4AF;
-  --pastel-rose-text: #9F1239;
+  --pastel-rose-bg: #FCE7F4;
+  --pastel-rose-border: #F59ACB;
+  --pastel-rose-text: #8A0E52;
 
-  --pastel-raspberry-bg: #FCE7F3;
-  --pastel-raspberry-border: #F472B6;
-  --pastel-raspberry-text: #831843;
+  --pastel-raspberry-bg: #F2E9FF;
+  --pastel-raspberry-border: #C9A5FF;
+  --pastel-raspberry-text: #54209A;
 
   --color-easy: #059669;
   --color-easy-bg: rgba(5, 150, 105, 0.1);
@@ -328,17 +323,17 @@ html.light,
   --color-revision-completed-text: var(--color-solved-text);
 
   /* Layered Drop Shadows - Light */
-  --shadow-ambient: 0 8px 30px -4px rgba(0, 18, 32, 0.08);
-  --shadow-card: 0 8px 24px -2px rgba(0, 18, 32, 0.06);
-  --shadow-card-hover: 0 14px 36px -4px rgba(0, 18, 32, 0.12);
-  --shadow-glow: 0 0 28px -4px rgba(227, 76, 103, 0.2);
-  --shadow-glow-coral: 0 0 28px -4px rgba(250, 114, 104, 0.25);
-  --shadow-glow-primary: 0 0 28px -4px rgba(198, 35, 104, 0.2);
+  --shadow-ambient: 0 8px 30px -4px rgba(24, 30, 72, 0.1);
+  --shadow-card: 0 8px 24px -2px rgba(24, 30, 72, 0.08);
+  --shadow-card-hover: 0 14px 36px -4px rgba(50, 34, 105, 0.16);
+  --shadow-glow: 0 0 28px -4px rgba(109, 63, 230, 0.22);
+  --shadow-glow-coral: 0 0 28px -4px rgba(194, 24, 117, 0.24);
+  --shadow-glow-primary: 0 0 28px -4px rgba(109, 63, 230, 0.24);
   --shadow-glow-mint: 0 0 28px -4px rgba(16, 185, 129, 0.2);
-  --shadow-sticker: 4px 4px 0px rgba(0, 18, 32, 0.9);
-  --terminal-bg: #17202B;
-  --terminal-header: #202C39;
-  --terminal-footer: #1B2733;
+  --shadow-sticker: 4px 4px 0px rgba(11, 16, 35, 0.9);
+  --terminal-bg: #080B18;
+  --terminal-header: #10162B;
+  --terminal-footer: #0B1124;
   --terminal-text: #F8FAFC;
   --glass-sheen: rgba(255, 255, 255, 0.58);
 }
