@@ -44,7 +44,7 @@ export default function Analytics() {
           <div className="min-w-0">
             <div className="flex items-center gap-2">
               <BarChart3 className="h-5 w-5 text-primary" aria-hidden="true" />
-              <h1 className="text-xl font-bold text-content-primary sm:text-2xl">Advanced analytics</h1>
+              <h2 className="text-xl font-bold text-content-primary sm:text-2xl">Advanced analytics</h2>
             </div>
             <p className="mt-1 max-w-2xl text-xs leading-relaxed text-content-secondary sm:text-sm">
               Explore coding activity, practice coverage, and consistency using only your saved solved problems.
