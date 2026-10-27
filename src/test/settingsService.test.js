@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
-import { settingsService } from '../services/settingsService'
+import { normalizeSettings, settingsService } from '../services/settingsService'
 
 describe('settings service', () => {
   beforeEach(() => {
@@ -22,6 +22,31 @@ describe('settings service', () => {
       accent: 'indigo',
       dailyGoal: 3,
     })
+  })
+
+  it('normalizes malformed legacy fields in memory without rewriting storage', () => {
+    const raw = JSON.stringify({
+      displayName: '  Legacy User  ', theme: 'sepia', accent: 'unknown', dailyGoal: 0,
+      revisionIntervals: ['1', 3], pageSize: 999, reduceMotion: 'false', customFutureField: 'keep',
+    })
+    localStorage.setItem('devtrack:v1:settings', raw)
+
+    expect(settingsService.getSettings()).toMatchObject({
+      displayName: 'Legacy User', theme: 'dark', accent: 'indigo', dailyGoal: 3,
+      revisionIntervals: [1, 3, 7, 14, 30], pageSize: 25, reduceMotion: false,
+      customFutureField: 'keep',
+    })
+    expect(localStorage.getItem('devtrack:v1:settings')).toBe(raw)
+    expect(normalizeSettings(null)).toMatchObject({ theme: 'dark', dailyGoal: 3 })
+  })
+
+  it('reports corrupted settings while preserving the original raw value', () => {
+    localStorage.setItem('devtrack:v1:settings', '{broken')
+    const result = settingsService.getSettingsWithMeta()
+
+    expect(result.settings).toMatchObject({ theme: 'dark', dailyGoal: 3 })
+    expect(result.error).toBeInstanceOf(Error)
+    expect(localStorage.getItem('devtrack:v1:settings')).toBe('{broken')
   })
 
   it('applies theme, accent, and motion settings to the document', () => {
