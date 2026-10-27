@@ -55,7 +55,7 @@ export function RevisionHistory({ history = [], problems = [], problemId = null,
         <div className="overflow-x-auto">
           <table className="w-full text-left text-xs">
             <thead className="border-b border-border-subtle bg-base-elevated/50 text-[11px] uppercase tracking-wide text-content-muted">
-              <tr><th className="px-4 py-3">Problem</th><th className="px-4 py-3">Completed</th><th className="px-4 py-3">Stage</th><th className="px-4 py-3">Previous due</th><th className="px-4 py-3">Next scheduled</th></tr>
+              <tr><th scope="col" className="px-4 py-3">Problem</th><th scope="col" className="px-4 py-3">Completed</th><th scope="col" className="px-4 py-3">Stage</th><th scope="col" className="px-4 py-3">Previous due</th><th scope="col" className="px-4 py-3">Next scheduled</th></tr>
             </thead>
             <tbody className="divide-y divide-border-subtle">
               {records.map((entry) => {
