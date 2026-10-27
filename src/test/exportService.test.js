@@ -1,7 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import {
   downloadJson,
-  exportAllData,
   exportAnalyticsSummary,
 } from '../services/exportService'
 
@@ -34,21 +33,17 @@ describe('export service', () => {
     expect(document.querySelector('a[download="summary.json"]')).toBeNull()
   })
 
-  it('uses dated filenames for backups and analytics summaries', () => {
+  it('uses a dated filename for analytics summaries', () => {
     vi.useFakeTimers()
     vi.setSystemTime(new Date(2026, 9, 21, 12))
 
-    exportAllData([], { theme: 'dark' })
     exportAnalyticsSummary(
       { solved: 4 },
       { currentStreak: 2, longestStreak: 5, activeDaysCount: 8 }
     )
 
     const downloads = click.mock.instances.map((anchor) => anchor.download)
-    expect(downloads).toEqual([
-      'devtrack-backup-2026-10-21.json',
-      'devtrack-analytics-2026-10-21.json',
-    ])
-    expect(revokeObjectURL).toHaveBeenCalledTimes(2)
+    expect(downloads).toEqual(['devtrack-analytics-2026-10-21.json'])
+    expect(revokeObjectURL).toHaveBeenCalledOnce()
   })
 })
