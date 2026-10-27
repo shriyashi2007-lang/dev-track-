@@ -85,7 +85,7 @@ export function TopicChart({ topicAnalytics }) {
         </div>
       </div>
 
-      <table className="sr-only"><caption>Topic practice activity and difficulty breakdown</caption><thead><tr><th>Topic</th><th>Total</th><th>Share</th><th>Easy</th><th>Medium</th><th>Hard</th><th>Unknown</th></tr></thead><tbody>{data.map((topic) => <tr key={topic.name}><td>{topic.name}</td><td>{topic.count}</td><td>{topic.percentage}%</td><td>{topic.Easy}</td><td>{topic.Medium}</td><td>{topic.Hard}</td><td>{topic.Unknown}</td></tr>)}</tbody></table>
+      <table className="sr-only"><caption>Topic practice activity and difficulty breakdown</caption><thead><tr><th scope="col">Topic</th><th scope="col">Total</th><th scope="col">Share</th><th scope="col">Easy</th><th scope="col">Medium</th><th scope="col">Hard</th><th scope="col">Unknown</th></tr></thead><tbody>{data.map((topic) => <tr key={topic.name}><td>{topic.name}</td><td>{topic.count}</td><td>{topic.percentage}%</td><td>{topic.Easy}</td><td>{topic.Medium}</td><td>{topic.Hard}</td><td>{topic.Unknown}</td></tr>)}</tbody></table>
     </AnalyticsChartCard>
   )
 }

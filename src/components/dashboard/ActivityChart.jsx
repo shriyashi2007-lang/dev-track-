@@ -55,7 +55,7 @@ export function ActivityChart({ problems = [], onAddProblem }) {
 
       <table className="sr-only">
         <caption>Solved problems for each of the last seven days</caption>
-        <thead><tr><th>Date</th><th>Problems solved</th></tr></thead>
+        <thead><tr><th scope="col">Date</th><th scope="col">Problems solved</th></tr></thead>
         <tbody>{data.map((day) => <tr key={day.date}><td>{day.fullDate}</td><td>{day.count}</td></tr>)}</tbody>
       </table>
     </Card>

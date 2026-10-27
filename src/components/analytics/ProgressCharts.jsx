@@ -32,7 +32,7 @@ function DataTable({ caption, data, valueKey, valueLabel }) {
   return (
     <table className="sr-only">
       <caption>{caption}</caption>
-      <thead><tr><th>Date or period</th><th>{valueLabel}</th></tr></thead>
+      <thead><tr><th scope="col">Date or period</th><th scope="col">{valueLabel}</th></tr></thead>
       <tbody>{data.map((point) => <tr key={point.date || point.key}><td>{point.fullDate || point.label}</td><td>{point[valueKey]}</td></tr>)}</tbody>
     </table>
   )

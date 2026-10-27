@@ -66,7 +66,7 @@ export function DifficultyDonut({ distribution }) {
           ))}
         </div>
         {distribution.unknownCount > 0 && <p className="mt-3 text-[11px] text-content-muted">{distribution.unknownCount} solved problem{distribution.unknownCount === 1 ? '' : 's'} with an unknown difficulty remain in the range total but are excluded from the percentage split.</p>}
-        <table className="sr-only"><caption>Difficulty distribution</caption><thead><tr><th>Difficulty</th><th>Count</th><th>Percentage</th></tr></thead><tbody>{distribution.items.map((item) => <tr key={item.name}><td>{item.name}</td><td>{item.count}</td><td>{item.percentage}%</td></tr>)}</tbody></table>
+        <table className="sr-only"><caption>Difficulty distribution</caption><thead><tr><th scope="col">Difficulty</th><th scope="col">Count</th><th scope="col">Percentage</th></tr></thead><tbody>{distribution.items.map((item) => <tr key={item.name}><td>{item.name}</td><td>{item.count}</td><td>{item.percentage}%</td></tr>)}</tbody></table>
     </AnalyticsChartCard>
   )
 }
