@@ -233,7 +233,6 @@ export function ProblemDrawer({
             if (errors.title) setErrors({ ...errors, title: null })
           }}
           error={errors.title}
-          autoFocus
         />
 
         {/* Platform & URL */}
