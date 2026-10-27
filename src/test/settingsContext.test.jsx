@@ -1,6 +1,11 @@
-import { act, render } from '@testing-library/react'
+import { act, render, screen } from '@testing-library/react'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
-import { SettingsProvider } from '../context/SettingsContext'
+import { SettingsProvider, useSettings } from '../context/SettingsContext'
+
+function SettingsProbe() {
+  const { settings, storageError } = useSettings()
+  return <p>{settings.theme}:{storageError ? 'storage-error' : 'ok'}</p>
+}
 
 describe('SettingsProvider theme synchronization', () => {
   beforeEach(() => {
@@ -34,5 +39,14 @@ describe('SettingsProvider theme synchronization', () => {
     localStorage.setItem('devtrack:v1:settings', JSON.stringify({ theme: 'light' }))
     act(() => window.dispatchEvent(new globalThis.StorageEvent('storage', { key: 'devtrack:v1:settings' })))
     expect(document.documentElement).toHaveAttribute('data-theme', 'light')
+  })
+
+  it('exposes corrupted settings without erasing the saved value', () => {
+    vi.stubGlobal('matchMedia', vi.fn(() => ({ matches: false, addEventListener: vi.fn(), removeEventListener: vi.fn() })))
+    localStorage.setItem('devtrack:v1:settings', '{broken')
+    render(<SettingsProvider><SettingsProbe /></SettingsProvider>)
+
+    expect(screen.getByText('dark:storage-error')).toBeInTheDocument()
+    expect(localStorage.getItem('devtrack:v1:settings')).toBe('{broken')
   })
 })
