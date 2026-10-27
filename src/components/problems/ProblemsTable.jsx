@@ -97,7 +97,7 @@ export function ProblemsTable({
           <thead>
             <tr className="border-b border-border-subtle bg-base-elevated/40 text-[11px] font-semibold text-content-secondary uppercase tracking-wider">
               {/* Checkbox */}
-              <th className="py-3 px-4 w-10">
+              <th scope="col" className="py-3 px-4 w-10">
                 <input
                   type="checkbox"
                   checked={isAllSelected}
@@ -108,7 +108,7 @@ export function ProblemsTable({
               </th>
 
               {/* Title */}
-              <th className="py-3 px-4">
+              <th scope="col" className="py-3 px-4">
                 <button
                   type="button"
                   onClick={() => handleHeaderSort('title')}
@@ -120,7 +120,7 @@ export function ProblemsTable({
               </th>
 
               {/* Difficulty */}
-              <th className="py-3 px-4 w-28">
+              <th scope="col" className="py-3 px-4 w-28">
                 <button
                   type="button"
                   onClick={() => handleHeaderSort('difficulty')}
@@ -132,13 +132,13 @@ export function ProblemsTable({
               </th>
 
               {/* Topics */}
-              <th className="py-3 px-4 hidden md:table-cell">Topics</th>
+              <th scope="col" className="py-3 px-4 hidden md:table-cell">Topics</th>
 
               {/* Status */}
-              <th className="py-3 px-4 w-32">Status</th>
+              <th scope="col" className="py-3 px-4 w-32">Status</th>
 
               {/* Solved Date */}
-              <th className="py-3 px-4 hidden lg:table-cell w-32">
+              <th scope="col" className="py-3 px-4 hidden lg:table-cell w-32">
                 <button
                   type="button"
                   onClick={() => onSortChange(sort === 'newest' ? 'oldest' : 'newest')}
@@ -150,10 +150,10 @@ export function ProblemsTable({
               </th>
 
               {/* Time */}
-              <th className="py-3 px-4 hidden xl:table-cell w-20">Time</th>
+              <th scope="col" className="py-3 px-4 hidden xl:table-cell w-20">Time</th>
 
               {/* Actions */}
-              <th className="py-3 px-4 text-right w-28">Actions</th>
+              <th scope="col" className="py-3 px-4 text-right w-28">Actions</th>
             </tr>
           </thead>
 
