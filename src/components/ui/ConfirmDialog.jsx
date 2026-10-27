@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useId, useState } from 'react'
 import { Modal } from './Modal'
 import { Button } from './Button'
 import { Input } from './Input'
@@ -19,6 +19,9 @@ export function ConfirmDialog({
   role = 'alertdialog',
 }) {
   const [matchInput, setMatchInput] = useState('')
+  const generatedId = useId()
+  const titleId = `${generatedId}-title`
+  const descriptionId = `${generatedId}-description`
 
   const isMatchValid = !requireMatch || matchInput.trim() === requireMatch
 
@@ -35,14 +38,14 @@ export function ConfirmDialog({
   }
 
   return (
-    <Modal isOpen={isOpen} onClose={handleClose} maxWidth="max-w-md" role={role}>
+    <Modal isOpen={isOpen} onClose={handleClose} maxWidth="max-w-md" role={role} ariaLabelledBy={titleId} ariaDescribedBy={descriptionId}>
       <div className="flex items-start gap-4 mb-4">
         <div className="w-10 h-10 rounded-full bg-difficulty-hard-bg border border-difficulty-hard-border flex items-center justify-center text-difficulty-hard shrink-0">
           <AlertTriangle className="w-5 h-5" />
         </div>
         <div>
-          <h3 className="text-base font-semibold text-content-primary">{title}</h3>
-          <p className="text-xs text-content-secondary mt-1">{description}</p>
+          <h2 id={titleId} className="text-base font-semibold text-content-primary">{title}</h2>
+          <p id={descriptionId} className="text-xs text-content-secondary mt-1">{description}</p>
         </div>
       </div>
 
@@ -52,10 +55,12 @@ export function ConfirmDialog({
             To confirm, please type <span className="font-bold text-difficulty-hard select-all">{requireMatch}</span> below:
           </p>
           <Input
+            label={`Type ${requireMatch} to confirm`}
             value={matchInput}
             onChange={(e) => setMatchInput(e.target.value)}
             placeholder={`Type "${requireMatch}" to confirm`}
-            autoFocus
+            required
+            autoComplete="off"
           />
         </div>
       )}
