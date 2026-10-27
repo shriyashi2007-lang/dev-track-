@@ -3,6 +3,7 @@ import { Outlet, NavLink, useLocation } from 'react-router-dom'
 import clsx from 'clsx'
 import {
   LayoutDashboard,
+  Home,
   Code2,
   BarChart3,
   RotateCcw,
@@ -16,6 +17,7 @@ import {
   Database,
   Trash2,
   Menu,
+  AlertTriangle,
 } from 'lucide-react'
 import { useProblems } from '../context/ProblemsContext'
 import { useSettings } from '../context/SettingsContext'
@@ -36,7 +38,7 @@ import { categorizeRevisions } from '../utils/spacedRepetition'
 export function AppLayout() {
   const location = useLocation()
   const { problems, addProblem, hasSampleData, clearSampleData } = useProblems()
-  const { settings, updateSettings, toggleTheme } = useSettings()
+  const { settings, storageError: settingsStorageError, updateSettings, toggleTheme } = useSettings()
   const { open: openCommandPalette } = useCommandPalette()
 
   // Overlay states
@@ -71,6 +73,11 @@ export function AppLayout() {
 
   const navItems = [
     {
+      to: '/',
+      label: 'Landing ✦',
+      icon: Home,
+    },
+    {
       to: '/dashboard',
       label: 'Dashboard 📊',
       icon: LayoutDashboard,
@@ -103,12 +110,16 @@ export function AppLayout() {
     },
   ]
 
+  const workspaceNavItems = navItems.filter((item) => item.to !== '/')
+
   // Get current section title
-  const currentNav = navItems.find((item) => location.pathname.startsWith(item.to))
+  const currentNav = navItems.find((item) => (
+    item.to === '/' ? location.pathname === '/' : location.pathname.startsWith(item.to)
+  ))
   const pageTitle = currentNav ? currentNav.label : 'DevTrack 🌊'
 
   return (
-    <div className="min-h-screen bg-base text-content-primary flex flex-col md:flex-row">
+    <div className="app-spectrum-shell min-h-screen bg-base text-content-primary flex flex-col md:flex-row">
       {/* Skip to Content for Accessibility */}
       <a
         href="#app-content"
@@ -121,7 +132,11 @@ export function AppLayout() {
       <aside className="hidden md:flex flex-col w-64 border-r border-border-subtle bg-base-surface/90 backdrop-blur-md shrink-0 h-screen sticky top-0">
         {/* Brand Header with Em-dash */}
         <div className="p-5 border-b border-border-subtle flex items-center justify-between">
-          <NavLink to="/dashboard" className="flex items-center gap-2.5 group">
+          <NavLink
+            to="/"
+            aria-label="Go to DevTrack landing page"
+            className="flex items-center gap-2.5 group"
+          >
             <div className="w-8 h-8 rounded-card bg-gradient-to-tr from-primary to-accent flex items-center justify-center text-white shadow-glow group-hover:scale-105 group-hover:shadow-glow-rose transition-all">
               <Code2 className="w-4 h-4" />
             </div>
@@ -161,11 +176,12 @@ export function AppLayout() {
               <NavLink
                 key={item.to}
                 to={item.to}
+                end={item.to === '/'}
                 className={({ isActive }) =>
                   clsx(
                     'flex items-center justify-between px-3.5 py-2.5 rounded-button text-xs font-display font-medium transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent select-none',
                     isActive
-                      ? 'bg-primary text-white font-semibold shadow-glow-rose border-l-4 border-l-accent'
+                      ? 'bg-gradient-to-r from-primary to-accent text-white font-semibold shadow-glow-rose border-l-4 border-l-accent'
                       : 'text-content-secondary hover:text-content-primary hover:bg-base-elevated hover:translate-x-1'
                   )
                 }
@@ -329,6 +345,15 @@ export function AppLayout() {
 
         {/* Routed Page Content with Wave Wipe */}
         <main id="app-content" className="flex-1 p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto w-full">
+          {settingsStorageError && (
+            <div className="mb-4 flex flex-col gap-2 rounded-card border border-difficulty-medium-border bg-difficulty-medium-bg/30 p-3 text-xs text-content-secondary sm:flex-row sm:items-center sm:justify-between" role="status">
+              <span className="flex items-start gap-2">
+                <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-difficulty-medium-text" aria-hidden="true" />
+                DevTrack could not read your saved settings. Safe defaults are active for this session, and the original browser value was not erased.
+              </span>
+              <NavLink to="/settings" className="shrink-0 font-semibold text-difficulty-medium-text underline underline-offset-2 focus-visible:ring-2 focus-visible:ring-accent">Review data settings</NavLink>
+            </div>
+          )}
           <WaveWipeTransition>
             <Outlet />
           </WaveWipeTransition>
@@ -340,7 +365,7 @@ export function AppLayout() {
         aria-label="Mobile Navigation"
         className="md:hidden fixed bottom-0 inset-x-0 z-40 bg-base-surface/95 backdrop-blur-md border-t border-border-subtle h-14 flex items-center justify-around px-2"
       >
-        {navItems.slice(0, 4).map((item) => {
+        {workspaceNavItems.slice(0, 4).map((item) => {
           const Icon = item.icon
           return (
             <NavLink
@@ -401,6 +426,7 @@ export function AppLayout() {
               <NavLink
                 key={item.to}
                 to={item.to}
+                end={item.to === '/'}
                 onClick={() => setMobileDrawerOpen(false)}
                 className={({ isActive }) =>
                   clsx(
