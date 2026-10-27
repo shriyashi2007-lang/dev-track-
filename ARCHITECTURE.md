@@ -25,9 +25,17 @@ An application-level error boundary protects the provider and router tree. Route
 - `src/utils` contains deterministic filtering, sorting, dates, statistics, validation, and spaced-repetition rules.
 - `src/styles` defines tokens and motion shared by the component layer.
 
+## Navigation and visual system
+
+The public landing experience lives at `/`. The DevTrack brand mark and a dedicated `Landing` item in the application sidebar and mobile drawer link back to it, while the compact mobile bottom bar remains focused on the four core workspace destinations plus Settings.
+
+The shared token layer carries the landing page's neon-wave identity across every application route: near-black or cool-white surfaces are accented by cyan, electric blue, ultraviolet, hot pink, and orange. AppLayout adds only a restrained spectrum atmosphere; individual pages continue to consume semantic tokens, preserving green success and amber warning meaning. Dark/light theme selection, reduced-motion behavior, and the isolated full-screen landing composition remain provider-controlled.
+
 ## Data boundaries
 
 Problem and settings services own normal application writes. `DEVTRACK_STORAGE_REGISTRY` is the exact inventory for portability and deletion. The data-portability utility treats imported JSON as untrusted, validates a versioned envelope, whitelists fields, and prepares merge or replace results without touching storage. The backup service snapshots raw portable values, writes and verifies the prepared result, and attempts a verified rollback after any multi-key failure. Context providers refresh Problems, Revision, Dashboard, Analytics, and Settings state after a successful restore.
+
+Problem and settings reads return data plus corruption metadata. Problems and legacy records are normalized additively; Settings values are range- and type-normalized in memory. Unreadable JSON is never replaced during a read. Providers surface non-blocking warnings while retaining the original raw browser value for recovery.
 
 Full backups include problems, a derived revision-queue view, independent revision history, preferences, the daily goal, and recent searches. Demo authentication is owned and clearable but intentionally excluded from exports. CSV generation is pure and applies RFC 4180 escaping plus spreadsheet-formula neutralization before the download layer creates a temporary object URL.
 
@@ -35,4 +43,4 @@ Dashboard data follows one deterministic pipeline. The problem service reads sto
 
 ## Testing strategy
 
-Vitest and Testing Library cover pure utilities, browser-facing services, hooks, and high-value component behavior. Tests use jsdom and reset browser storage and mocks between cases. Production readiness is checked with the full test suite, ESLint, a Vite production build, and representative browser inspection.
+Vitest and Testing Library cover pure utilities, browser-facing services, hooks, shared overlay focus behavior, and high-value component flows. Tests use jsdom, reset browser storage and mocks between cases, and are scoped to `src/test` so nested workspaces cannot contaminate DevTrack results. Production readiness is checked with `npm run test:run`, ESLint, a Vite production build, and representative browser inspection.

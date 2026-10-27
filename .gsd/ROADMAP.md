@@ -1,7 +1,7 @@
-# Day 6 Roadmap
+# Day 7 Roadmap
 
-1. Inventory and centralize exact owned-key policies and document backup schema version 1.
-2. Add pure JSON validation, CSV generation, merge/replace planning, and explicit whitelisting.
-3. Add verified storage application, rollback, exact-key clearing, and native download orchestration.
-4. Upgrade Settings with accessible export, previewed restore, storage information, live System theme, goal validation, and guarded deletion.
-5. Add focused regression tests and run the complete test, lint, build, persistence, and responsive verification suite without committing or pushing.
+1. Audit implemented Days 1–6 architecture and record untouched lint, test, and build baselines.
+2. Isolate quality tooling and harden corrupted/legacy Settings reads without changing storage data.
+3. Correct shared overlay focus, dialog naming, announcements, headings, tables, and export-service consistency with regression tests.
+4. Measure large-dataset calculations and production bundles; preserve justified route splitting and memoization.
+5. Run the complete deterministic suite, lint, build, and browser verification; record evidence without committing or pushing.

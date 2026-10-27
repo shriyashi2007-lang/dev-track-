@@ -1,4 +1,4 @@
-git# DevTrack — DSA & Coding Progress Tracker 🌊
+# DevTrack — DSA & Coding Progress Tracker 🌊
 
 A modern, high-performance, developer-focused web application for students and software engineers to track DSA preparation, coding consistency, solved algorithmic problems, and spaced repetition schedules.
 
@@ -93,7 +93,10 @@ npm install
 # Start local Vite development server
 npm run dev
 
-# Run unit tests
+# Run tests once (CI/release verification)
+npm run test:run
+
+# Run tests in watch mode while developing
 npm test
 
 # Run linter
@@ -105,7 +108,7 @@ npm run build
 
 ### Quality checks
 
-Before opening a pull request or publishing a build, run the test suite, linter, and production build. Tests live in `src/test` and cover the date, filtering, scheduling, statistics, persistence, export, authentication, and hook boundaries that drive the interface.
+Before opening a pull request or publishing a build, run the test suite, linter, and production build. Tests live in `src/test` and cover the date, filtering, scheduling, statistics, persistence, export, authentication, accessibility, and hook boundaries that drive the interface. Test and lint discovery intentionally exclude the separate `portfolio/` workspace when it is present.
 
 Interactive controls should remain usable without a pointer. Keep visible focus styles, expose selected state with `aria-pressed` or `aria-selected`, label icon-only controls, and preserve focus trapping and trigger restoration in dialogs and drawers. Verify navigation, forms, filters, and data views at mobile and desktop widths after changing shared components.
 
@@ -113,6 +116,18 @@ For architectural context, see [ARCHITECTURE.md](ARCHITECTURE.md). For dependenc
 
 ### Dashboard data rules
 
-DevTrack keeps problem data in the existing `devtrack:v1:problems` localStorage key. Reads pass through a defensive in-memory normalizer, so older or partially malformed records remain usable without an automatic rewrite. Unknown difficulty values use a separate `Unknown` bucket and never increase Easy, Medium, or Hard totals. A problem counts as solved when it has an explicit `Solved` status or a valid solved date; calendar-based views require a valid local date and exclude future dates.
+DevTrack keeps problem data in the existing `devtrack:v1:problems` localStorage key. Reads pass through a defensive in-memory normalizer, so older or partially malformed records remain usable. Corrupted JSON is never automatically overwritten; DevTrack uses session-safe defaults and surfaces a warning. Unknown difficulty values use a separate `Unknown` bucket and never increase Easy, Medium, or Hard totals. A problem counts as completed only when its status is `Solved`; calendar-based views additionally require a valid local date and exclude future dates.
 
 The dashboard derives its total, difficulty counts, streaks, exact seven-day chart, 52-week contribution heatmap, and recent list from shared pure utilities. Date-only strings remain local calendar dates, ISO timestamps convert to the browser's local day, duplicate solves on one day count once toward a streak, and recent ties resolve by solved date, creation time, then stable ID. Sample problems are loaded only through the clearly labeled sample-data action.
+
+### Browser data model
+
+The central storage registry owns exactly these keys:
+
+- `devtrack:v1:problems` — normalized problem records with nested revision state.
+- `devtrack:v1:revision_history` — append-only revision completion records.
+- `devtrack:v1:settings` — appearance, goal, paging, motion, and onboarding preferences.
+- `devtrack:v1:recent_searches` — reserved portable search history.
+- `devtrack:v1:demo_auth` — local demo session metadata; clearable but excluded from backups.
+
+All calendar-only values use local `YYYY-MM-DD` keys. Invalid dates are excluded from date-based metrics instead of being coerced into `Invalid Date` or UTC-shifted values. See [BACKUP_FORMAT.md](BACKUP_FORMAT.md) for portability behavior.

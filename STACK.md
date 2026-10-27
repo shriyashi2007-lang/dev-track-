@@ -6,7 +6,7 @@
 - React Router 7 handles route composition and lazy page loading.
 - Vite 8 supplies the development server and production bundling.
 - Tailwind CSS 3 provides utility styling over the tokens in `src/styles`.
-- Framer Motion and Motion power route, component, and gesture animation.
+- Motion (`motion/react`, backed by its transitive Framer Motion runtime) powers route, component, and gesture animation.
 - Lucide React supplies interface icons.
 - Recharts renders analytics charts.
 - date-fns supports date calculations where native helpers are not enough.
@@ -26,4 +26,4 @@ DevTrack is local-first. Browser `localStorage` holds application data, demo ses
 
 ## Supported workflow
 
-Use `npm run test` for the test suite, `npm run test:ci` for a deterministic single-worker CI run, `npm run lint` for static checks, `npm run build` for a production bundle, and `npm run dev` for local browser inspection. Dashboard verification also covers narrow and wide layouts, persisted refreshes, keyboard navigation, reduced motion, and browser console errors.
+Use `npm test` for watch mode, `npm run test:run` (or its `test:ci` alias) for a deterministic single-worker verification run, `npm run lint` for static checks, `npm run build` for a production bundle, and `npm run dev` for local browser inspection. Dashboard verification also covers narrow and wide layouts, persisted refreshes, keyboard navigation, reduced motion, and browser console errors.
