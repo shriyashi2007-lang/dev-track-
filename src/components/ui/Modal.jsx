@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react'
+import React, { useEffect, useId, useRef } from 'react'
 import clsx from 'clsx'
 import { X } from 'lucide-react'
 
@@ -12,13 +12,30 @@ export function Modal({
   className = '',
   showClose = true,
   role = 'dialog',
+  ariaLabelledBy,
+  ariaDescribedBy,
 }) {
   const modalRef = useRef(null)
+  const previouslyFocusedRef = useRef(null)
+  const generatedId = useId()
+  const titleId = `${generatedId}-title`
+  const descriptionId = `${generatedId}-description`
+
+  useEffect(() => {
+    if (isOpen) return undefined
+    const rememberFocus = (event) => {
+      const target = event?.target || document.activeElement
+      if (target?.focus && !modalRef.current?.contains(target)) previouslyFocusedRef.current = target
+    }
+    rememberFocus()
+    document.addEventListener('focusin', rememberFocus)
+    return () => document.removeEventListener('focusin', rememberFocus)
+  }, [isOpen])
 
   useEffect(() => {
     if (!isOpen || !modalRef.current) return
 
-    const previouslyFocused = document.activeElement
+    const previouslyFocused = previouslyFocusedRef.current || document.activeElement
     const modal = modalRef.current
     const getFocusable = () =>
       [...modal.querySelectorAll(
@@ -67,8 +84,8 @@ export function Modal({
       className="fixed inset-0 z-50 flex items-center justify-center p-4 overflow-y-auto"
       role={role}
       aria-modal="true"
-      aria-labelledby={title ? 'modal-title' : undefined}
-      aria-describedby={description ? 'modal-description' : undefined}
+      aria-labelledby={ariaLabelledBy || (title ? titleId : undefined)}
+      aria-describedby={ariaDescribedBy || (description ? descriptionId : undefined)}
     >
       {/* Backdrop */}
       <div
@@ -90,12 +107,12 @@ export function Modal({
         <div className="flex items-start justify-between gap-4 mb-4">
           <div>
             {title && (
-              <h2 id="modal-title" className="text-xl font-display font-bold text-content-primary tracking-tight">
+              <h2 id={titleId} className="text-xl font-display font-bold text-content-primary tracking-tight">
                 {title}
               </h2>
             )}
             {description && (
-              <p id="modal-description" className="text-xs text-content-secondary mt-1">
+              <p id={descriptionId} className="text-xs text-content-secondary mt-1">
                 {description}
               </p>
             )}
@@ -105,7 +122,7 @@ export function Modal({
               type="button"
               onClick={onClose}
               aria-label="Close modal"
-              className="text-content-muted hover:text-content-primary p-1.5 rounded-subtle hover:bg-base-elevated transition-colors"
+              className="text-content-muted hover:text-content-primary p-1.5 rounded-subtle hover:bg-base-elevated transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
             >
               <X className="w-5 h-5" />
             </button>
