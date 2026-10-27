@@ -1,6 +1,6 @@
-import { beforeEach, describe, expect, it } from 'vitest'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { DEVTRACK_OWNED_KEYS, STORAGE_KEYS } from '../data/constants'
-import { applyPlanToStorage, clearOwnedStorage, getOwnedStorageInfo } from '../services/backupService'
+import { applyPlanToStorage, clearOwnedStorage, downloadCurrentBackup, getOwnedStorageInfo } from '../services/backupService'
 import { buildBackup, planImport, validateBackup } from '../utils/dataPortability'
 
 class MemoryStorage {
@@ -43,6 +43,11 @@ describe('backup storage orchestration', () => {
     })
   })
 
+  afterEach(() => {
+    vi.unstubAllGlobals()
+    vi.restoreAllMocks()
+  })
+
   it('applies and verifies all portable keys without changing auth or unrelated data', () => {
     const imported = validateBackup(buildBackup({ problems: [currentProblem('new')], revisionHistory: [], settings, recentSearches: [] })).backup
     const plan = planImport({ problems: [currentProblem('old')], revisionHistory: [], settings, recentSearches: [] }, imported, { mode: 'replace' })
@@ -74,5 +79,23 @@ describe('backup storage orchestration', () => {
     expect(info.keys.map((item) => item.key)).toEqual(DEVTRACK_OWNED_KEYS)
     expect(info.keys.find((item) => item.key === STORAGE_KEYS.DEMO_AUTH)?.portable).toBe(false)
     expect(info.totalBytes).toBeGreaterThan(0)
+  })
+
+  it('downloads the current versioned schema with a local timestamped filename', () => {
+    const click = vi.spyOn(window.HTMLAnchorElement.prototype, 'click').mockImplementation(() => {})
+    const createObjectURL = vi.fn(() => 'blob:devtrack-backup')
+    const revokeObjectURL = vi.fn()
+    vi.stubGlobal('URL', { createObjectURL, revokeObjectURL })
+
+    const result = downloadCurrentBackup(
+      { problems: [currentProblem('downloaded')], revisionHistory: [], settings },
+      { adapter, date: new Date(2026, 9, 26, 9, 5) }
+    )
+
+    expect(result.downloaded).toBe(true)
+    expect(result.filename).toBe('devtrack-backup-2026-10-26-0905.json')
+    expect(result.backup).toMatchObject({ app: 'DevTrack', schemaVersion: 1, counts: { problems: 1 } })
+    expect(click).toHaveBeenCalledOnce()
+    expect(revokeObjectURL).toHaveBeenCalledWith('blob:devtrack-backup')
   })
 })
