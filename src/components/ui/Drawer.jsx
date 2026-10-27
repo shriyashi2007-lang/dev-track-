@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react'
+import React, { useEffect, useId, useRef } from 'react'
 import clsx from 'clsx'
 import { X } from 'lucide-react'
 
@@ -12,11 +12,26 @@ export function Drawer({
   className = '',
 }) {
   const drawerRef = useRef(null)
+  const previouslyFocusedRef = useRef(null)
+  const generatedId = useId()
+  const titleId = `${generatedId}-title`
+  const descriptionId = `${generatedId}-description`
+
+  useEffect(() => {
+    if (isOpen) return undefined
+    const rememberFocus = (event) => {
+      const target = event?.target || document.activeElement
+      if (target?.focus && !drawerRef.current?.contains(target)) previouslyFocusedRef.current = target
+    }
+    rememberFocus()
+    document.addEventListener('focusin', rememberFocus)
+    return () => document.removeEventListener('focusin', rememberFocus)
+  }, [isOpen])
 
   useEffect(() => {
     if (!isOpen || !drawerRef.current) return
 
-    const previouslyFocused = document.activeElement
+    const previouslyFocused = previouslyFocusedRef.current || document.activeElement
     const drawer = drawerRef.current
     const getFocusable = () =>
       [...drawer.querySelectorAll(
@@ -65,8 +80,8 @@ export function Drawer({
       className="fixed inset-0 z-50 overflow-hidden"
       role="dialog"
       aria-modal="true"
-      aria-labelledby={title ? 'drawer-title' : undefined}
-      aria-describedby={description ? 'drawer-description' : undefined}
+      aria-labelledby={title ? titleId : undefined}
+      aria-describedby={description ? descriptionId : undefined}
     >
       {/* Backdrop */}
       <div
@@ -89,19 +104,19 @@ export function Drawer({
           <div className="p-5 border-b border-border-subtle flex items-start justify-between bg-base-elevated/40">
             <div>
               {title && (
-                <h2 id="drawer-title" className="text-base font-semibold text-content-primary">
+                <h2 id={titleId} className="text-base font-semibold text-content-primary">
                   {title}
                 </h2>
               )}
               {description && (
-                <p id="drawer-description" className="text-xs text-content-secondary mt-1">{description}</p>
+                <p id={descriptionId} className="text-xs text-content-secondary mt-1">{description}</p>
               )}
             </div>
             <button
               type="button"
               onClick={onClose}
               aria-label="Close drawer"
-              className="text-content-muted hover:text-content-primary p-1.5 rounded-subtle hover:bg-base-elevated transition-colors"
+              className="text-content-muted hover:text-content-primary p-1.5 rounded-subtle hover:bg-base-elevated transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
             >
               <X className="w-5 h-5" />
             </button>
