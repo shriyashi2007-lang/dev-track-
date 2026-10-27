@@ -25,6 +25,24 @@ export function PublicLayout() {
     setMobileMenuOpen(false)
   }, [location.pathname])
 
+  const isLandingPage = location.pathname === '/'
+
+  if (isLandingPage) {
+    return (
+      <div className="min-h-screen bg-black text-white">
+        <a
+          href="#main-content"
+          className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-white focus:text-black focus:rounded-card focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400"
+        >
+          Skip to main content
+        </a>
+        <main id="main-content">
+          <Outlet />
+        </main>
+      </div>
+    )
+  }
+
   return (
     <div className="min-h-screen flex flex-col bg-base text-content-primary">
       {/* Skip to Content for Accessibility */}
