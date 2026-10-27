@@ -17,11 +17,10 @@ import {
 import { useCommandPalette } from '../context/CommandPaletteContext'
 import { useProblems } from '../context/ProblemsContext'
 import { useSettings } from '../context/SettingsContext'
-import { exportAllData } from '../services/exportService'
 
 export function CommandPalette({ onNewProblem }) {
   const { isOpen, close } = useCommandPalette()
-  const { problems, loadSampleData, clearSampleData, hasSampleData } = useProblems()
+  const { problems, revisionHistory, loadSampleData, clearSampleData, hasSampleData } = useProblems()
   const { settings, toggleTheme } = useSettings()
   const navigate = useNavigate()
 
@@ -73,7 +72,10 @@ export function CommandPalette({ onNewProblem }) {
         title: 'Export Backup JSON',
         icon: Download,
         category: 'Actions',
-        action: () => exportAllData(problems, settings),
+        action: async () => {
+          const { downloadCurrentBackup } = await import('../services/backupService')
+          downloadCurrentBackup({ problems, revisionHistory, settings })
+        },
       },
       {
         id: 'act-sample-load',
@@ -94,7 +96,7 @@ export function CommandPalette({ onNewProblem }) {
           ]
         : []),
     ],
-    [onNewProblem, settings, toggleTheme, problems, loadSampleData, clearSampleData, hasSampleData]
+    [onNewProblem, settings, toggleTheme, problems, revisionHistory, loadSampleData, clearSampleData, hasSampleData]
   )
 
   // Filter items matching query
