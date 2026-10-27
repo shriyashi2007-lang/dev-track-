@@ -20,12 +20,13 @@ import { ProblemDrawer } from '../components/problems/ProblemDrawer'
 import { Button } from '../components/ui/Button'
 import { EmptyState } from '../components/ui/EmptyState'
 import { ConfirmDialog } from '../components/ui/ConfirmDialog'
-import { exportAllData } from '../services/exportService'
+import { downloadCurrentBackup } from '../services/backupService'
 
 export default function Problems() {
   const [searchParams, setSearchParams] = useSearchParams()
   const {
     problems,
+    revisionHistory,
     addProblem,
     updateProblem,
     deleteProblem,
@@ -223,7 +224,7 @@ export default function Problems() {
         onViewModeChange={setViewMode}
         onOpenImport={() => setIsImportOpen(true)}
         onOpenAdd={handleAddNew}
-        onExport={() => exportAllData(problems, settings)}
+        onExport={() => downloadCurrentBackup({ problems, revisionHistory, settings })}
         totalFilteredCount={filteredProblems.length}
         totalCount={problems.length}
       />
