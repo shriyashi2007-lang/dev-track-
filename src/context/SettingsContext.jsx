@@ -1,17 +1,18 @@
-import React, { createContext, useCallback, useContext, useState, useEffect } from 'react'
+import React, { createContext, useCallback, useContext, useMemo, useState, useEffect } from 'react'
 import { settingsService } from '../services/settingsService'
 import { STORAGE_KEYS } from '../data/constants'
 
 const SettingsContext = createContext(null)
 
 export function SettingsProvider({ children }) {
-  const [settings, setSettings] = useState(() => settingsService.getSettings())
+  const [state, setState] = useState(() => settingsService.getSettingsWithMeta())
+  const { settings, error: storageError } = state
 
   const refreshSettings = useCallback(() => {
-    const next = settingsService.getSettings()
-    setSettings(next)
-    settingsService.applyToDOM(next)
-    return next
+    const next = settingsService.getSettingsWithMeta()
+    setState(next)
+    settingsService.applyToDOM(next.settings)
+    return next.settings
   }, [])
 
   useEffect(() => {
@@ -31,33 +32,34 @@ export function SettingsProvider({ children }) {
     return () => window.removeEventListener('storage', handleStorage)
   }, [refreshSettings])
 
-  const updateSettings = (updates) => {
+  const updateSettings = useCallback((updates) => {
     const updated = settingsService.updateSettings(updates)
-    setSettings(updated)
+    setState({ settings: updated, error: null })
     return updated
-  }
+  }, [])
 
-  const resetSettings = () => {
+  const resetSettings = useCallback(() => {
     const defaults = settingsService.resetSettings()
-    setSettings(defaults)
+    setState({ settings: defaults, error: null })
     return defaults
-  }
+  }, [])
 
-  const toggleTheme = () => {
+  const toggleTheme = useCallback(() => {
     const nextTheme = settings.theme === 'dark' ? 'light' : 'dark'
     updateSettings({ theme: nextTheme })
-  }
+  }, [settings.theme, updateSettings])
+
+  const value = useMemo(() => ({
+    settings,
+    storageError,
+    updateSettings,
+    resetSettings,
+    toggleTheme,
+    refreshSettings,
+  }), [refreshSettings, resetSettings, settings, storageError, toggleTheme, updateSettings])
 
   return (
-    <SettingsContext.Provider
-      value={{
-        settings,
-        updateSettings,
-        resetSettings,
-        toggleTheme,
-        refreshSettings,
-      }}
-    >
+    <SettingsContext.Provider value={value}>
       {children}
     </SettingsContext.Provider>
   )
