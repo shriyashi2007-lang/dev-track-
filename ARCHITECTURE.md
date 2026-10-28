@@ -2,7 +2,7 @@
 
 ## Overview
 
-DevTrack is a browser-only React application for recording coding problems, reviewing them on a spaced-repetition schedule, and inspecting progress. It has no server dependency: repositories, authentication state, settings, and revision history are stored in the browser through `localStorage`.
+DevTrack is a local-first React application for recording coding problems, reviewing them on a spaced-repetition schedule, and inspecting progress. Problems, settings, authentication state, and revision history remain in browser `localStorage`. A separately packaged Express server provides the initial `/api/health` contract, but the application has no runtime dependency on that server and continues to work offline.
 
 ## Runtime flow
 
@@ -14,6 +14,8 @@ DevTrack is a browser-only React application for recording coding problems, revi
 
 An application-level error boundary protects the provider and router tree. Route loading uses a shared skeleton fallback.
 
+`server/src/server.js` validates runtime configuration, creates the Express application, starts the HTTP listener, and owns graceful process shutdown. `server/src/app.js` remains free of `listen()` so Supertest can exercise the real middleware stack without a network port. The stack is ordered as Helmet, restricted CORS, a 100kb JSON parser, `/api` routes, JSON 404 handling, and centralized error handling.
+
 ## Layers
 
 - `src/pages` assembles route-level experiences.
@@ -24,6 +26,16 @@ An application-level error boundary protects the provider and router tree. Route
 - `src/services` is the persistence and export boundary.
 - `src/utils` contains deterministic filtering, sorting, dates, statistics, validation, and spaced-repetition rules.
 - `src/styles` defines tokens and motion shared by the component layer.
+- `server/src/config` validates environment inputs without reading frontend state.
+- `server/src/routes` owns the health endpoint and API router composition.
+- `server/src/middleware` owns stable JSON 404 and error envelopes.
+- `server/tests` uses Supertest against the exported app factory.
+
+## Backend integration boundary
+
+`src/services/api.js` is the only frontend HTTP boundary. It normalizes `VITE_API_BASE_URL`, applies an AbortController timeout, validates the exact public health response, and converts failures into normalized connection results. `useBackendHealth` performs one check when `AppLayout` mounts and exposes an explicit retry; there is no polling. Desktop and mobile indicator views share that single hook state.
+
+The API has no database, models, authentication, sessions, or credentialed requests. CORS accepts configured origins and requests without an `Origin` header, rejects other browser origins with a JSON 403, and never uses a production wildcard. This boundary is intentionally narrow so Day 9 database work can add real data capabilities without coupling today's frontend storage flows to a placeholder API.
 
 ## Navigation and visual system
 
@@ -43,4 +55,4 @@ Dashboard data follows one deterministic pipeline. The problem service reads sto
 
 ## Testing strategy
 
-Vitest and Testing Library cover pure utilities, browser-facing services, hooks, shared overlay focus behavior, and high-value component flows. Tests use jsdom, reset browser storage and mocks between cases, and are scoped to `src/test` so nested workspaces cannot contaminate DevTrack results. Production readiness is checked with `npm run test:run`, ESLint, a Vite production build, and representative browser inspection.
+Frontend Vitest and Testing Library cover pure utilities, browser-facing services, hooks, shared overlay focus behavior, and high-value component flows. Tests use jsdom, reset browser storage and mocks between cases, and are scoped to `src/test` so the nested server package cannot contaminate frontend results. Backend Vitest and Supertest cover environment validation, middleware ordering, health, errors, CORS, and security headers without opening a port. Production readiness is checked with both test suites, ESLint, a Vite production build, real HTTP requests, and representative online/offline browser inspection.

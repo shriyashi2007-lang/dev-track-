@@ -1,133 +1,170 @@
-# DevTrack — DSA & Coding Progress Tracker 🌊
+# DevTrack — DSA & Coding Progress Tracker
 
-A modern, high-performance, developer-focused web application for students and software engineers to track DSA preparation, coding consistency, solved algorithmic problems, and spaced repetition schedules.
+DevTrack is a local-first React application for tracking solved coding problems, revision schedules, consistency, and analytics. It also includes a small Express API foundation for health and connectivity checks.
 
-Built with **React 19 + Vite**, **JavaScript (JSX)**, **Tailwind CSS**, **Motion Primitives** (`motion/react`), **Recharts**, and **localStorage persistence**.
+The backend is optional today. Problems, revisions, analytics, settings, and backups still use browser `localStorage`, so the frontend remains fully usable while the API is offline. Database integration is intentionally deferred to a later milestone.
 
----
+## Project structure
 
-## 🌊 Landing Page Concept: "Dive In"
+```text
+devTrack/
+├── src/                    React frontend
+│   ├── components/         Shared and domain UI
+│   ├── context/            Local application state
+│   ├── hooks/              Browser and connection hooks
+│   ├── pages/              Route-level screens
+│   ├── services/           localStorage, export, and API utilities
+│   └── test/               Frontend Vitest suite
+├── server/                 Independent Express package
+│   ├── src/
+│   │   ├── config/         Environment validation
+│   │   ├── middleware/     JSON 404 and error handling
+│   │   ├── routes/         API and health routes
+│   │   ├── app.js          Testable Express app factory
+│   │   └── server.js       HTTP startup and graceful shutdown
+│   └── tests/              Supertest and configuration tests
+├── .env.example            Frontend environment example
+└── server/.env.example     Backend environment example
+```
 
-The landing page takes inspiration from the ocean-depth journey of algorithmic preparation, harmonizing with the owner's Haikei **Layered Waves** art and coral/raspberry color palette.
+Both packages use ES modules. Node 24 or newer is recommended because the backend scripts use the built-in watch mode and environment-file loader.
 
-### Interactive Gadgets & Motion Features
-1. **Interactive Rising Bubbles 🫧 (`BubblesCanvas.jsx`)**:
-   - Lightweight canvas particle engine rising behind the hero and layered waves (capped to 28 on desktop, 12 on mobile).
-   - Gentle cursor-dodging interaction.
-   - **Click or tap to POP a bubble** with a mini particle burst effect.
-   - Automatically pauses animation when offscreen or when browser tab is hidden (`IntersectionObserver` + `visibilitychange`).
-   - `devicePixelRatio` capped to 2 for 60fps performance on standard laptops.
-   - Strictly disabled when `prefers-reduced-motion` is active.
+## Install dependencies
 
-2. **Fast Layered Wave-Wipe Route Transition 🌊 (`WaveWipeTransition.jsx`)**:
-   - Sweeps across the viewport in the 5 brand wave colors in $\le 320\text{ms}$ upon navigating between routes (`Landing` ↔ `Login/Signup` ↔ `Dashboard`).
-   - Smoothly reveals the destination page with staggered wave bars.
-   - Automatically degrades to a gentle cross-fade when reduced motion is preferred.
-
-3. **Swipeable Feature Carousel 🎠 (`FeatureCarousel.jsx`)**:
-   - Touch/mouse drag with momentum, drag constraints, and card tilt.
-   - Full keyboard accessibility (← / → arrow keys).
-   - Animated progress indicator and interactive pagination dots.
-   - Staggered spring entrance transitions.
-
-4. **Swipe Deck Sandbox Gadget 🃏 (`SwipeDeckDemo.jsx`)**:
-   - Interactive stack of sample problem cards (clearly marked as demo sandbox, no user data touched).
-   - **Swipe Right** (or click button) = ✅ Mark Solved!
-   - **Swipe Left** (or click button) = 🔁 Revise Later.
-   - Dynamic stamp overlays, spring physics, live updating demo counters, mini streak ring, and a celebratory burst of confetti.
-   - Single-click "Reset Demo Deck" button to restart the interactive demo anytime.
-
-5. **Scrolling Topic Ticker 📊 (`TopicTicker.jsx`)**:
-   - Continuous marquee pill ticker showcasing key DSA domains (Arrays, DP, Graphs, Trees, Heaps, Sliding Window...).
-   - Pauses on hover; disabled under reduced motion.
-
-6. **Magnetic Primary CTA 🧲 (`MagneticButton.jsx`)**:
-   - Subtle cursor attraction and squish press feedback.
-
-7. **Connected How-It-Works 🧠 (`ConnectedHowItWorks.jsx`)**:
-   - Scroll-linked animated SVG path connecting the 3 preparation steps as the user navigates down the page.
-
-8. **Hero Preview Card with 3D Tilt 💻 (`HeroPreviewCard.jsx`)**:
-   - Interactive 3D mouse perspective tilt with realistic dashboard metrics and floating sticker badges.
-
----
-
-## 🎨 Design System
-
-The shared design system lives in three places:
-- `src/styles/tokens.css` defines both themes, typography, brand and rainbow colors, pastel surfaces, hard-stop gradients, glass surfaces, stripes, shadows, radii, and timing tokens.
-- `tailwind.config.js` maps those CSS variables to the utility classes used throughout the app.
-- `src/styles/motion.js` defines shared interaction and transition presets, including reduced-motion checks.
-
-### Typography
-Inter is self-hosted for body and interface text. Space Grotesk is self-hosted for display headings, navigation, and prominent numbers. The root size is 112.5%, body text starts at 1.125rem, and statistics use tabular numerals.
-
-### Color and surfaces
-The dark and light themes share the coral, rose, and raspberry wave palette, extended by amber, mint, sky, blue, and violet. `rainbow-1` through `rainbow-8` support topic badges, charts, heatmaps, and progress visuals; the pastel tokens provide paired surfaces and readable text colors. Hard-stop gradients keep the palette crisp. Cards use semantic left stripes, layered shadows, and 12px, 20px, 28px, or pill radii. Glass surfaces use translucent backgrounds and backdrop blur with a solid-surface fallback.
-
-### Accessibility and motion
-Focus rings use the theme focus token. Difficulty and status colors remain distinct in both themes. Shared hover and press effects use short transform, opacity, and color changes, and reduced-motion preferences disable movement. The landing page feature and dashboard overviews use responsive asymmetric bento layouts.
-
-The landing dashboard and CLI views are explicitly labeled sample previews. Sample problems enter the app only through the labeled **Load Sample Data** action.
-
----
-## 🛠️ Tech Stack & Credits
-
-- **Core**: React 19, Vite 8, React Router 7
-- **Styling**: Tailwind CSS 3, Vanilla CSS Design Tokens
-- **Icons**: Lucide React
-- **Data Visualization**: Recharts, Custom Canvas Heatmap
-- **Motion & Interactions**: `motion/react` (Motion Primitives components adapted to JSX: `TextEffect`, `AnimatedGroup`, `InView`, `AnimatedNumber`, `AnimatedBackground`)
-- **Assets**:
-  - Layered Waves SVG by [Haikei](https://app.haikei.app/) placed at `public/assets/backgrounds/layered-waves-haikei.svg`.
-  - Palette inspired by [Solus Wellness Template](https://www.figma.com/design/lDolpl1EX5FlbBqPupwYWK/Solus-%E2%80%93-Mental-Health---Wellness-Website-Template--Community-?node-id=2003-633&t=AvEcfTONpr0vuHn3-1).
-
----
-
-## 🚀 Running Locally
+From the repository root:
 
 ```bash
-# Install dependencies
 npm install
+npm --prefix server install
+```
 
-# Start local Vite development server
+Only three backend runtime packages are used: Express for routing, CORS for explicit browser-origin policy, and Helmet for security headers. Supertest and Vitest are development-only test dependencies. Node supplies watch mode and environment loading, so no `nodemon` or `dotenv` dependency is needed.
+
+## Configure environment files
+
+The committed examples contain safe development values. Real `.env` files are ignored by Git.
+
+Windows PowerShell:
+
+```powershell
+Copy-Item .env.example .env
+Copy-Item server/.env.example server/.env
+```
+
+macOS or Linux:
+
+```bash
+cp .env.example .env
+cp server/.env.example server/.env
+```
+
+Frontend variable:
+
+| Variable | Default | Purpose |
+|---|---|---|
+| `VITE_API_BASE_URL` | `http://localhost:5000` | Base URL used only for the API health check. |
+
+Backend variables:
+
+| Variable | Default | Purpose |
+|---|---|---|
+| `PORT` | `5000` | HTTP port, validated as an integer from 1 through 65535. |
+| `NODE_ENV` | `development` | Must be `development`, `test`, or `production`. |
+| `CLIENT_ORIGIN` | `http://localhost:5173` outside production | Allowed browser origin. Comma-separated origins are supported. It is required in production. |
+
+## Run locally
+
+Start the frontend and backend in separate terminals.
+
+Terminal 1 — frontend:
+
+```bash
 npm run dev
+```
 
-# Run tests once (CI/release verification)
-npm run test:run
+Terminal 2 — backend with file watching:
 
-# Run tests in watch mode while developing
+```bash
+npm run server:dev
+```
+
+Production-style backend startup:
+
+```bash
+npm run server:start
+```
+
+The independent package commands also work from `server/`:
+
+```bash
+npm run dev
+npm start
 npm test
+```
 
-# Run linter
+A combined `dev:all` command is intentionally omitted so both processes remain independently observable without adding a process-manager dependency.
+
+## API contract
+
+`GET /api/health` returns HTTP 200 with only this public shape:
+
+```json
+{
+  "success": true,
+  "status": "ok",
+  "service": "devtrack-api",
+  "timestamp": "2026-10-28T00:00:00.000Z"
+}
+```
+
+Quick check:
+
+```bash
+curl -i http://localhost:5000/api/health
+```
+
+Errors use one stable JSON envelope:
+
+```json
+{
+  "success": false,
+  "error": {
+    "code": "NOT_FOUND",
+    "message": "Route not found"
+  }
+}
+```
+
+Unknown routes return 404, unsupported methods on `/api/health` return 405, malformed JSON returns 400, oversized JSON returns 413, disallowed browser origins return 403, and unexpected failures return 500 without production stack traces or internal messages.
+
+Helmet uses its defaults, JSON bodies are limited to 100kb, and CORS allows only configured origins. Requests without an `Origin` header continue to work for curl and server-to-server checks. Credentials are disabled because DevTrack has no backend authentication or sessions.
+
+## Verification commands
+
+Backend:
+
+```bash
+npm run server:test
+```
+
+Frontend:
+
+```bash
+npm run test:run
 npm run lint
-
-# Build production bundle
 npm run build
 ```
 
-### Quality checks
+The frontend connection indicator checks once when the application shell mounts and offers a manual retry when disconnected. It does not poll, block rendering, write to localStorage, or route any existing feature through the API.
 
-Before opening a pull request or publishing a build, run the test suite, linter, and production build. Tests live in `src/test` and cover the date, filtering, scheduling, statistics, persistence, export, authentication, accessibility, and hook boundaries that drive the interface. Test and lint discovery intentionally exclude the separate `portfolio/` workspace when it is present.
+## Data and security boundaries
 
-Interactive controls should remain usable without a pointer. Keep visible focus styles, expose selected state with `aria-pressed` or `aria-selected`, label icon-only controls, and preserve focus trapping and trigger restoration in dialogs and drawers. Verify navigation, forms, filters, and data views at mobile and desktop widths after changing shared components.
+The canonical browser keys remain:
 
-For architectural context, see [ARCHITECTURE.md](ARCHITECTURE.md). For dependency and tooling details, see [STACK.md](STACK.md).
+- `devtrack:v1:problems`
+- `devtrack:v1:revision_history`
+- `devtrack:v1:settings`
+- `devtrack:v1:recent_searches`
+- `devtrack:v1:demo_auth`
 
-### Dashboard data rules
-
-DevTrack keeps problem data in the existing `devtrack:v1:problems` localStorage key. Reads pass through a defensive in-memory normalizer, so older or partially malformed records remain usable. Corrupted JSON is never automatically overwritten; DevTrack uses session-safe defaults and surfaces a warning. Unknown difficulty values use a separate `Unknown` bucket and never increase Easy, Medium, or Hard totals. A problem counts as completed only when its status is `Solved`; calendar-based views additionally require a valid local date and exclude future dates.
-
-The dashboard derives its total, difficulty counts, streaks, exact seven-day chart, 52-week contribution heatmap, and recent list from shared pure utilities. Date-only strings remain local calendar dates, ISO timestamps convert to the browser's local day, duplicate solves on one day count once toward a streak, and recent ties resolve by solved date, creation time, then stable ID. Sample problems are loaded only through the clearly labeled sample-data action.
-
-### Browser data model
-
-The central storage registry owns exactly these keys:
-
-- `devtrack:v1:problems` — normalized problem records with nested revision state.
-- `devtrack:v1:revision_history` — append-only revision completion records.
-- `devtrack:v1:settings` — appearance, goal, paging, motion, and onboarding preferences.
-- `devtrack:v1:recent_searches` — reserved portable search history.
-- `devtrack:v1:demo_auth` — local demo session metadata; clearable but excluded from backups.
-
-All calendar-only values use local `YYYY-MM-DD` keys. Invalid dates are excluded from date-based metrics instead of being coerced into `Invalid Date` or UTC-shifted values. See [BACKUP_FORMAT.md](BACKUP_FORMAT.md) for portability behavior.
+There is no database, backend authentication, session handling, credentialed CORS, telemetry, or placeholder model/controller layer. See [ARCHITECTURE.md](ARCHITECTURE.md), [STACK.md](STACK.md), and [BACKUP_FORMAT.md](BACKUP_FORMAT.md) for more detail.

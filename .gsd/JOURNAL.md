@@ -64,3 +64,18 @@ The production build reports Vite's advisory that the main bundle is larger than
 - Desktop browser verification confirmed the new palette and visible Landing link on Dashboard. The link opened the full-screen animated landing page successfully; the cool-white light variant was also inspected before restoring the saved dark theme.
 - Mobile verification at 360 × 800 confirmed the core bottom navigation remained intact, the drawer exposed the Landing link, and the landing composition remained responsive.
 - Browser console: zero errors. ESLint: passed. Vitest: 34 files and 139 tests passed. Production build: 3,304 modules transformed successfully.
+
+## 2026-10-28 — Day 8 Express API foundation
+
+- Added an independent ESM `server/` package using Express, restricted CORS, Helmet, Node's built-in environment-file support, Vitest, and Supertest. No database, authentication, placeholder layers, or request logging was added.
+- Added validated `PORT`, `NODE_ENV`, and comma-separated `CLIENT_ORIGIN` configuration. Production now fails fast when the client origin is missing or invalid.
+- Added `GET /api/health`, JSON 404/405 responses, safe malformed/oversized JSON handling, centralized production-safe errors, and graceful process shutdown.
+- Added a five-second frontend health client and an accessible sidebar status card with checking, connected, offline, and manual retry states. The hook checks once on mount and does not poll.
+- Preserved localStorage as the only application data source. In an isolated browser origin, a problem was saved while exercising the new integration and Dashboard immediately reflected one solved Medium problem, a one-day streak, and one heatmap contribution.
+- Real HTTP verification on port 5050 confirmed health 200 JSON, Helmet headers, no `X-Powered-By`, JSON 404, safe 400 malformed JSON, allowed-origin and preflight headers, and safe 403 rejection without `Access-Control-Allow-Origin` for a disallowed origin.
+- Production start was exercised both ways: missing `CLIENT_ORIGIN` exited nonzero with a clear validation message; a temporary valid production configuration started on port 5051, served health, and shut down on SIGINT.
+- Live browser verification confirmed connected, offline-after-reload, and retry-to-connected-without-reload states. Dashboard, Problems, Analytics, Revision, and Settings rendered with the backend offline; the console contained no errors.
+- Frontend Vitest: 36 files and 145 tests passed. Server Vitest: 2 files and 18 tests passed. ESLint passed. Vite built 3,307 modules successfully; the existing >500 kB chunk advisory remains.
+- Production dependency audits for both root and server reported zero vulnerabilities. `git diff --check` passed apart from Windows line-ending notices.
+- The default API port 5000 was already occupied by an unrelated local service, so live integration used port 5050 without stopping or changing that service. Browser network-request counting was not available; the no-polling behavior is enforced by source structure and the component test that asserts one fetch after time advances.
+- Temporary `.env` files and verification processes were removed/stopped. No commit or push was performed, and the unrelated `portfolio/` directory remained untouched.
