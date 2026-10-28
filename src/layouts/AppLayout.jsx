@@ -23,7 +23,9 @@ import { useProblems } from '../context/ProblemsContext'
 import { useSettings } from '../context/SettingsContext'
 import { useCommandPalette } from '../context/CommandPaletteContext'
 import { useKeyboardShortcuts } from '../hooks/useKeyboardShortcuts'
+import { useBackendHealth } from '../hooks/useBackendHealth'
 import { CommandPalette } from '../components/CommandPalette'
+import { BackendStatus } from '../components/BackendStatus'
 import { KeyboardShortcutsModal } from '../components/KeyboardShortcutsModal'
 import { ProblemDrawer } from '../components/problems/ProblemDrawer'
 import { OnboardingTour } from '../components/OnboardingTour'
@@ -40,6 +42,7 @@ export function AppLayout() {
   const { problems, addProblem, hasSampleData, clearSampleData } = useProblems()
   const { settings, storageError: settingsStorageError, updateSettings, toggleTheme } = useSettings()
   const { open: openCommandPalette } = useCommandPalette()
+  const { health: backendHealth, retry: retryBackend } = useBackendHealth()
 
   // Overlay states
   const [isProblemDrawerOpen, setIsProblemDrawerOpen] = useState(false)
@@ -238,6 +241,10 @@ export function AppLayout() {
             </button>
           </div>
         )}
+
+        <div className="px-3 pb-3">
+          <BackendStatus health={backendHealth} onRetry={retryBackend} />
+        </div>
 
         {/* User Card & Palette Trigger */}
         <div className="p-3 border-t border-border-subtle bg-base-elevated/20 flex items-center justify-between">
@@ -450,6 +457,9 @@ export function AppLayout() {
             )
           })}
         </nav>
+        <div className="mt-5 border-t border-border-subtle pt-4">
+          <BackendStatus health={backendHealth} onRetry={retryBackend} />
+        </div>
       </Drawer>
       <CommandPalette onNewProblem={handleOpenNewProblem} />
       <KeyboardShortcutsModal isOpen={isHelpOpen} onClose={() => setIsHelpOpen(false)} />

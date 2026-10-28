@@ -21,6 +21,7 @@ export default [
         clearInterval: 'readonly',
         requestAnimationFrame: 'readonly',
         cancelAnimationFrame: 'readonly',
+        AbortController: 'readonly',
         console: 'readonly',
         fetch: 'readonly',
         URL: 'readonly',
